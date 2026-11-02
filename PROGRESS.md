@@ -10,7 +10,7 @@
 | S0 | 게이트통과 | npm ci/타입 음성검사/타입/lint/test48/build 종료0; Chromium+Firefox8 E2E 종료0 | AC-01 2D/78 및 S0 부분 검증 | S1 공간 편집 |
 | S1 | 게이트통과 | 타입/lint/test48/build0; Chromium+Firefox18 E2E0+root12 E2E0 | 방 편집/기하/뷰포트 검증 | S2 가구 배치 |
 | S2 | 게이트통과 | 타입/lint/test65/build0; room+furniture E2E42/42 종료0 | 가구20종/배치/키보드/경고 검증 | S3 실제3D |
-| S3 | 미착수 | 없음 | 미실행 | 실제 3D |
+| S3 | 게이트통과 | 타입/lint/test78/build0; 전체 E2E68/68 종료0 | 실제Canvas/메시/카메라/폴백/동기화 | S4 저장·안정화 |
 | S4 | 미착수 | 없음 | 미실행 | 저장·E2E |
 | S5 | 미착수 | 없음 | 원격 미검증 | base/Actions |
 
@@ -23,3 +23,6 @@ S0 npm ci/타입 음성검사/로컬 gate 통과, 브라우저에서 발견한 �
 S0 게이트 통과: 19:12 controller typecheck/lint/test48/build 모두 종료0, root Chromium+Firefox8 E2E 종료0. S1 일부 prework(방 명령/기하/history/일부 UI)를 함께 보존하며 S1 전체 게이트는 미통과.
 
 S1 게이트:48unit 및 공간E2E18개(Chrome계열/Firefox),root독립12개 통과. Safari feature-detect 구현이나 실제Safari 미검증. S2 가구단계 진행 예정.
+
+## 2026-11-03 재개
+2026-11-02 S2 커밋71581af 이후 S3 진행 중 에이전트 실행이 workspace credits 소진으로 중단되었다. 사용자의 명시적 계속 지시에 따라 기존 변경을 보존하고 같은 두 구현 에이전트를 재개했다. S0~S2를 다시 만들지 않으며 S3→S4→S5를 이어간다. 원격 push는 여전히 금지.

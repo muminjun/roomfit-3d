@@ -155,6 +155,7 @@ export const shortcuts: Definition[] = [
   },
 ];
 export const shortcutHelp = [
+  { label: "Esc", description: "진행 중인 작업 취소" },
   ...shortcuts.map(({ label, description }) => ({ label, description })),
   { label: "Space / 가운데 버튼 드래그", description: "화면 이동" },
   { label: "Alt + 가구 드래그", description: "가구 복제" },

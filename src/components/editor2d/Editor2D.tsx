@@ -122,12 +122,10 @@ export function Editor2D() {
               clamp(v.zoom * (action === "zoomOut" ? 1 / 1.2 : 1.2), 0.02, 1.5),
             ),
           );
-        else if (action === "view2d" || action === "view3d")
-          setMessage(
-            action === "view3d"
-              ? "3D 보기는 준비 중입니다. 2D에서 계속 편집할 수 있습니다."
-              : "2D 편집",
-          );
+        else if (action === "view2d" || action === "view3d") {
+          window.dispatchEvent(new Event("roomfit-cancel-drag"));
+          useUIStore.getState().setView(action === "view3d" ? "3d" : "2d");
+        }
       }
     };
     const keyup = (e: KeyboardEvent) => {

@@ -4,6 +4,8 @@ type Tool = "select" | "wallMove" | "indent" | "protrude";
 type UIStore = {
   selected: { kind: "room" | "wall" | "furniture"; id: string } | null;
   setSelected: (selected: UIStore["selected"]) => void;
+  view: "2d" | "3d";
+  setView: (view: "2d" | "3d") => void;
   tool: Tool;
   setTool: (tool: Tool) => void;
   preview: { polygon: PointMm[]; valid: boolean; message: string } | null;
@@ -31,6 +33,16 @@ export const useUIStore = create<UIStore>((set) => ({
   selected: null,
   setSelected: (selected) =>
     set({ selected, preview: null, furniturePreview: null }),
+  view: "2d",
+  setView: (view) =>
+    set({
+      view,
+      tool: "select",
+      preview: null,
+      furniturePreview: null,
+      draggedCatalogId: null,
+      duplicatePlacementId: null,
+    }),
   tool: "select",
   setTool: (tool) =>
     set({

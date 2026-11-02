@@ -125,3 +125,14 @@ S2 중간: controller `npm run test`64/6files 종료0. 가구domain12unit+fixtur
 - worker typecheck/lint/test65(6files)/build 종료0. room+furniture Chromium+Firefox42/42 E2E 종료0. 90도 핸들 로컬W/D,Alt복제+Undo1,Esc/재드래그,IME/화살표Undo병합,복구,실제DOMDnD 포함.
 - Root 독립Firefox가구11/11 종료0(7.9s). 실제내보낸JSON퀸90도에서로컬W/D1500×2000유지;W1001/중심(1000,500.5)정확접촉;H2401거절후JSON전체불변—양브라우저2/2종료0(3.4s).
 - build698.15kB경고잔존. Edge/Safari실제미검증.
+
+## S3 재개 후 중간 검증(2026-11-03)
+- controller 실제 `npm run typecheck && npm run lint && npm run test && npm run build`: 종료0,78 tests/8files. 바닥 노멀/면적/xyz, 비균일 격자 벽 내부면 회귀,20가구 외곽/바닥접촉, 카메라 독립투영 비교 포함.
+- 초기 Context-loss 테스트 실패는 R3F wrapper에 이벤트를 보낸 테스트 위치 오류였다. 실제 canvas에 dispatch한 양브라우저 검증은 통과. 앱 결함 재현으로 과장하지 않는다.
+- 3D Canvas/Orbit/초기화/JSON불변/Alt전환/WebGL없음/context-loss 양브라우저8개 통과. 실제3D Undo에 따른 canvas 이미지 변경+가구0개JSON도 양브라우저 확인.
+- 빌드 advisory: main702.50kB, lazy3D938.40kB. S4에서 의존성/분할을 비파괴적으로 검토한다.
+
+## S3 게이트 통과
+- worker 안정파일 기준 typecheck/lint/unit78/build 모두0; 전체Chromium+Firefox E2E68/68 종료0.
+- Root 독립viewer+performance12/12 종료0(41.1s), 실제Firefox3D30벽50가구 스크린샷 육안확인. source외벽/카메라 독립감사 통과.
+- 실측환경: headlessPlaywright, 다른검사동시실행 가능. Chromium선택482ms/편집115ms/RAF17callbacks÷1583.8ms≈10.10Hz; Firefox324ms/80ms/88callbacks÷1502.04ms≈57.92Hz. 이는 브라우저UI RAF cadence 대리측정이며 GPU렌더fps나30fps보장이 아니다. 별도동시전체실행 Chromium약17.2Hz/Firefox약60Hz로 변동. 기능상30벽50가구선택/수정/자동저장/실제3D/2D복귀완료.
