@@ -102,3 +102,24 @@ test('AC-42: 음수 좌표의 방을 숫자로 늘릴 때 왼쪽 위 꼭짓점�
   const project = await exportProject(page);
   expect(project.room.polygon.map(({ x, y }) => [x, y])).toEqual([[0, -200], [5000, -200], [5000, 3400], [0, 3400]]);
 });
+
+test('AC-18/62/85: 회전한 홀수 치수 가구의 로컬 치수와 반 mm 중심을 저장한다', async ({ page }) => {
+  await createRoom(page);
+  await page.getByRole('button', { name: /퀸 침대 1500/ }).click();
+  await page.getByRole('button', { name: '90° 회전', exact: true }).click();
+  const rotated = await exportProject(page);
+  expect(rotated.furniture).toHaveLength(1);
+  expect(rotated.furniture[0]).toMatchObject({ widthMm: 1500, depthMm: 2000, heightMm: 500, rotationDeg: 90 });
+  for (const [label, value] of [['가로 W (mm)', '1001'], ['위치 X (mm)', '1000'], ['위치 Y (mm)', '500.5']]) {
+    const input = page.getByLabel(label, { exact: true });
+    await input.fill(value);
+    await input.press('Enter');
+  }
+  const touching = await exportProject(page);
+  expect(touching.furniture[0]).toMatchObject({ widthMm: 1001, depthMm: 2000, rotationDeg: 90, position: { x: 1000, y: 500.5 } });
+  const height = page.getByLabel('높이 H (mm)', { exact: true });
+  await height.fill('2401');
+  await height.press('Enter');
+  await expect(page.getByRole('alert')).toContainText('높이');
+  expect(await exportProject(page)).toEqual(touching);
+});

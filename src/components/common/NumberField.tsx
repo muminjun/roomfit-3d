@@ -5,10 +5,12 @@ export function NumberField({
   label,
   value,
   onCommit,
+  half = false,
 }: {
   label: string;
   value: number;
   onCommit: (value: number) => void;
+  half?: boolean;
 }) {
   const [text, setText] = useState(String(value));
   const [error, setError] = useState(false);
@@ -23,8 +25,10 @@ export function NumberField({
         onBlur={() => {
           const cleaned = text.replace(/[\s,]/g, "");
           if (
-            /^-?\d+$/.test(cleaned) &&
-            Number.isSafeInteger(Number(cleaned))
+            half
+              ? /^-?\d+(?:\.5)?$/.test(cleaned) &&
+                Number.isSafeInteger(Number(cleaned) * 2)
+              : /^-?\d+$/.test(cleaned) && Number.isSafeInteger(Number(cleaned))
           ) {
             setError(false);
             onCommit(Number(cleaned));
@@ -35,7 +39,9 @@ export function NumberField({
         }}
       />
       {error && (
-        <small className={styles.error}>정수 치수를 입력해 주세요.</small>
+        <small className={styles.error}>
+          {half ? "0.5 mm 단위로 입력해 주세요." : "정수 치수를 입력해 주세요."}
+        </small>
       )}
     </label>
   );

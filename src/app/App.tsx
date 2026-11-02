@@ -1,3 +1,6 @@
+import { exportJson } from "../features/project/exportJson";
+import { shortcutHelp } from "../config/shortcuts";
+import { FurniturePanel } from "../components/panels/FurniturePanel";
 import { useCallback, useEffect, useState } from "react";
 import { Editor2D } from "../components/editor2d/Editor2D";
 import { ToolsPanel } from "../components/panels/ToolsPanel";
@@ -14,23 +17,33 @@ export function App() {
   const redo = useProjectStore((s) => s.redo);
   const past = useProjectStore((s) => s.past);
   const future = useProjectStore((s) => s.future);
+  const selection = useUIStore((s) => s.selected);
+  const selectedFurniture =
+    selection?.kind === "furniture"
+      ? project.furniture.find((item) => item.id === selection.id)
+      : undefined;
+  const helpOpen = useUIStore((s) => s.helpOpen);
+  const setHelpOpen = useUIStore((s) => s.setHelpOpen);
   const save = useUIStore((s) => s.saveStatus);
   const [modal, setModal] = useState(false);
   const closeModal = useCallback(() => setModal(false), []);
   useEffect(() => startAutosave(), []);
+  useEffect(() => {
+    if (
+      selection?.kind === "furniture" &&
+      !project.furniture.some((item) => item.id === selection.id)
+    )
+      useUIStore.getState().setSelected(null);
+  }, [selection, project.furniture]);
+  useEffect(() => {
+    if (!helpOpen) return;
+    const key = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setHelpOpen(false);
+    };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, [helpOpen, setHelpOpen]);
 
-  function exportJson() {
-    const url = URL.createObjectURL(
-      new Blob([JSON.stringify(project, null, 2)], {
-        type: "application/json",
-      }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "roomfit-project.json";
-    link.click();
-    URL.revokeObjectURL(url);
-  }
   const saveLabel =
     save === "failed"
       ? "자동 저장 실패: JSON으로 백업해 주세요"
@@ -56,7 +69,8 @@ export function App() {
           <button onClick={redo} disabled={!future.length}>
             다시 실행
           </button>
-          <button onClick={exportJson}>JSON 내보내기</button>
+          <button onClick={() => exportJson(project)}>JSON 내보내기</button>
+          <button onClick={() => setHelpOpen(true)}>단축키 도움말</button>
         </div>
       </header>
       <main className={styles.layout}>
@@ -77,9 +91,32 @@ export function App() {
             <span>{saveLabel}</span>
           </div>
         </section>
-        <RoomPanel />
+        {selectedFurniture ? (
+          <FurniturePanel item={selectedFurniture} />
+        ) : (
+          <RoomPanel />
+        )}
       </main>
       {modal && <NewProjectDialog onClose={closeModal} />}
+      {helpOpen && (
+        <div className={styles.overlay}>
+          <div
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-label="단축키 도움말"
+          >
+            <h2>단축키 도움말</h2>
+            {shortcutHelp.map(({ label: key, description }) => (
+              <div className={styles.info} key={key}>
+                <span>{key}</span>
+                <b>{description}</b>
+              </div>
+            ))}
+            <button onClick={() => setHelpOpen(false)}>닫기</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

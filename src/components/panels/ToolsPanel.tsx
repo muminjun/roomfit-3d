@@ -1,9 +1,11 @@
+import { CatalogPanel } from "./CatalogPanel";
 import { roomPresets } from "../../data/presets";
 import { createId } from "../../features/project/createProject";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import styles from "../../styles/App.module.css";
 export function ToolsPanel() {
+  const furniture = useProjectStore((s) => s.project.furniture);
   const tool = useUIStore((s) => s.tool),
     setTool = useUIStore((s) => s.setTool),
     setSelected = useUIStore((s) => s.setSelected),
@@ -66,6 +68,21 @@ export function ToolsPanel() {
           </button>
         ))}
       </div>
+      <h3>배치된 가구</h3>
+      <div className={styles.toolList}>
+        {furniture.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => {
+              setTool("select");
+              setSelected({ kind: "furniture", id: item.id });
+            }}
+          >
+            {item.name} 선택
+          </button>
+        ))}
+      </div>
+      <CatalogPanel />
       <p className={styles.note}>
         예제 크기는 참고용입니다. 실제 현장 치수를 확인해 주세요.
       </p>

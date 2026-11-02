@@ -48,7 +48,7 @@ test("캔버스에서 폭과 깊이를 지정해 함몰한다", async ({ page })
   await page.mouse.move(left + 2500 * zoom, top, { steps: 5 });
   await page.mouse.up();
   await page.mouse.move(left + 2500 * zoom, top + 500 * zoom, { steps: 5 });
-  await expect(page.getByRole("status")).toContainText("800 × 500 mm");
+  await expect(page.getByText("800 × 500 mm")).toContainText("800 × 500 mm");
   await page.mouse.click(left + 2500 * zoom, top + 500 * zoom);
   await expect(page.getByText("13.88 ㎡")).toBeVisible();
 });
@@ -101,7 +101,7 @@ test("미리보기 취소와 휠 방식 변경은 방을 수정하지 않는다"
   await page.mouse.move(left + 2500 * zoom, top);
   await page.mouse.up();
   await page.mouse.move(left + 2500 * zoom, top + 500 * zoom);
-  await expect(page.getByRole("status")).toContainText("800 × 500 mm");
+  await expect(page.getByText("800 × 500 mm")).toContainText("800 × 500 mm");
   await page.keyboard.press("Escape");
   await expect(page.getByText("14.28 ㎡")).toBeVisible();
   await expect(page.getByRole("button", { name: "실행 취소" })).toBeDisabled();

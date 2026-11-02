@@ -9,7 +9,7 @@
 |---|---|---|---|---|
 | S0 | 게이트통과 | npm ci/타입 음성검사/타입/lint/test48/build 종료0; Chromium+Firefox8 E2E 종료0 | AC-01 2D/78 및 S0 부분 검증 | S1 공간 편집 |
 | S1 | 게이트통과 | 타입/lint/test48/build0; Chromium+Firefox18 E2E0+root12 E2E0 | 방 편집/기하/뷰포트 검증 | S2 가구 배치 |
-| S2 | 미착수 | 없음 | 미실행 | 가구/검증 |
+| S2 | 게이트통과 | 타입/lint/test65/build0; room+furniture E2E42/42 종료0 | 가구20종/배치/키보드/경고 검증 | S3 실제3D |
 | S3 | 미착수 | 없음 | 미실행 | 실제 3D |
 | S4 | 미착수 | 없음 | 미실행 | 저장·E2E |
 | S5 | 미착수 | 없음 | 원격 미검증 | base/Actions |

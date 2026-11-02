@@ -1,0 +1,923 @@
+{
+  "schemaVersion": 2,
+  "id": "fixture-project",
+  "title": "성능 검증 30벽 50가구",
+  "createdAt": "2026-11-02T00:00:00.000Z",
+  "updatedAt": "2026-11-02T00:00:00.000Z",
+  "unit": "mm",
+  "room": {
+    "id": "fixture-room",
+    "name": "검증 공간",
+    "polygon": [
+      {
+        "id": "vertex-1",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": "vertex-2",
+        "x": 500,
+        "y": 0
+      },
+      {
+        "id": "vertex-3",
+        "x": 500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-4",
+        "x": 1500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-5",
+        "x": 1500,
+        "y": 0
+      },
+      {
+        "id": "vertex-6",
+        "x": 3500,
+        "y": 0
+      },
+      {
+        "id": "vertex-7",
+        "x": 3500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-8",
+        "x": 4500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-9",
+        "x": 4500,
+        "y": 0
+      },
+      {
+        "id": "vertex-10",
+        "x": 6500,
+        "y": 0
+      },
+      {
+        "id": "vertex-11",
+        "x": 6500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-12",
+        "x": 7500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-13",
+        "x": 7500,
+        "y": 0
+      },
+      {
+        "id": "vertex-14",
+        "x": 9500,
+        "y": 0
+      },
+      {
+        "id": "vertex-15",
+        "x": 9500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-16",
+        "x": 10500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-17",
+        "x": 10500,
+        "y": 0
+      },
+      {
+        "id": "vertex-18",
+        "x": 12500,
+        "y": 0
+      },
+      {
+        "id": "vertex-19",
+        "x": 12500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-20",
+        "x": 13500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-21",
+        "x": 13500,
+        "y": 0
+      },
+      {
+        "id": "vertex-22",
+        "x": 15500,
+        "y": 0
+      },
+      {
+        "id": "vertex-23",
+        "x": 15500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-24",
+        "x": 16500,
+        "y": 1000
+      },
+      {
+        "id": "vertex-25",
+        "x": 16500,
+        "y": 0
+      },
+      {
+        "id": "vertex-26",
+        "x": 20000,
+        "y": 0
+      },
+      {
+        "id": "vertex-27",
+        "x": 20000,
+        "y": 20000
+      },
+      {
+        "id": "vertex-28",
+        "x": 6000,
+        "y": 20000
+      },
+      {
+        "id": "vertex-29",
+        "x": 6000,
+        "y": 16000
+      },
+      {
+        "id": "vertex-30",
+        "x": 0,
+        "y": 16000
+      }
+    ],
+    "wallHeightMm": 2400,
+    "wallThicknessMm": 120
+  },
+  "furniture": [
+    {
+      "id": "furniture-1",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 1",
+      "position": {
+        "x": 1000,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-2",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 2",
+      "position": {
+        "x": 2800,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-3",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 3",
+      "position": {
+        "x": 4600,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-4",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 4",
+      "position": {
+        "x": 6400,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-5",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 5",
+      "position": {
+        "x": 8200,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-6",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 6",
+      "position": {
+        "x": 10000,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-7",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 7",
+      "position": {
+        "x": 11800,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-8",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 8",
+      "position": {
+        "x": 13600,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-9",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 9",
+      "position": {
+        "x": 15400,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-10",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 10",
+      "position": {
+        "x": 17200,
+        "y": 3000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-11",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 11",
+      "position": {
+        "x": 1000,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-12",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 12",
+      "position": {
+        "x": 2800,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-13",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 13",
+      "position": {
+        "x": 4600,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-14",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 14",
+      "position": {
+        "x": 6400,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-15",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 15",
+      "position": {
+        "x": 8200,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-16",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 16",
+      "position": {
+        "x": 10000,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-17",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 17",
+      "position": {
+        "x": 11800,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-18",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 18",
+      "position": {
+        "x": 13600,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-19",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 19",
+      "position": {
+        "x": 15400,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-20",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 20",
+      "position": {
+        "x": 17200,
+        "y": 5500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-21",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 21",
+      "position": {
+        "x": 1000,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-22",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 22",
+      "position": {
+        "x": 2800,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-23",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 23",
+      "position": {
+        "x": 4600,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-24",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 24",
+      "position": {
+        "x": 6400,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-25",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 25",
+      "position": {
+        "x": 8200,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-26",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 26",
+      "position": {
+        "x": 10000,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-27",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 27",
+      "position": {
+        "x": 11800,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-28",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 28",
+      "position": {
+        "x": 13600,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-29",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 29",
+      "position": {
+        "x": 15400,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-30",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 30",
+      "position": {
+        "x": 17200,
+        "y": 8000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-31",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 31",
+      "position": {
+        "x": 1000,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-32",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 32",
+      "position": {
+        "x": 2800,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-33",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 33",
+      "position": {
+        "x": 4600,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-34",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 34",
+      "position": {
+        "x": 6400,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-35",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 35",
+      "position": {
+        "x": 8200,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-36",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 36",
+      "position": {
+        "x": 10000,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-37",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 37",
+      "position": {
+        "x": 11800,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-38",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 38",
+      "position": {
+        "x": 13600,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-39",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 39",
+      "position": {
+        "x": 15400,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-40",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 40",
+      "position": {
+        "x": 17200,
+        "y": 10500
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-41",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 41",
+      "position": {
+        "x": 1000,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-42",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 42",
+      "position": {
+        "x": 2800,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-43",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 43",
+      "position": {
+        "x": 4600,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-44",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 44",
+      "position": {
+        "x": 6400,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-45",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 45",
+      "position": {
+        "x": 8200,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-46",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 46",
+      "position": {
+        "x": 10000,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-47",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 47",
+      "position": {
+        "x": 11800,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-48",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 48",
+      "position": {
+        "x": 13600,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-49",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 49",
+      "position": {
+        "x": 15400,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    },
+    {
+      "id": "furniture-50",
+      "catalogId": "office-chair",
+      "kind": "chair",
+      "name": "성능 의자 50",
+      "position": {
+        "x": 17200,
+        "y": 13000
+      },
+      "widthMm": 500,
+      "depthMm": 500,
+      "heightMm": 950,
+      "rotationDeg": 0,
+      "color": "#64B5F6"
+    }
+  ],
+  "settings": {
+    "gridSizeMm": 100,
+    "snapEnabled": true,
+    "gridVisible": true
+  }
+}

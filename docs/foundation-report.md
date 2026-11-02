@@ -775,3 +775,9 @@ Registry results above were queried before installation. Selected React/React DO
 - `npm run test`: exit 0, 29 tests in 2 files. Foundation schema self-intersection test was observed failing before geometry validation integration and passing afterward.
 - `VITE_BASE_PATH=/roomfit-3d/ npm run build` followed by the same-base `node scripts/check-dist.mjs`: exit 0. Vite reports a 650.76 kB JS chunk warning.
 - Browser acceptance and E2E are pending controller verification. JSON import, full persistence error recovery, room editing, placement, and 3D remain later-stage work. `coalesceKey` is reserved and not implemented yet.
+
+## S2 room and furniture UI verification (2026-11-02)
+- `npm run typecheck`: exit 0; `npm run lint`: exit 0; `npm run test`: exit 0, 65 tests across 6 files.
+- `npm run build`: exit 0; Vite reports the main JS chunk at 698.15 kB before gzip, above its warning threshold.
+- `npm run test:e2e -- tests/e2e/room-editor.spec.ts tests/e2e/furniture-editor.spec.ts --project=chromium --project=firefox`: exit 0, 42 tests (21 in each browser). These exercise wall edits, numeric and gesture notches, catalog click, DOM drop after zoom, overlap refusal, rotation, resizing including at 90°, 0.5mm center input, undo, legacy invalid recovery, keyboard coalescing, IME, and drag cancellation.
+- Edge and Safari browser execution remain unverified in this environment. Actual 3D, hardened file import, and S4/S5 acceptance remain later work.

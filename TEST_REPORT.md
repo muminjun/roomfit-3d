@@ -118,3 +118,10 @@ S0 최종 로컬 스냅샷: controller19:12 typecheck/lint/test48(4files)/build 
 - Root 수치/ID 독립 브라우저 추가: root-smoke 총12개 Chromium+Firefox 종료0(10.3s). AC-88 800×500돌출의 실제 JSON8점/minY−500/14.68㎡/기존ID+Undo 보존, AC-42 상단+200후 가로5000에서 앵커(0,−200)와 모든 좌표 확인. 면적 라벨 외 실제 내보낸 모델로 검증.
 
 S1 최종 worker: typecheck/lint/test48(4files)/build 종료0; room-editor Chromium+Firefox18/18 종료0. Root독립root-smoke12/12 종료0. initial672.21kB 경고 잔존. Safari 실제/Edge 미검증.
+
+S2 중간: controller `npm run test`64/6files 종료0. 가구domain12unit+fixture경계4unit 포함. Root30벽50가구·64점100가구 모두 스키마/배치유효,65점101가구 거절 및 load원자성검증. 카탈로그 클릭퀸/90도/Undo Chromium첫E2E통과; 전체S2브라우저진행중.
+
+## S2 게이트
+- worker typecheck/lint/test65(6files)/build 종료0. room+furniture Chromium+Firefox42/42 E2E 종료0. 90도 핸들 로컬W/D,Alt복제+Undo1,Esc/재드래그,IME/화살표Undo병합,복구,실제DOMDnD 포함.
+- Root 독립Firefox가구11/11 종료0(7.9s). 실제내보낸JSON퀸90도에서로컬W/D1500×2000유지;W1001/중심(1000,500.5)정확접촉;H2401거절후JSON전체불변—양브라우저2/2종료0(3.4s).
+- build698.15kB경고잔존. Edge/Safari실제미검증.

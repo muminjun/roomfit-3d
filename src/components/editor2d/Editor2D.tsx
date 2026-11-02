@@ -1,3 +1,9 @@
+import { resolveShortcut } from "../../config/shortcuts";
+import { handleFurnitureShortcut } from "./furnitureShortcuts";
+import { exportJson } from "../../features/project/exportJson";
+import { useDuplicatePlacement } from "./useDuplicatePlacement";
+import { FurnitureLayer } from "./FurnitureLayer";
+import { useCatalogDrop } from "./useCatalogDrop";
 import { useEffect, useRef, useState } from "react";
 import { clamp, useViewport } from "./useViewport";
 import { Layer, Line, Stage, Text } from "react-konva";
@@ -31,11 +37,21 @@ export function Editor2D() {
   const room = useProjectStore((s) => s.project.room),
     projectId = useProjectStore((s) => s.project.id),
     settings = useProjectStore((s) => s.project.settings);
-  const { tool, selected, setSelected, preview, setPreview } = useUIStore();
+  const {
+    tool,
+    selected,
+    setSelected,
+    preview,
+    setPreview,
+    furniturePreview,
+    furnitureMessage,
+  } = useUIStore();
   const { ref, size, view, setView, mode, setMode, fit } = useViewport(
     room.polygon,
     projectId,
   );
+  const drop = useCatalogDrop(ref, view);
+  const duplicate = useDuplicatePlacement();
   const gesture = useRef<Gesture | null>(null),
     space = useRef(false);
   const [message, setMessage] = useState("");
@@ -47,39 +63,34 @@ export function Editor2D() {
         gesture.current = null;
         setPreview(null);
         setMessage("");
+        useUIStore.getState().setDuplicatePlacementId(null);
+        useUIStore.getState().setFurniturePreview(null);
+        useUIStore.getState().setDraggedCatalogId(null);
       }
       if (e.code === "Space" && document.activeElement === ref.current) {
         e.preventDefault();
         space.current = true;
       }
       if (document.activeElement === ref.current) {
-        const key = e.code;
-        if ((e.ctrlKey || e.metaKey) && key === "KeyZ") {
-          e.preventDefault();
-          if (e.shiftKey) useProjectStore.getState().redo();
-          else useProjectStore.getState().undo();
-        } else if ((e.ctrlKey || e.metaKey) && key === "KeyY") {
-          e.preventDefault();
-          useProjectStore.getState().redo();
-        } else if (key === "KeyF" || (e.shiftKey && key === "Digit1")) {
-          e.preventDefault();
-          fit();
-        } else if (e.shiftKey && key === "Digit0") {
-          e.preventDefault();
+        const action = resolveShortcut(e);
+        if (!action) return;
+        e.preventDefault();
+        if (handleFurnitureShortcut(action, e)) return;
+        if (action === "save") exportJson(useProjectStore.getState().project);
+        else if (action === "help") useUIStore.getState().setHelpOpen(true);
+        else if (action === "undo") useProjectStore.getState().undo();
+        else if (action === "redo") useProjectStore.getState().redo();
+        else if (action === "fit") fit();
+        else if (action === "actualSize")
           setView((v) =>
             zoomAtPointer(v, { x: size.width / 2, y: size.height / 2 }, 1),
           );
-        } else if (
-          e.shiftKey &&
-          key === "Digit2" &&
-          selected?.kind === "wall"
-        ) {
-          e.preventDefault();
+        else if (action === "fitSelection" && selected?.kind === "wall") {
           const i = room.polygon.findIndex((p) => p.id === selected.id);
           if (i >= 0) {
             const a = room.polygon[i],
-              b = room.polygon[(i + 1) % room.polygon.length];
-            const length = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+              b = room.polygon[(i + 1) % room.polygon.length],
+              length = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             const zoom = clamp(
               Math.min(
                 (size.width - 100) /
@@ -97,41 +108,26 @@ export function Editor2D() {
             });
           }
         } else if (
-          !e.ctrlKey &&
-          !e.metaKey &&
-          ["KeyV", "KeyW", "KeyI", "KeyP"].includes(key)
-        ) {
-          useUIStore.getState().setTool(
-            (
-              {
-                KeyV: "select",
-                KeyW: "wallMove",
-                KeyI: "indent",
-                KeyP: "protrude",
-              } as const
-            )[key as "KeyV" | "KeyW" | "KeyI" | "KeyP"],
-          );
-        } else if (
-          (e.ctrlKey || e.metaKey) &&
-          (key === "Equal" ||
-            key === "Minus" ||
-            key === "NumpadAdd" ||
-            key === "NumpadSubtract")
-        ) {
-          e.preventDefault();
+          action === "select" ||
+          action === "wallMove" ||
+          action === "indent" ||
+          action === "protrude"
+        )
+          useUIStore.getState().setTool(action);
+        else if (action === "zoomIn" || action === "zoomOut")
           setView((v) =>
             zoomAtPointer(
               v,
               { x: size.width / 2, y: size.height / 2 },
-              clamp(
-                v.zoom *
-                  (key === "Minus" || key === "NumpadSubtract" ? 1 / 1.2 : 1.2),
-                0.02,
-                1.5,
-              ),
+              clamp(v.zoom * (action === "zoomOut" ? 1 / 1.2 : 1.2), 0.02, 1.5),
             ),
           );
-        }
+        else if (action === "view2d" || action === "view3d")
+          setMessage(
+            action === "view3d"
+              ? "3D 보기는 준비 중입니다. 2D에서 계속 편집할 수 있습니다."
+              : "2D 편집",
+          );
       }
     };
     const keyup = (e: KeyboardEvent) => {
@@ -141,6 +137,9 @@ export function Editor2D() {
       gesture.current = null;
       setPreview(null);
       space.current = false;
+      useUIStore.getState().setDuplicatePlacementId(null);
+      useUIStore.getState().setFurniturePreview(null);
+      useUIStore.getState().setDraggedCatalogId(null);
     };
     window.addEventListener("keydown", keydown);
     window.addEventListener("keyup", keyup);
@@ -154,6 +153,7 @@ export function Editor2D() {
   useEffect(() => {
     gesture.current = null;
     setPreview(null);
+    window.dispatchEvent(new Event("roomfit-cancel-drag"));
   }, [tool, setPreview]);
   function pointer(e: KonvaEventObject<MouseEvent>): Point | null {
     const pos = e.target.getStage()?.getPointerPosition();
@@ -216,6 +216,11 @@ export function Editor2D() {
   }
   function move(e: KonvaEventObject<MouseEvent>) {
     const g = gesture.current;
+    if (useUIStore.getState().duplicatePlacementId) {
+      const p = pointer(e);
+      if (p) duplicate.move(p);
+      return;
+    }
     if (!g) return;
     const screen = e.target.getStage()?.getPointerPosition();
     if (!screen) return;
@@ -325,6 +330,10 @@ export function Editor2D() {
   }
   function downStage(e: KonvaEventObject<MouseEvent>) {
     ref.current?.focus();
+    if (useUIStore.getState().duplicatePlacementId) {
+      duplicate.commit();
+      return;
+    }
     const screen = e.target.getStage()?.getPointerPosition();
     if (!screen) return;
     if (e.evt.button === 1 || space.current) {
@@ -414,6 +423,7 @@ export function Editor2D() {
         className={styles.canvas}
         ref={ref}
         tabIndex={0}
+        {...drop}
         data-zoom={view.zoom}
         data-pan-x={view.panX}
         data-pan-y={view.panY}
@@ -422,6 +432,8 @@ export function Editor2D() {
           gesture.current = null;
           setPreview(null);
           setMessage("");
+          window.dispatchEvent(new Event("roomfit-cancel-drag"));
+          duplicate.cancel();
         }}
         onPointerCancel={() => {
           gesture.current = null;
@@ -477,6 +489,7 @@ export function Editor2D() {
               strokeWidth={5 / view.zoom}
               listening={false}
             />
+            <FurnitureLayer zoom={view.zoom} />
             {room.polygon.map((a, i) => {
               const b = room.polygon[(i + 1) % room.polygon.length];
               return (
@@ -516,9 +529,18 @@ export function Editor2D() {
           </Layer>
         </Stage>
       </div>
-      {(message || preview?.message) && (
-        <div role="status" className={styles.canvasMessage}>
-          {preview?.message || message}
+      {(message ||
+        preview?.message ||
+        furniturePreview?.message ||
+        furnitureMessage) && (
+        <div
+          role={preview || furniturePreview ? undefined : "status"}
+          className={styles.canvasMessage}
+        >
+          {preview?.message ||
+            furniturePreview?.message ||
+            message ||
+            furnitureMessage}
         </div>
       )}
     </div>

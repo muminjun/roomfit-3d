@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getBBox, zoomAtPointer, type Viewport } from "../../lib/geometry";
+import { useUIStore } from "../../store/useUIStore";
 import type { PointMm } from "../../types/model";
 export const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
@@ -122,5 +123,14 @@ export function useViewport(polygon: PointMm[], projectId: string) {
       node.removeEventListener("gesturechange", change);
     };
   }, []);
+  useEffect(() => {
+    if (size.width > 0 && size.height > 0)
+      useUIStore
+        .getState()
+        .setViewportCenter({
+          x: (size.width / 2 - view.panX) / view.zoom,
+          y: (size.height / 2 - view.panY) / view.zoom,
+        });
+  }, [size, view]);
   return { ref, size, view, setView, mode, setMode, fit };
 }
