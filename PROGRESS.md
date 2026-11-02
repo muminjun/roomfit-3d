@@ -11,7 +11,7 @@
 | S1 | 게이트통과 | 타입/lint/test48/build0; Chromium+Firefox18 E2E0+root12 E2E0 | 방 편집/기하/뷰포트 검증 | S2 가구 배치 |
 | S2 | 게이트통과 | 타입/lint/test65/build0; room+furniture E2E42/42 종료0 | 가구20종/배치/키보드/경고 검증 | S3 실제3D |
 | S3 | 게이트통과 | 타입/lint/test78/build0; 전체 E2E68/68 종료0 | 실제Canvas/메시/카메라/폴백/동기화 | S4 저장·안정화 |
-| S4 | 진행 | JSON/autosave unit92 종료0 | strict IO·오류보존 구현/브라우저검증중 | import/충돌/손상/접근성 E2E |
+| S4 | Gate passed | type/lint/unit97/build exit0; full84 E2E + final focused cases exit0 | JSON, autosave, accessibility, Chrome verified | S5 same-dist subpath verification |
 | S5 | 미착수 | 없음 | 원격 미검증 | base/Actions |
 
 AC별 증거는 `TEST_REPORT.md`, 독립 감사는 `docs/AC_AUDIT.md`.

@@ -138,3 +138,10 @@ S2 중간: controller `npm run test`64/6files 종료0. 가구domain12unit+fixtur
 - 실측환경: headlessPlaywright, 다른검사동시실행 가능. Chromium선택482ms/편집115ms/RAF17callbacks÷1583.8ms≈10.10Hz; Firefox324ms/80ms/88callbacks÷1502.04ms≈57.92Hz. 이는 브라우저UI RAF cadence 대리측정이며 GPU렌더fps나30fps보장이 아니다. 별도동시전체실행 Chromium약17.2Hz/Firefox약60Hz로 변동. 기능상30벽50가구선택/수정/자동저장/실제3D/2D복귀완료.
 
 S4 중간: strictJSON raw검사→정규화→확정스키마검사→파생경고 완료. 가역메타데이터/ID보존,CCW요약,unknowncatalog→other,UTF8실제2MiB,중복/깊은prototype/버전/64·100상한,파일명검증. 제거가능50mm중간점정리/잔존99mm거절 및 C1제어문자입력정리회귀포함. 전체unit92개통과. Root독립source감사JSON/자동저장보존파이프라인차단없음; 전체브라우저게이트진행중.
+
+## S4 final gate (2026-11-03)
+- Controller typecheck/lint/unit97 (10 files)/build: exit0. Default Chromium+Firefox84/84 passed before final fixes; focused storage8, restore-label2, new furniture6 and root import-boundary4 cases all passed afterward.
+- New exported-model cases: DOM drop after zoom/pan yields exact center(1000,1100); outside/stage-leave/U-notch attempts preserve model/history; odd1001mm handle resize keeps opposite corner fixed.
+- Actual Google Chrome156.0.8078.74: worker3 and root5 representative cases passed. Chromium is reported separately. Edge absent; actual Safari unverified.
+- Restored updatedAt remains project metadata and is not labeled as actual last-save time. Current-session successful writes show the real save time.
+- Final S4 build advisory: main646.26kB, lazy3D938.40kB. Limited splitting experiment is part of S5; no warning threshold suppression.
