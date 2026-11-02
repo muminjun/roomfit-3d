@@ -1,0 +1,5 @@
+# Room commands report
+
+`src/features/room/commands.ts` provides atomic wall movement, notch creation, rectangular resizing, height and thickness updates, and project renaming. Commands validate the candidate project and commit once, distinguish `Committed`, `NoChange`, and `Invalid`, and preserve furniture when room changes make placements invalid. Geometry edits return the surviving selected edge ID. Existing furniture and untouched room data retain their references.
+
+The command tests cover the specified wall areas, both protrusion examples, notch collapse and selection, bounding-box anchoring, invalid and no-op history behavior, name normalization, and room-height warnings for retained furniture. Tests were created first; the initial run failed because the command module did not yet exist. After implementation, `npm test -- --run tests/unit/room-commands.test.ts` passed 7 tests. The full `npm test` run passed 36 tests, and `npm run typecheck` and `npm run lint` exited successfully. A first lint run encountered a concurrently removed `test-results` directory; a separate rerun passed.

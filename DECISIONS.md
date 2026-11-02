@@ -5,3 +5,7 @@
 - React19/R3F9/drei10/react-konva19 peerDependencies를 npm view로 확인. 프리릴리스 제외.
 - 외부 JSON 반시계 입력은 id 유지 반전, strict schema 및 구조 검증 후 사용자 확인.
 - 원격 push/Pages 활성화는 승인 전 금지; 로컬 배포 파일과 subpath 검증은 수행.
+- 타입 정의용 @types/react/react-dom/three/node는 strict TypeScript 컴파일에 필요한 개발 의존성 예외로 허용 목록에 보완. 런타임 허용 목록은 유지.
+- DOM→Stage는 컨테이너 client rect를 뺀 CSS 좌표에 단일 viewport 역변환을 사용하며 DPR을 직접 곱하지 않는다.
+- UI 숫자 입력은 문자열로 보관, 쉼표와 공백 제거 후 검증; 빈 값은0으로 강제 변환하지 않음.
+- 정규화는 양옆 점 사이에 있는 일직선 중간점만 제거. 역주행 collinear 경로는 SELF_TOUCH로 거절하여 잘못된 구조를 숨기지 않음.

@@ -1,0 +1,2 @@
+export const LIMITS = { roomMin: 500, roomMax: 30000, heightMin: 1800, heightMax: 5000, wallMin: 50, wallMax: 500, minWallLength: 100, maxVertices: 64, maxFurniture: 100, furnitureMin: 100, furnitureMax: 10000, furnitureHeightMin: 50, furnitureHeightMax: 5000, maxJsonBytes: 2 * 1024 * 1024, history: 50 } as const;
+export const COLORS = ['#E57373','#F2A65A','#F4D35E','#81C784','#4DB6AC','#64B5F6','#9575CD','#A1887F','#B0BEC5','#FFFFFF'] as const;
