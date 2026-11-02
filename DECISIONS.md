@@ -9,3 +9,4 @@
 - DOM→Stage는 컨테이너 client rect를 뺀 CSS 좌표에 단일 viewport 역변환을 사용하며 DPR을 직접 곱하지 않는다.
 - UI 숫자 입력은 문자열로 보관, 쉼표와 공백 제거 후 검증; 빈 값은0으로 강제 변환하지 않음.
 - 정규화는 양옆 점 사이에 있는 일직선 중간점만 제거. 역주행 collinear 경로는 SELF_TOUCH로 거절하여 잘못된 구조를 숨기지 않음.
+- 의존성 audit: 10개 moderate 표시는 개발용 ESLint 계열 minimatch GHSA 한 건의 전파이며 `npm audit --omit=dev`는0개. npm audit fix가 추천하는 ESLint4 다운그레이드는 호환 파괴이므로 적용하지 않음. 최신 minimatch11을 ^10 의존성에 강제 override하는 방식도 검증되지 않은 semver 변경이라 유지하지 않음. 후속 호환 upstream 릴리스를 기다리며 잔존 개발 도구 위험은 docs/dependency-audit.md에 기록.

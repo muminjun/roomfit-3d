@@ -72,3 +72,33 @@ test('AC-73: 좁은 화면에서도 수치 생성과 JSON 백업을 사용할 �
   expect(project.room.polygon.map(({ x, y }) => [x, y])).toEqual([[0, 0], [5000, 0], [5000, 4000], [0, 4000]]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('AC-88: 800×500 돌출은 함몰과 구별되는 실제 음수 좌표를 저장한다', async ({ page }) => {
+  await createRoom(page);
+  const before = await exportProject(page);
+  await page.getByRole('button', { name: '벽 1 선택', exact: true }).click();
+  await page.getByLabel('시작 위치 (mm)', { exact: true }).fill('1700');
+  await page.getByLabel('폭 (mm)', { exact: true }).fill('800');
+  await page.getByLabel('깊이 (mm)', { exact: true }).fill('500');
+  await page.getByRole('button', { name: '돌출 적용', exact: true }).click();
+  await expect(page.getByText('14.68 ㎡', { exact: true })).toBeVisible();
+  const after = await exportProject(page);
+  expect(after.room.polygon.map(({ x, y }) => [x, y])).toEqual([
+    [0, 0], [1700, 0], [1700, -500], [2500, -500], [2500, 0], [4200, 0], [4200, 3400], [0, 3400],
+  ]);
+  expect(after.room.polygon.filter((point) => before.room.polygon.some((old) => old.id === point.id))).toEqual(before.room.polygon);
+  await page.getByRole('button', { name: '실행 취소', exact: true }).click();
+  expect((await exportProject(page)).room.polygon).toEqual(before.room.polygon);
+});
+
+test('AC-42: 음수 좌표의 방을 숫자로 늘릴 때 왼쪽 위 꼭짓점을 고정한다', async ({ page }) => {
+  await createRoom(page);
+  await page.getByRole('button', { name: '벽 1 선택', exact: true }).click();
+  await page.getByLabel('벽 이동 거리 (mm)', { exact: true }).fill('200');
+  await page.getByRole('button', { name: '벽 이동 적용', exact: true }).click();
+  const width = page.getByLabel('전체 가로 (mm)', { exact: true });
+  await width.fill('5000');
+  await width.press('Enter');
+  const project = await exportProject(page);
+  expect(project.room.polygon.map(({ x, y }) => [x, y])).toEqual([[0, -200], [5000, -200], [5000, 3400], [0, 3400]]);
+});

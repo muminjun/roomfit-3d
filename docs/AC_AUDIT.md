@@ -110,3 +110,10 @@ P0는 AC-01~51, AC-61~90의 **81개**다. AC-52~60의 9개는 선택 S6이며 �
 - 카메라 맞춤은 aspect에 따라 8개 꼭짓점 NDC ±0.95를 만족. yaw=-rotationDeg.
 - 문자 단축키 event.code, composing/입력/모달 중 정지, Space는 캔버스 focus 한정.
 - Pages는 한 번 빌드한 dist를 검사 후 그대로 업로드. 원격 미실행은 미검증으로 명시.
+
+
+## 독립 브라우저 검증 — S0 기반
+
+`npx playwright test tests/e2e/root-smoke.spec.ts --project=chromium --project=firefox --workers=1 --reporter=line`: 종료 코드 0, 8개 통과(7.7초). Chromium/Firefox 설치 완료. 테스트: JSON에서 기본 방 꼭짓점·schemaVersion·단위·높이/두께 확인 및 새로고침 후 전체 필드 동일, 소수 입력 거절 후 Esc 취소와 원본 동일, 쉼표 치수 파싱, 390px 화면의 수치 생성/JSON 백업/가로 넘침 없음.
+
+이는 AC-01/31/67/73의 기반 부분 검증이다. 3D·가구 3개 복원·전체 키보드 사용자 여정까지 통과로 확대 해석하지 않는다. 최초 실패에서 발견한 쉼표 미지원과 Esc 모달 미지원은 수정 후 같은 테스트로 통과를 확인했다.

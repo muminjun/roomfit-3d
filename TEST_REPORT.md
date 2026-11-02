@@ -111,3 +111,10 @@
 | AC-90 | 부분 검증 | geometry/room/history unit; 요구 브라우저·3D 검증 미완료 |
 
 S0 최종 로컬 스냅샷: controller19:12 typecheck/lint/test48(4files)/build 종료0. Root Chromium+Firefox8/8 E2E 종료0. 669.36kB chunk 경고 잔존; S4 최적화 예정.
+
+## S1 중간 브라우저 증거
+- Root 독립 `npx playwright test tests/e2e/room-editor.spec.ts --project=firefox --workers=1 --reporter=line`: 종료0,8/8 통과(6.1s). 벽 수치/실제드래그+Undo, ㄱ/ㄷ/돌출예제, 숫자/두단계마우스 함몰,99mm거절,450mm거절/+500병합,Esc,휠모드유지.
+- 동일8개 Chromium worker 실행 종료0. 실제 줌/팬 후 편집 및 추가 취소 불변식 검증은 계속 진행 중.
+- Root 수치/ID 독립 브라우저 추가: root-smoke 총12개 Chromium+Firefox 종료0(10.3s). AC-88 800×500돌출의 실제 JSON8점/minY−500/14.68㎡/기존ID+Undo 보존, AC-42 상단+200후 가로5000에서 앵커(0,−200)와 모든 좌표 확인. 면적 라벨 외 실제 내보낸 모델로 검증.
+
+S1 최종 worker: typecheck/lint/test48(4files)/build 종료0; room-editor Chromium+Firefox18/18 종료0. Root독립root-smoke12/12 종료0. initial672.21kB 경고 잔존. Safari 실제/Edge 미검증.
