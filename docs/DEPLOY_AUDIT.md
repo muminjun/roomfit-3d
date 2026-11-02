@@ -28,4 +28,4 @@
 
 ## 결과
 
-현재는 공식 버전 및 원격 저장소 생성만 확인했다. AC-39/80의 로컬 빌드·서브경로 브라우저 검증은 구현 후 실행하며, AC-40 원격 배포는 미검증이다.
+AC-39/80 로컬 검증 통과: 최종 dist를 /roomfit-3d/로 한 번 빌드하고 정적 자산26참조/7개 JS를 검사했다. Chromium/Firefox에서 하위 경로 entry/CSS/favicon/lazy3D/실제Canvas/새로고침2개 테스트 종료0. 10개 dist 파일 SHA256이 검사 전후 동일하다. AC-40 원격 push/Pages는 미실행이며 승인과 private Pages 플랜 확인이 필요하다.
