@@ -781,3 +781,10 @@ Registry results above were queried before installation. Selected React/React DO
 - `npm run build`: exit 0; Vite reports the main JS chunk at 698.15 kB before gzip, above its warning threshold.
 - `npm run test:e2e -- tests/e2e/room-editor.spec.ts tests/e2e/furniture-editor.spec.ts --project=chromium --project=firefox`: exit 0, 42 tests (21 in each browser). These exercise wall edits, numeric and gesture notches, catalog click, DOM drop after zoom, overlap refusal, rotation, resizing including at 90°, 0.5mm center input, undo, legacy invalid recovery, keyboard coalescing, IME, and drag cancellation.
 - Edge and Safari browser execution remain unverified in this environment. Actual 3D, hardened file import, and S4/S5 acceptance remain later work.
+
+## S3–S4 UI and persistence verification (2026-11-03)
+- S3: typecheck, lint, unit suite and build passed; full default E2E 68/68 on Chromium and Firefox after final viewer updates. The S3-specific tests exercise real canvas, camera controls, live undo rendering, JSON invariance, unavailable WebGL and context loss.
+- S4 full run before final narrow corrections: typecheck/lint/test/build exit 0, 95 unit tests, default E2E 84/84. After correcting restored-save status, fresh typecheck/lint/test/build exit 0, 96 unit tests; targeted autosave 8/8 and storage browser cases 8/8 passed, plus restored-label check 2/2. Geometry worker subsequently reports 97 unit tests for the center-range regression.
+- Focused new furniture browser cases pass 6/6 on Chromium and Firefox: DOM drop after zoom/pan exports exact position; outside room, outside stage and concave notch placement do not commit; an odd-width handle resize retains its opposite edge.
+- Actual Google Chrome 156.0.8078.74, opt-in `RUN_CHROME=1`, passed 3 representative checks (create/restore, quota failure/export, 3D canvas/camera). Edge and Safari remain unverified.
+- Core Konva adapter reduced the production main JS chunk from 702.50 kB to 646.28 kB; Vite still warns on that and the lazy 3D chunk (938.40 kB). No threshold was changed.

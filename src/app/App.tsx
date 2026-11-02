@@ -1,5 +1,8 @@
+import { ImportProject } from "../components/common/ImportProject";
+import { StorageNotice } from "../components/common/StorageNotice";
 import { exportJson } from "../features/project/exportJson";
-import { shortcutHelp } from "../config/shortcuts";
+import { HelpDialog } from "../components/common/HelpDialog";
+import { WelcomeCard } from "../components/common/WelcomeCard";
 import { FurniturePanel } from "../components/panels/FurniturePanel";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Editor2D } from "../components/editor2d/Editor2D";
@@ -26,6 +29,7 @@ export function App() {
   const helpOpen = useUIStore((s) => s.helpOpen);
   const setHelpOpen = useUIStore((s) => s.setHelpOpen);
   const save = useUIStore((s) => s.saveStatus);
+  const lastSavedAt = useUIStore((s) => s.lastSavedAt);
   const view = useUIStore((s) => s.view);
   const setView = useUIStore((s) => s.setView);
   const changeView = useCallback(
@@ -37,6 +41,7 @@ export function App() {
   );
   const [modal, setModal] = useState(false);
   const closeModal = useCallback(() => setModal(false), []);
+  const closeHelp = useCallback(() => setHelpOpen(false), [setHelpOpen]);
   useEffect(() => startAutosave(), []);
   useEffect(() => {
     if (
@@ -45,14 +50,6 @@ export function App() {
     )
       useUIStore.getState().setSelected(null);
   }, [selection, project.furniture]);
-  useEffect(() => {
-    if (!helpOpen) return;
-    const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setHelpOpen(false);
-    };
-    window.addEventListener("keydown", key);
-    return () => window.removeEventListener("keydown", key);
-  }, [helpOpen, setHelpOpen]);
 
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
@@ -84,7 +81,11 @@ export function App() {
         ? "다른 탭에서 수정됨: 자동 저장 일시 중지"
         : save === "pending"
           ? "저장 중"
-          : "이 브라우저에 저장";
+          : save === "saved"
+            ? lastSavedAt
+              ? `저장됨 · ${new Date(lastSavedAt).toLocaleTimeString("ko-KR")}`
+              : "저장본 복구됨"
+            : "이 브라우저에 저장";
   return (
     <div className={styles.app}>
       <header className={styles.header}>
@@ -102,10 +103,13 @@ export function App() {
           <button onClick={redo} disabled={!future.length}>
             다시 실행
           </button>
+          <ImportProject />
           <button onClick={() => exportJson(project)}>JSON 내보내기</button>
           <button onClick={() => setHelpOpen(true)}>단축키 도움말</button>
         </div>
       </header>
+      <StorageNotice />
+      <WelcomeCard onNew={() => setModal(true)} />
       <main className={view === "2d" ? styles.layout : styles.layout3d}>
         {view === "2d" && <ToolsPanel />}
         <section className={styles.workspace}>
@@ -149,7 +153,7 @@ export function App() {
               </Suspense>
             </>
           )}
-          <div className={styles.status}>
+          <div className={styles.status} role="status" aria-live="polite">
             <span>
               {project.title} · {project.room.wallHeightMm} mm 높이
             </span>
@@ -164,25 +168,7 @@ export function App() {
           ))}
       </main>
       {modal && <NewProjectDialog onClose={closeModal} />}
-      {helpOpen && (
-        <div className={styles.overlay}>
-          <div
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-label="단축키 도움말"
-          >
-            <h2>단축키 도움말</h2>
-            {shortcutHelp.map(({ label: key, description }) => (
-              <div className={styles.info} key={key}>
-                <span>{key}</span>
-                <b>{description}</b>
-              </div>
-            ))}
-            <button onClick={() => setHelpOpen(false)}>닫기</button>
-          </div>
-        </div>
-      )}
+      {helpOpen && <HelpDialog onClose={closeHelp} />}
     </div>
   );
 }

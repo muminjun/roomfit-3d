@@ -136,3 +136,5 @@ S2 중간: controller `npm run test`64/6files 종료0. 가구domain12unit+fixtur
 - worker 안정파일 기준 typecheck/lint/unit78/build 모두0; 전체Chromium+Firefox E2E68/68 종료0.
 - Root 독립viewer+performance12/12 종료0(41.1s), 실제Firefox3D30벽50가구 스크린샷 육안확인. source외벽/카메라 독립감사 통과.
 - 실측환경: headlessPlaywright, 다른검사동시실행 가능. Chromium선택482ms/편집115ms/RAF17callbacks÷1583.8ms≈10.10Hz; Firefox324ms/80ms/88callbacks÷1502.04ms≈57.92Hz. 이는 브라우저UI RAF cadence 대리측정이며 GPU렌더fps나30fps보장이 아니다. 별도동시전체실행 Chromium약17.2Hz/Firefox약60Hz로 변동. 기능상30벽50가구선택/수정/자동저장/실제3D/2D복귀완료.
+
+S4 중간: strictJSON raw검사→정규화→확정스키마검사→파생경고 완료. 가역메타데이터/ID보존,CCW요약,unknowncatalog→other,UTF8실제2MiB,중복/깊은prototype/버전/64·100상한,파일명검증. 제거가능50mm중간점정리/잔존99mm거절 및 C1제어문자입력정리회귀포함. 전체unit92개통과. Root독립source감사JSON/자동저장보존파이프라인차단없음; 전체브라우저게이트진행중.

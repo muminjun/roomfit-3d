@@ -293,7 +293,7 @@ export function renameFurniture({
   if (!item) return missing(itemId);
   if (typeof name !== "string")
     return invalid("INVALID_NAME", "가구 이름을 입력해 주세요.");
-  const clean = name.replace(/[\u0000-\u001f\u007f]/g, "").trim();
+  const clean = name.replace(/\p{Cc}/gu, "").trim();
   if ([...clean].length < 1 || [...clean].length > 40)
     return invalid("INVALID_NAME", "가구 이름은 1~40자여야 합니다.");
   return commitItems(

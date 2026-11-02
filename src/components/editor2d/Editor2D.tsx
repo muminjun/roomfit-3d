@@ -6,7 +6,7 @@ import { FurnitureLayer } from "./FurnitureLayer";
 import { useCatalogDrop } from "./useCatalogDrop";
 import { useEffect, useRef, useState } from "react";
 import { clamp, useViewport } from "./useViewport";
-import { Layer, Line, Stage, Text } from "react-konva";
+import { Layer, Line, Stage, Text } from "./konva";
 import type { KonvaEventObject } from "konva/lib/Node";
 import {
   addNotch,

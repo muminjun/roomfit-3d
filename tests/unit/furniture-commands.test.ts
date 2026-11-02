@@ -167,6 +167,8 @@ describe("furniture commands", () => {
       true,
     );
     expect(project().furniture[0].name).toBe("가구");
+    expect(renameFurniture({ itemId: "a", name: "가\u0085구" }).ok).toBe(true);
+    expect(project().furniture[0].name).toBe("가구");
     expect(setFurnitureColor({ itemId: "a", color: "#E57373" }).ok).toBe(true);
     expect(setFurnitureColor({ itemId: "a", color: "#123456" }).ok).toBe(false);
     expect(renameFurniture({ itemId: "a", name: " ".repeat(2) }).ok).toBe(

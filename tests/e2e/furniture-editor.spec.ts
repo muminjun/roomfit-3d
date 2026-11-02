@@ -221,3 +221,121 @@ test("90도 회전한 가구의 모서리 크기 조절은 로컬 W와 D를 유�
   await expect(page.getByLabel("가로 W (mm)")).toHaveValue("1300");
   await expect(page.getByLabel("깊이 D (mm)")).toHaveValue("800");
 });
+test("확대와 팬 이후 드롭한 위치는 역변환된 밀리미터로 저장된다", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "확대", exact: true }).click();
+  const area = page.getByLabel("2D 편집 영역");
+  const box = await area.boundingBox();
+  if (!box) throw new Error("canvas missing");
+  await area.dispatchEvent("wheel", {
+    deltaY: 80,
+    shiftKey: true,
+    clientX: box.x + box.width / 2,
+    clientY: box.y + box.height / 2,
+  });
+  await page.evaluate(() => new Promise(requestAnimationFrame));
+  const zoom = Number(await area.getAttribute("data-zoom")),
+    px = Number(await area.getAttribute("data-pan-x")),
+    py = Number(await area.getAttribute("data-pan-y"));
+  await page
+    .getByRole("button", { name: /싱글 침대 1000/ })
+    .dragTo(area, {
+      targetPosition: { x: px + 1000 * zoom, y: py + 1100 * zoom },
+    });
+  await expect(
+    page.getByRole("heading", { name: "싱글 침대", exact: true }),
+  ).toBeVisible();
+  const pending = page.waitForEvent("download");
+  await page.getByRole("button", { name: "JSON 내보내기" }).click();
+  const stream = await (await pending).createReadStream();
+  if (!stream) throw new Error("download missing");
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  const project = JSON.parse(Buffer.concat(chunks).toString());
+  expect(project.furniture[0].position).toEqual({ x: 1000, y: 1100 });
+});
+test("방 바깥과 ㄷ자 홈을 가로지르는 드롭은 이력을 남기지 않는다", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const area = page.getByLabel("2D 편집 영역"),
+    box = await area.boundingBox();
+  if (!box) throw new Error("canvas missing");
+  let zoom = Number(await area.getAttribute("data-zoom")),
+    px = Number(await area.getAttribute("data-pan-x")),
+    py = Number(await area.getAttribute("data-pan-y"));
+  const source = page.getByRole("button", { name: /싱글 침대 1000/ });
+  await source.dragTo(area, {
+    targetPosition: { x: px + 100 * zoom, y: py + 1700 * zoom },
+  });
+  await expect(
+    page.getByRole("button", { name: "싱글 침대 선택" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "실행 취소" })).toBeDisabled();
+  const sourceBox = await source.boundingBox();
+  if (!sourceBox) throw new Error("source missing");
+  await page.mouse.move(
+    sourceBox.x + sourceBox.width / 2,
+    sourceBox.y + sourceBox.height / 2,
+  );
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, {
+    steps: 8,
+  });
+  await page.mouse.move(box.x + box.width / 2, box.y - 10, { steps: 5 });
+  await page.mouse.up();
+  await expect(
+    page.getByRole("button", { name: "싱글 침대 선택" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "실행 취소" })).toBeDisabled();
+  page.once("dialog", (d) => d.accept());
+  await page.getByRole("button", { name: "ㄷ자", exact: true }).click();
+  zoom = Number(await area.getAttribute("data-zoom"));
+  px = Number(await area.getAttribute("data-pan-x"));
+  py = Number(await area.getAttribute("data-pan-y"));
+  await source.dragTo(area, {
+    targetPosition: { x: px + 1800 * zoom, y: py + 1100 * zoom },
+  });
+  await expect(
+    page.getByRole("button", { name: "싱글 침대 선택" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "실행 취소" })).toBeDisabled();
+});
+test("홀수 폭 가구 핸들 조절은 반대쪽 모서리를 고정한다", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /싱글 침대 1000/ }).click();
+  const width = page.getByLabel("가로 W (mm)");
+  await width.fill("1001");
+  await width.press("Enter");
+  const xInput = page.getByLabel("위치 X (mm)");
+  await xInput.fill("2100.5");
+  await xInput.press("Enter");
+  const x = Number(await xInput.inputValue()),
+    y = Number(await page.getByLabel("위치 Y (mm)").inputValue()),
+    initialLeft = x - 1001 / 2;
+  const area = page.getByLabel("2D 편집 영역"),
+    box = await area.boundingBox();
+  if (!box) throw new Error("canvas missing");
+  const zoom = Number(await area.getAttribute("data-zoom")),
+    px = Number(await area.getAttribute("data-pan-x")),
+    py = Number(await area.getAttribute("data-pan-y"));
+  await page.mouse.move(
+    box.x + px + (x + 500.5) * zoom,
+    box.y + py + (y + 1000) * zoom,
+  );
+  await page.mouse.down();
+  await page.mouse.move(
+    box.x + px + (x + 600.5) * zoom,
+    box.y + py + (y + 1000) * zoom,
+    { steps: 5 },
+  );
+  await page.mouse.up();
+  await expect
+    .poll(async () => Number(await width.inputValue()))
+    .toBeGreaterThan(1001);
+  expect(
+    Number(await xInput.inputValue()) - Number(await width.inputValue()) / 2,
+  ).toBe(initialLeft);
+});

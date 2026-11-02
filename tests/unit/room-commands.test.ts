@@ -172,6 +172,8 @@ describe("room commands", () => {
       kind: "Committed",
     });
     expect(project().title).toBe("내 방");
+    expect(renameProject({ title: "방\u0085이름" }).ok).toBe(true);
+    expect(project().title).toBe("방이름");
     expect(updateWallThickness({ wallThicknessMm: 501 }).ok).toBe(false);
   });
 });

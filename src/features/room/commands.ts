@@ -161,7 +161,7 @@ export function updateWallThickness({
 export function renameProject({ title }: { title: string }): CommandResult {
   if (typeof title !== "string")
     return invalid("INVALID_TITLE", "프로젝트 이름을 입력해 주세요.");
-  const clean = title.replace(/[\u0000-\u001f\u007f]/g, "").trim();
+  const clean = title.replace(/\p{Cc}/gu, "").trim();
   if ([...clean].length < 1 || [...clean].length > 60)
     return invalid("INVALID_TITLE", "프로젝트 이름은 1~60자여야 합니다.");
   const project = useProjectStore.getState().project;

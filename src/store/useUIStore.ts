@@ -26,6 +26,10 @@ type UIStore = {
   setDuplicatePlacementId: (id: string | null) => void;
   draggedCatalogId: string | null;
   setDraggedCatalogId: (id: string | null) => void;
+  saveDetail: "" | "corrupt" | "storage" | "conflict";
+  setSaveDetail: (detail: UIStore["saveDetail"]) => void;
+  lastSavedAt: string | null;
+  setLastSavedAt: (time: string | null) => void;
   saveStatus: "clean" | "pending" | "saved" | "failed" | "conflict";
   setSaveStatus: (status: UIStore["saveStatus"]) => void;
 };
@@ -67,6 +71,10 @@ export const useUIStore = create<UIStore>((set) => ({
     set({ duplicatePlacementId }),
   draggedCatalogId: null,
   setDraggedCatalogId: (draggedCatalogId) => set({ draggedCatalogId }),
+  saveDetail: "",
+  setSaveDetail: (saveDetail) => set({ saveDetail }),
+  lastSavedAt: null,
+  setLastSavedAt: (lastSavedAt) => set({ lastSavedAt }),
   saveStatus: "clean",
   setSaveStatus: (saveStatus) => set({ saveStatus }),
 }));

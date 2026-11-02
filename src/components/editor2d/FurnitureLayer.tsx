@@ -1,4 +1,4 @@
-import { Circle, Group, Rect, Text } from "react-konva";
+import { Circle, Group, Rect, Text } from "./konva";
 import type { KonvaEventObject } from "konva/lib/Node";
 import {
   duplicateFurniture,
