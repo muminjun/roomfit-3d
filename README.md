@@ -1,5 +1,5 @@
 # RoomFit 3D
-실측 mm 기반 단일 공간·한 층의 2D·3D 가구 배치 도구입니다. 2D·3D 편집기와 로컬 배포 검증을 구현했습니다. 원격 배포는 아직 수행하지 않았습니다. 단계별 상태와 실제 검증 결과는 [PROGRESS.md](PROGRESS.md), [TEST_REPORT.md](TEST_REPORT.md)를 확인하세요. 기준 명세는 [원본 요구사항](docs/requirements/RoomFit3D_PROMPT.md)입니다.
+실측 mm 기반 단일 공간·한 층의 2D·3D 가구 배치 도구입니다. 2D·3D 편집기와 로컬 배포 검증을 구현했습니다. 원격 GitHub Pages 배포와 실제 브라우저 검증까지 완료했습니다. 단계별 상태와 실제 검증 결과는 [PROGRESS.md](PROGRESS.md), [TEST_REPORT.md](TEST_REPORT.md)를 확인하세요. 기준 명세는 [원본 요구사항](docs/requirements/RoomFit3D_PROMPT.md)입니다.
 
 Node **22.15.0**과 npm을 사용합니다. React19 + TypeScript strict + Vite, react-konva, Three.js/R3F9/Drei10, Zustand, Zod, CSS Modules로 구성합니다. 런타임 의존성은 명세 허용 목록으로 제한하며 외부 폰트·사진·모델·아이콘을 사용하지 않습니다.
 
@@ -36,7 +36,7 @@ npm run test:e2e:subpath
 VITE_BASE_PATH=/roomfit-3d/ npm run preview -- --host 127.0.0.1
 ```
 
-Actions는 같은 base로 한 번 빌드한 `dist`를 검사한 후 그대로 업로드합니다. 승인 후 저장소의 `Settings → Pages → Build and deployment → Source: GitHub Actions` 설정이 필요합니다. 저장소는 private으로 만들었으며 개인 요금제에 따라 Pages 사용이 제한될 수 있고 Pages 사이트는 공개될 수 있습니다. 예상 경로는 `https://muminjun.github.io/roomfit-3d/`이지만 **원격 push·Pages 활성화·URL 검증은 아직 수행하지 않았습니다.**
+Actions는 같은 base로 한 번 빌드한 `dist`를 검사한 후 그대로 업로드합니다. 사용자 승인으로 저장소를 공개 전환하고 `Settings → Pages → GitHub Actions`를 활성화했습니다. 실제 사이트는 **https://muminjun.github.io/roomfit-3d/** 입니다. [Actions 실행](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) 재실행2가 성공했고 Chromium/Firefox에서 2D·가구 편집·실제3D·JSON·자동저장·새로고침·동적 자산 로딩을 확인했습니다. 브라우저별 자산 응답 근거는 [remote-evidence.json](docs/remote-evidence.json)에 있습니다.
 
 
 최종 검증: 단위/통합97개, 동일 dist의 하위 경로 Chromium/Firefox2개 통과. 실제Chrome 대표5개 추가 통과. 기본 전체 E2E92개도 통과했습니다. 상세 결과는 TEST_REPORT에 기록합니다. 의존성을 재설치한 뒤 기존 개발 서버가 오래된 최적화 URL을 참조하면 서버를 다시 시작하세요.

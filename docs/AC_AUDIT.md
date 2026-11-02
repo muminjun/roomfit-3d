@@ -45,7 +45,7 @@ P0는 AC-01~51, AC-61~90의 **81개**다. AC-52~60의 9개는 선택 S6이며 �
 | AC-37 | S4 | integration+E2E | 포커스·라벨·안내 일관, 기능 버튼 실제 동작 | 키보드·포커스·레이블 자동 검증; 실제 스크린리더 수동 검증 미실행 |
 | AC-38 | S0~S5 | unit+CI | 명령 성공, 경고/에러 수정, dist 생성 | 통과: 최종 npm ci/타입/lint/단위97/동일 base 빌드/자산 검사 모두 종료0 |
 | AC-39 | S5 | unit+CI | JS/CSS/동적 3D 청크가 서브경로에서 로드 가능 | 통과: 동일 dist 하위 경로 Chromium/Firefox 2개 종료0; 자산 200·새로고침·실제 3D 확인 |
-| AC-40 | S5 | manual+E2E | Actions 성공, `/<REPO>/` 접속·새로고침·2D/3D·저장 정상 | 미실행: 원격 push 승인 및 private Pages 조건 미확인 |
+| AC-40 | S5 | manual+E2E | Actions 성공, `/<REPO>/` 접속·새로고침·2D/3D·저장 정상 | 통과: 승인 후 PUBLIC/Pages 설정, Actions attempt2 success, 실제 https://muminjun.github.io/roomfit-3d/ 양브라우저 편집·3D·자동복원·자산 검증 |
 | AC-41 | S1 | unit+E2E | 홈이 사라져 4꼭짓점 사각형으로 **병합**(거절 아님), 면적 14.28㎡, 선택이 병합된 변으로 이동 | 자동 검증 근거 확인 — 아래 증거 묶음 참조 |
 | AC-42 | S1 | unit+CI | bbox 좌상단 고정, 오른쪽/아래쪽만 이동 | 자동 검증 근거 확인 — 아래 증거 묶음 참조 |
 | AC-43 | S2 | unit+E2E | 반대편 코너 불변, W/D 정수, 중심은 0.5mm 배수(§3.1), 벽에 접해 있던 가구는 계속 접함(오차 0), 검증 후 커밋 | 자동 검증 근거 확인 — 아래 증거 묶음 참조 |
@@ -145,3 +145,6 @@ P0는 AC-01~51, AC-61~90의 **81개**다. AC-52~60의 9개는 선택 S6이며 �
 
 
 최종 기본 전체 재검증: `npm run test:e2e -- --workers=1 --reporter=line` 종료0, Chromium/Firefox92개 통과(1.2분). 오래된 dev optimizer 캐시504는 서버 재시작으로 해소했고 소스/dist 변경은 없었다. 최신 성능 cadence는 Chromium49.71Hz/Firefox56.98Hz로 관측되었으며 이전 측정과의 변동도 그대로 보고한다.
+
+
+AC-40 최종 원격 검증 통과: [Actions 재실행2](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) success, 실제 사이트 양브라우저 검증 종료0. 세부 자산 응답은 `remote-evidence.json`. 이전 원격 미실행 문구는 승인 이전 기록이다.

@@ -29,3 +29,7 @@
 ## 결과
 
 AC-39/80 로컬 검증 통과: 최종 dist를 /roomfit-3d/로 한 번 빌드하고 정적 자산26참조/7개 JS를 검사했다. Chromium/Firefox에서 하위 경로 entry/CSS/favicon/lazy3D/실제Canvas/새로고침2개 테스트 종료0. 10개 dist 파일 SHA256이 검사 전후 동일하다. AC-40 원격 push/Pages는 미실행이며 승인과 private Pages 플랜 확인이 필요하다.
+
+
+## 원격 배포 최종 상태
+2026-11-03 사용자 push 승인 및 별도 공개 전환 승인 후 저장소 PUBLIC, Pages workflow/HTTPS 활성화. 첫 시도 비공개 플랜422는 해소되었고 [Actions 재실행2](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) 성공. 실제 https://muminjun.github.io/roomfit-3d/ Chromium/Firefox에서 HTTP200·2D·카탈로그/회전·JSON·실제3D·Orbit/초기화·자동저장/새로고침·favicon/CSS/lazy3D, 404/pageerror 없음 확인. AC-40 통과. 이전 비공개/미실행 문구는 초기 감사 당시 상태다.

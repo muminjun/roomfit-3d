@@ -1,6 +1,6 @@
 # 검증 보고서
 
-최종 갱신: 2026-11-03. 상태: **로컬 구현 및 배포 준비 완료, 원격 배포 미실행**. 아래 최신 결과가 과거 단계 중간 기록보다 우선한다.
+최종 갱신: 2026-11-03. 상태: **원격 배포 확인 완료**. 아래 최신 결과가 과거 단계 중간 기록보다 우선한다.
 
 ## 최종 실행 결과
 
@@ -15,7 +15,7 @@
 | npm run test:e2e -- --workers=1 --reporter=line | 종료0, Chromium/Firefox 92개(1.2분) |
 | 실제 Google Chrome156.0.8078.74 | 독립 대표5개 종료0(7.9초), worker 대표3개 별도 통과 |
 | npm audit --omit=dev | 종료0, 취약점0개 |
-| GitHub Pages 원격 | 미실행: push 승인 전, private 저장소 Pages 플랜 미확인 |
+| GitHub Pages 원격 | 종료0, [Actions 재실행2](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) 성공, 실제 URL 양브라우저 검증 통과 |
 
 빌드된10개 dist 파일의 SHA256이 production browser 검사 전후 모두 동일했다. 실제 하위 경로에서 JS/CSS/favicon/lazy3D 로드, 실제 Canvas, 2D 복귀 및 새로고침, 404/페이지 오류 없음 확인. 실행 Node22.15.0/npm10.9.2, macOS, Playwright headless Chromium/Firefox 및 설치된 Google Chrome.
 
@@ -25,7 +25,7 @@
 
 ## 검증의 한계
 
-- AC-40 원격 Actions/Pages는 미실행이다. 로컬 하위 경로 검증을 원격 배포로 부르지 않는다.
+- AC-40은 실제 Actions 성공과 공개 URL 양브라우저 검증으로 통과했다. 첫 비공개 Pages 플랜422 실패는 승인 후 공개 전환으로 해소했다.
 - 실제 Edge/Safari 및 실제 스크린리더·물리 트랙패드/핀치는 미검증이다. HTML 대체 조작·포커스·키보드·이벤트 자동 검증은 수행했다.
 - 30벽/50가구 선택·수정·저장·실제3D 기능을 검증했다. 측정된 rAF cadence는 Chromium 약10.10Hz, Firefox 약57.92Hz로 환경/동시 실행에 따라 변한다. 이는 GPU 렌더fps가 아니며30fps 달성을 보장하지 않는다.
 - npm ci는 개발 도구 트리의 moderate10개 및 whatwg-encoding deprecation을 보고했다. 런타임 audit0개. 파괴적인 audit fix/강제 override는 적용하지 않았으며 `docs/dependency-audit.md`에 근거가 있다.
@@ -76,7 +76,7 @@
 | AC-37 | 부분 검증/제약 명시 | 키보드·포커스·레이블 자동 검증; 실제 스크린리더 수동 검증 미실행 |
 | AC-38 | 통과(자동 검증) | 통과: 최종 npm ci/타입/lint/단위97/동일 base 빌드/자산 검사 모두 종료0 |
 | AC-39 | 통과(자동 검증) | 통과: 동일 dist 하위 경로 Chromium/Firefox 2개 종료0; 자산 200·새로고침·실제 3D 확인 |
-| AC-40 | 미실행 | 미실행: 원격 push 승인 및 private Pages 조건 미확인 |
+| AC-40 | 통과(실제 원격) | Actions attempt2 success; https://muminjun.github.io/roomfit-3d/ Chromium/Firefox HTTP200·편집·3D·JSON·자동복원·자산 확인 |
 | AC-41 | 통과(자동 검증) | 자동 검증 근거 확인 — 아래 증거 묶음 참조 |
 | AC-42 | 통과(자동 검증) | 자동 검증 근거 확인 — 아래 증거 묶음 참조 |
 | AC-43 | 통과(자동 검증) | 자동 검증 근거 확인 — 아래 증거 묶음 참조 |
@@ -182,3 +182,11 @@ S4 중간: strictJSON raw검사→정규화→확정스키마검사→파생경�
 새 의존성 설치 이후 켜져 있던 이전 Vite 서버가 예전 최적화 URL에서504를 반환하여 초기 재실행은2개 실패/1개 중단이었다. page response에서 원인을 확인하고 기존 dev 서버만 종료 후 `npm run dev -- --host 127.0.0.1 --port 4173 --strictPort --force`로 재시작했다. 제품 소스나 최종 production dist는 변경하지 않았다.
 
 그 후 동일 `npm run test:e2e -- --workers=1 --reporter=line`을 재실행하여 **92/92 통과, 종료0, 1.2분**을 확인했다. 최신30벽/50가구 측정: Chromium 선택208ms/편집30ms/rAF76callbacks·1508.9ms≈49.71Hz, Firefox145ms/32ms/87callbacks·1509.4ms≈56.98Hz. 실행 간 변동과 rAF 대리측정의 한계는 그대로 유지한다. 30fps GPU 보장으로 해석하지 않는다.
+
+
+## 원격 첫 실행 결과
+사용자 승인 후 main push 성공. Actions run41546473922의 npm ci/typecheck/lint/test/build/check-dist는 모두 success. configure-pages에서 failure, upload/deploy는 skipped. Pages API422로 현재 플랜의 비공개 저장소 Pages 미지원 확인. 공개 전환 승인 대기이며 아직 원격 배포 확인 완료가 아니다.
+
+## 원격 배포 최종 확인
+
+사용자의 push 승인과 별도 공개 전환 승인 후, PUBLIC 저장소/Pages workflow source/HTTPS를 확인했다. [Actions](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) attempt2는 success이며 ci/typecheck/lint/unit97/build/check-dist/configure/upload/deploy 모두 성공했다. 실제 https://muminjun.github.io/roomfit-3d/ 에서 Chromium156.0.8078.4와 Firefox157.0 각 새 컨텍스트로 HTTP200, 기본2D, 퀸 침대 추가·90° 회전·JSON실측값, 실제3D·Orbit·카메라 초기화·데이터 불변, 2D복귀, localStorage 저장·새로고침 동일JSON, favicon/CSS/lazy3D 응답을 확인했다. 자산13/14건, 404·pageerror0. `/tmp/roomfit-remote-smoke.mjs` 실제 실행 종료0; 원격 근거를 `docs/remote-evidence.json`에 보존했다.

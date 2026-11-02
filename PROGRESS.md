@@ -1,6 +1,6 @@
 # RoomFit 3D 진행 장부
-- 저장소: 신규 private `muminjun/roomfit-3d`; 작업 브랜치 `feat/roomfit-mvp`. 원격 push 금지.
-- 상태: S0~S4 로컬 게이트 통과, S5 동일 dist 하위 경로 검사 통과. 최종 전체 E2E92개 통과 및 기록 확정. 원격 배포는 미실행. S6 협업은 범위 밖.
+- 저장소: PUBLIC `muminjun/roomfit-3d`, 기본/현재 브랜치 `main`. 사용자 승인으로 원격 push·공개 전환·Pages 배포 완료. 기존 개발 브랜치 `feat/roomfit-mvp` 보존.
+- 상태: S0~S5 구현·로컬 검증 및 원격 Pages 배포 확인 완료. 실제 수동 환경 제약은 TEST_REPORT 참조. S6 협업은 범위 밖.
 - 폴더: `src/lib/geometry`, `types`, `store`, `components/editor2d`, `components/viewer3d`, `features/project`, `tests`.
 - 데이터: schemaVersion 2, mm 정수/가구 중심 0.5mm, 단일 Zustand 원본.
 - 순서: 기반→순수기하→방편집→가구검증→3D→저장강화→배포경로 검증.
@@ -12,7 +12,7 @@
 | S2 | 게이트통과 | 타입/lint/test65/build0; room+furniture E2E42/42 종료0 | 가구20종/배치/키보드/경고 검증 | S3 실제3D |
 | S3 | 게이트통과 | 타입/lint/test78/build0; 전체 E2E68/68 종료0 | 실제Canvas/메시/카메라/폴백/동기화 | S4 저장·안정화 |
 | S4 | Gate passed | type/lint/unit97/build exit0; full84 E2E + final focused cases exit0 | JSON, autosave, accessibility, Chrome verified | S5 same-dist subpath verification |
-| S5 | 로컬 게이트통과 / 원격 미실행 | npm ci/타입/lint/unit97/한 번 subpath build/check-dist/서브경로 E2E2 종료0 | AC-39/80 통과, AC-40 미실행 | 로컬 커밋 후 push/Pages 승인 및 원격 검증 |
+| S5 | 게이트통과 / 원격 확인 완료 | 로컬97unit/92E2E/서브경로2 및 Actions attempt2 success, 실제 URL2브라우저 검증 | AC-39/40/80 통과 | 배포 기록 최종 동기화 |
 
 AC별 증거는 `TEST_REPORT.md`, 독립 감사는 `docs/AC_AUDIT.md`.
 
@@ -64,7 +64,7 @@ S1 게이트:48unit 및 공간E2E18개(Chrome계열/Firefox),root독립12개 통
 | FR-050 | 로컬 검증 통과 | AC-24, AC-25, AC-27, AC-31, AC-70 | src/store, tests/unit/history.test.ts, tests/e2e/root-smoke.spec.ts | 없음(자동 검증 범위) |
 | FR-051 | 로컬 검증 통과 | AC-24, AC-25, AC-43, AC-50, AC-69, AC-70 | src/store, tests/unit/history.test.ts, tests/e2e/root-smoke.spec.ts | 없음(자동 검증 범위) |
 | FR-052 | 자동 검증 통과 / 수동 일부 미실행 | AC-26, AC-37, AC-44, AC-51, AC-66, AC-73, AC-79 | src/components/common, tests/e2e/accessibility.spec.ts | 실제 스크린리더·물리 입력장치 |
-| FR-053 | 로컬 검증 통과 / 원격 미실행 | AC-38, AC-39, AC-40, AC-80 | vite.config.ts, .github/workflows/deploy.yml, tests/e2e/subpath.pw.ts | push 승인·Pages 플랜·실제 URL 검증 |
+| FR-053 | 원격 검증 통과 | AC-38, AC-39, AC-40, AC-80 | vite.config.ts, deploy.yml, subpath.pw.ts, docs/remote-evidence.json | 없음 |
 | FR-054 | 기능/측정 완료 / GPU fps 미확인 | AC-30, AC-36, AC-64, AC-79, AC-82 | src/components/viewer3d, tests/e2e/performance.spec.ts | 실기기 GPU30fps 목표 검증 |
 | FR-055 | 로컬 검증 통과 | AC-38, AC-39, AC-40, AC-78, AC-79, AC-80 | TEST_REPORT.md, docs/AC_AUDIT.md, PROGRESS.md, scripts/check-dist.mjs | 명시한 환경/원격 제약 참조 |
 | FR-056 | 로컬 검증 통과 | AC-38, AC-78 | TEST_REPORT.md, docs/AC_AUDIT.md, PROGRESS.md, scripts/check-dist.mjs | 명시한 환경/원격 제약 참조 |
@@ -72,3 +72,13 @@ S1 게이트:48unit 및 공간E2E18개(Chrome계열/Firefox),root독립12개 통
 
 
 최종: `npm ci`, typecheck, lint, unit97, 한 번의 base=/roomfit-3d/ build, check:dist, 서브경로2 E2E, 기본 전체92 E2E 모두 종료0. 실제Chrome대표5개 별도 종료0. AC-40 원격 미실행, AC-37/79의 실제스크린리더·Edge/Safari 및 물리입력 수동확인은 남아 있다. 다음 실행자는 로컬 앱을 재작성하지 말고 원격 push/Pages 승인과 이 환경 제약만 이어서 확인한다.
+
+
+## 원격 배포 진행 — 2026-11-03
+사용자가 push/Pages 진행에 `ㅇㅇ`으로 승인했다. `git push origin HEAD:refs/heads/main` 종료0, 원격 HEAD=acbc303ed9dba2d9f5c0567b0a633ca97aea9201. 기본 브랜치 main 설정 완료. Actions https://github.com/muminjun/roomfit-3d/actions/runs/41546473922 에서 ci/type/lint/unit97/build/check-dist 모두 통과했으나 configure-pages가 실패했다. Pages 생성 API는422 `Your current plan does not support GitHub Pages for this repository.` 응답. 비공개→공개는 코드/커밋 공개를 수반하므로 별도 승인 질문을 보냈으며 아직 답변 전이다. 공개 전환이나 Pages 배포 성공으로 표시하지 않는다.
+
+
+공개 전환 승인: 사용자가 `승인`으로 명시 확인했다. 저장소 PUBLIC 전환 및 Pages workflow source 생성 API가 각각 종료0. 사이트 예정 URL https://muminjun.github.io/roomfit-3d/ , https_enforced=true. 첫 Actions run41546473922를 재실행했다. 공개 전환 승인 대기 상태는 해제되었으며, 현재는 재실행 성공과 실제 URL 검증을 진행한다.
+
+## 최종 원격 인계
+사용자 `ㅇㅇ`으로 push 승인, `승인`으로 공개 전환 승인. 현재 저장소 PUBLIC, 기본브랜치 main. 실제 https://muminjun.github.io/roomfit-3d/ 배포 성공 및 Chromium/Firefox 사용자 흐름 검증 통과. AC-40 이전 미실행/승인대기 문구는 과거 이력이며 최신 상태는 이 절과 상단 표를 따른다. 실제 Edge/Safari/스크린리더/물리입력/GPU보장 제약은 여전히 유지한다.
