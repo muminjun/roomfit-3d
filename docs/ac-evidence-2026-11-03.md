@@ -99,3 +99,5 @@ The user has since allowed invalid rotation and requested door opening clearance
 - Historical remote Actions/Pages evidence refers to an earlier deployed revision; it does not validate the current uncommitted source or a future deployment.
 
 Current original-requirements SHA-256 `25cabf1861d7e9fe305cfbd328a8e7aabf4b6f95d5683cb3ee1dc265edb21065` matches `git show HEAD:docs/requirements/RoomFit3D_PROMPT.md`. This comparison establishes the checked file matches the committed original.
+
+최종 추가 확인: `npm run test:e2e -- --workers=1`은154개 통과 및 종료0으로 재실행 완료했다. `/tmp/roomfit-final-e2e-recorded.log`와 종료코드 파일이 근거다. unit126/16파일, 같은dist서브경로2개도 종료0이다. 현재 원격 배포 확인은 이어서 기록한다.

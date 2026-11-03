@@ -15,3 +15,5 @@ The final browser result and artifact hashes were inspected independently; no du
 ## Final serial full-suite rerun
 
 `npm run test:e2e -- --workers=1 > /tmp/roomfit-final-serial-e2e.log 2>&1` ran alone with unchanged product code, tests, assertions, timeouts and retry settings. The completed Playwright log reports **154 passed (2.0m)** across Chromium and Firefox. The process session's numeric exit code was not retained when its final poll was consumed, so this record relies on the completed test summary and does not claim an independently observed numeric exit code. The prior 153/154 run and focused recheck remain recorded above; the cause of the prior delay is not established.
+
+Coordinator final gate: unchanged full154 passed again, observed exit0 and persisted in /tmp/roomfit-final-e2e-exit-code.txt. Runtime audit exit0 with zero vulnerabilities. Main integration/remote verification follow.
