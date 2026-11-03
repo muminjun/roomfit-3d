@@ -1,6 +1,7 @@
 import { LIMITS } from "../../config/limits";
 import { geometryMessage } from "./messages";
 import type { PointMm, Room, FurnitureItem } from "../../types/model";
+import { getPartitionSolidRects } from "../../features/architecture/geometry";
 export type Rect = { minX: number; minY: number; maxX: number; maxY: number };
 export function getFurnitureRect(item: FurnitureItem): Rect {
   const swap = item.rotationDeg === 90 || item.rotationDeg === 270,
@@ -64,7 +65,7 @@ export const intersectRects = (a: Rect, b: Rect) =>
   Math.min(a.maxY, b.maxY) > Math.max(a.minY, b.minY);
 export type PlacementIssue = {
   code:
-    "OUTSIDE_ROOM" | "FURNITURE_OVERLAP" | "TOO_TALL" | "INVALID_DIMENSIONS";
+    "OUTSIDE_ROOM" | "FURNITURE_OVERLAP" | "TOO_TALL" | "INVALID_DIMENSIONS" | "PARTITION_OVERLAP";
   message: string;
   targetId?: string;
 };
@@ -78,7 +79,7 @@ export function validatePlacement(
   const add = (code: PlacementIssue["code"], targetId?: string) =>
     issues.push({
       code,
-      message: geometryMessage(code),
+      message: code === "PARTITION_OVERLAP" ? "칸막이 벽과 겹칩니다." : geometryMessage(code),
       ...(targetId ? { targetId } : {}),
     });
   if (
@@ -102,6 +103,8 @@ export function validatePlacement(
   const rect = getFurnitureRect(candidate);
   if (!containsRectInRoom(room.polygon, rect)) add("OUTSIDE_ROOM");
   if (candidate.heightMm > room.wallHeightMm) add("TOO_TALL");
+  for (const partition of room.partitions ?? [])
+    if (getPartitionSolidRects(room, partition, candidate.heightMm).some(p => intersectRects(rect, p))) add("PARTITION_OVERLAP", partition.id);
   for (const item of items)
     if (
       item.id !== options.ignoreId &&
@@ -130,6 +133,18 @@ export function getNearestClearance(
     down = Infinity;
   const overlap = (a: number, b: number, c: number, d: number) =>
     Math.min(b, d) > Math.max(a, c);
+  for (const p of room.partitions ?? []) {
+    for (const q of getPartitionSolidRects(room,p,candidate.heightMm)) {
+      if (overlap(r.minY,r.maxY,q.minY,q.maxY)) {
+        if (q.maxX <= r.minX) left = Math.min(left,r.minX-q.maxX);
+        if (q.minX >= r.maxX) right = Math.min(right,q.minX-r.maxX);
+      }
+      if (overlap(r.minX,r.maxX,q.minX,q.maxX)) {
+        if (q.maxY <= r.minY) up = Math.min(up,r.minY-q.maxY);
+        if (q.minY >= r.maxY) down = Math.min(down,q.minY-r.maxY);
+      }
+    }
+  }
   for (const item of items) {
     if (item.id === candidate.id) continue;
     const q = getFurnitureRect(item);

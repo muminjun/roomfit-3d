@@ -1,11 +1,12 @@
 import { LIMITS } from "../../config/limits";
 import { catalog } from "../../data/catalog";
+import { validateArchitecture } from "../architecture/geometry";
 import {
   normalizeEditCandidate,
   validateAllPlacements,
   validateRoomPolygon,
 } from "../../lib/geometry";
-import type { PointMm, ProjectDataV2 } from "../../types/model";
+import type { Opening, PointMm, ProjectDataV2 } from "../../types/model";
 import { projectSchema, rawProjectSchema } from "../../types/schema";
 
 export type ProjectParseResult =
@@ -107,6 +108,9 @@ export function parseProjectJson(raw: string): ProjectParseResult {
     project.room.id,
     ...project.room.polygon.map((point) => point.id),
     ...project.furniture.map((item) => item.id),
+    ...(project.room.partitions ?? []).map(item => item.id),
+    ...(project.room.openings ?? []).map(item => item.id),
+    ...(project.room.zones ?? []).map(item => item.id),
   ];
   if (new Set(ids).size !== ids.length)
     return error("프로젝트에 중복 ID가 있습니다.");
@@ -125,6 +129,32 @@ export function parseProjectJson(raw: string): ProjectParseResult {
     return sum + a.x * b.y - b.x * a.y;
   }, 0);
   if (signed < 0) changes.push("방 꼭짓점 순서를 시계 방향으로 변경했습니다.");
+  // An exterior host is an outgoing directed edge, so retaining only its vertex ID
+  // after reversing/merging vertices would silently move its openings to another wall.
+  const openings = project.room.openings?.map((opening, index): Opening => {
+    const oldIndex = polygon.findIndex(p => p.id === opening.hostId);
+    if (oldIndex < 0 || JSON.stringify(polygon) === JSON.stringify(normalized.polygon)) return opening;
+    const a = polygon[oldIndex], b = polygon[(oldIndex + 1) % polygon.length];
+    const length = Math.abs(b.x-a.x) + Math.abs(b.y-a.y);
+    const tx = (b.x-a.x)/length, ty = (b.y-a.y)/length;
+    const first = { x:a.x+tx*opening.offsetMm, y:a.y+ty*opening.offsetMm };
+    const last = { x:first.x+tx*opening.widthMm, y:first.y+ty*opening.widthMm };
+    for (let i=0;i<normalized.polygon.length;i++) {
+      const start=normalized.polygon[i], end=normalized.polygon[(i+1)%normalized.polygon.length];
+      const contains = (p:{x:number;y:number}) => (start.x === end.x ? p.x === start.x : p.y === start.y) && p.x >= Math.min(start.x,end.x) && p.x <= Math.max(start.x,end.x) && p.y >= Math.min(start.y,end.y) && p.y <= Math.max(start.y,end.y);
+      if (!contains(first) || !contains(last)) continue;
+      const newLength=Math.abs(end.x-start.x)+Math.abs(end.y-start.y);
+      const at=(p:{x:number;y:number})=>((p.x-start.x)*(end.x-start.x)+(p.y-start.y)*(end.y-start.y))/newLength;
+      const one=at(first),two=at(last);
+      return {...opening,hostId:start.id,offsetMm:Math.min(one,two),hinge:two<one ? (opening.hinge === "start" ? "end":"start"):opening.hinge};
+    }
+    // Keep malformed, previously out-of-range openings visible for repair rather
+    // than attaching them to a different edge carrying the same vertex ID.
+    let suffix=index, hostId=`unmapped-opening-${suffix}`;
+    while (ids.includes(hostId)) hostId = `unmapped-opening-${++suffix}`;
+    return {...opening,hostId};
+  });
+  if (openings && JSON.stringify(openings) !== JSON.stringify(project.room.openings)) changes.push("문·창문의 실제 위치와 경첩을 유지하도록 정규화된 벽에 다시 연결했습니다. 연결할 수 없는 항목은 경고로 표시합니다.");
   const furniture = project.furniture.map((item) => {
     if (
       !catalog.some((entry) => entry.id === item.catalogId) &&
@@ -139,7 +169,7 @@ export function parseProjectJson(raw: string): ProjectParseResult {
   });
   const candidate: ProjectDataV2 = {
     ...project,
-    room: { ...project.room, polygon: normalized.polygon },
+    room: { ...project.room, polygon: normalized.polygon, ...(openings !== undefined ? {openings}: {}) },
     furniture,
   };
   const checked = projectSchema.safeParse(candidate);
@@ -151,6 +181,7 @@ export function parseProjectJson(raw: string): ProjectParseResult {
   const warnings = candidate.furniture.flatMap((item) =>
     placements[item.id].issues.map((issue) => `${item.name}: ${issue.message}`),
   );
+  warnings.push(...validateArchitecture(candidate.room).map(issue => issue.message));
   return { ok: true, project: candidate, changes, warnings };
 }
 /** Explicit projection prevents accidentally exporting UI or unknown fields. */
@@ -169,6 +200,9 @@ export function serializeProjectJson(project: ProjectDataV2): string {
         polygon: project.room.polygon.map(({ id, x, y }) => ({ id, x, y })),
         wallHeightMm: project.room.wallHeightMm,
         wallThicknessMm: project.room.wallThicknessMm,
+        ...(project.room.partitions !== undefined ? { partitions: project.room.partitions } : {}),
+        ...(project.room.openings !== undefined ? { openings: project.room.openings } : {}),
+        ...(project.room.zones !== undefined ? { zones: project.room.zones } : {}),
       },
       furniture: project.furniture.map((item) => ({
         id: item.id,
@@ -181,6 +215,7 @@ export function serializeProjectJson(project: ProjectDataV2): string {
         heightMm: item.heightMm,
         rotationDeg: item.rotationDeg,
         ...(item.color !== undefined ? { color: item.color } : {}),
+        ...(item.operation !== undefined ? { operation: item.operation } : {}),
       })),
       settings: {
         gridSizeMm: project.settings.gridSizeMm,

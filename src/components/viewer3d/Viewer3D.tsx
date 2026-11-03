@@ -13,7 +13,10 @@ import { OrbitControls } from "@react-three/drei";
 import { FrontSide } from "three";
 import type { FurnitureItem, Room } from "../../types/model";
 import { useProjectStore } from "../../store/useProjectStore";
-import { buildFloorGeometry, buildWallGeometry } from "./geometry";
+import { buildFloorGeometry } from "./geometry";
+import { buildArchitecturalWallGeometry } from "./architecture";
+import { ArchitectureMeshes } from "./ArchitectureMeshes";
+import { RendererTelemetry, type RendererSample } from "./RendererTelemetry";
 import { buildFurnitureObject, disposeFurnitureObject } from "./furniture";
 import { cameraForRoom } from "./camera";
 
@@ -44,7 +47,7 @@ class ViewerBoundary extends Component<
 }
 function RoomMeshes({ room }: { room: Room }) {
   const floor = useMemo(() => buildFloorGeometry(room.polygon), [room.polygon]);
-  const walls = useMemo(() => buildWallGeometry(room), [room]);
+  const walls = useMemo(() => buildArchitecturalWallGeometry(room), [room]);
   useEffect(
     () => () => {
       floor.dispose();
@@ -83,10 +86,12 @@ function Scene({
   room,
   items,
   reset,
+  onSample,
 }: {
   room: Room;
   items: FurnitureItem[];
   reset: number;
+  onSample?: (sample: RendererSample) => void;
 }) {
   const { camera, size } = useThree();
   const controls = useRef<ComponentRef<typeof OrbitControls>>(null);
@@ -106,12 +111,14 @@ function Scene({
   }, [camera, frame, reset]);
   return (
     <>
+      {onSample && <RendererTelemetry onSample={onSample} />}
       <ambientLight intensity={0.6} />
       <directionalLight
         intensity={0.8}
         position={[frame.target.x + 5, frame.target.y + 10, frame.target.z + 5]}
       />
       <RoomMeshes room={room} />
+      <ArchitectureMeshes room={room} />
       {items.map((item) => (
         <FurnitureMesh key={item.id} item={item} />
       ))}
@@ -132,6 +139,9 @@ export default function Viewer3D() {
     [lost, setLost] = useState(false),
     [generation, setGeneration] = useState(0),
     [reset, setReset] = useState(0);
+  const [sample, setSample] = useState<RendererSample | null>(null);
+  const measuring =
+    new URLSearchParams(window.location.search).get("measure") === "1";
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const handleContextLost = useCallback((event: Event) => {
     event.preventDefault();
@@ -172,6 +182,22 @@ export default function Viewer3D() {
           카메라 초기화
         </button>
       </div>
+      {measuring && sample && (
+        <output
+          aria-label="렌더러 측정"
+          data-frames={sample.frames}
+          data-draw-calls={sample.drawCalls}
+          data-triangles={sample.triangles}
+          data-cpu-ms={sample.cpuMs}
+          data-frame-ms={sample.frameMs}
+          data-renderer={sample.renderer}
+          data-gpu-timer-available={String(sample.gpuTimerAvailable)}
+        >
+          CPU 제출 {sample.cpuMs.toFixed(2)} ms · 프레임 간격{" "}
+          {sample.frameMs.toFixed(2)} ms · 호출 {sample.drawCalls} · 삼각형{" "}
+          {sample.triangles}
+        </output>
+      )}
       {!available || lost ? (
         <div role="status">
           <p>
@@ -190,7 +216,12 @@ export default function Viewer3D() {
               dpr={[1, 2]}
               camera={{ fov: 45, near: 0.1, far: 200 }}
             >
-              <Scene room={room} items={items} reset={reset} />
+              <Scene
+                room={room}
+                items={items}
+                reset={reset}
+                onSample={measuring ? setSample : undefined}
+              />
             </Canvas>
           </div>
         </ViewerBoundary>

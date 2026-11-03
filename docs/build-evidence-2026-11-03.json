@@ -1,0 +1,16 @@
+{
+  "base": "/roomfit-3d/",
+  "same_before_after_subpath": true,
+  "files": {
+    "dist/assets/Viewer3D-CeQdWsql.js": "da4fea6b2e4389099312e2f650c3054dac7acf1ca7a5a12676c2eb373e0b32c7",
+    "dist/assets/index-8-FBkCca.js": "02726ba0dd55d58c946c3a9e2652d632c4e9de4f741a4ec31e090f7ada796956",
+    "dist/assets/index-DLn0Yw3o.css": "03df55fc0bc3b5fe3148e5879c95942209dbd68279534fdea3369aa843b61339",
+    "dist/assets/konva-vendor-CcVq7tEh.js": "5eb9f0d9e2e5991482f5f7169abee9a2dd8b0ebadabe01f08b4df2331df6e305",
+    "dist/assets/react-vendor-CGTtH4Z4.js": "545c447f8ad7447272f70a69be1a53afe690984ab8975c5c0e14610821147d04",
+    "dist/assets/rolldown-runtime-XKyaHtl9.js": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
+    "dist/assets/three-core-BF58tRDi.js": "2a7443fb04c485eac7af9e2ffab7f114570c29dbb45921d8af899c7ceece1c34",
+    "dist/assets/three-module-AImBqZWr.js": "56ecaecbe4dc3a3d00ae0f2ad425a322b444dd5dcd45bae980884e7d5ce20e6f",
+    "dist/favicon.svg": "c69d0f9100415b3c0f2eec5bfc7daf61e7b1f6b323f35865ce5ef5de372f436a",
+    "dist/index.html": "ba7d78a24997fe73be62ee3c36f8065a6182eedb4daf8cd78036339937ba4aa5"
+  }
+}

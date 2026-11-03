@@ -6,7 +6,7 @@ import {
   validatePlacement,
 } from "../../lib/geometry";
 import { useProjectStore } from "../../store/useProjectStore";
-import type { FurnitureItem, Room, RotationDeg } from "../../types/model";
+import type { FurnitureItem, FurnitureOperation, Room, RotationDeg } from "../../types/model";
 import { projectSchema } from "../../types/schema";
 import { createId } from "../project/createProject";
 import type { CommandResult } from "../room/commands";
@@ -42,6 +42,7 @@ export function createFurnitureCandidate(
     heightMm: definition.heightMm,
     rotationDeg: 0,
     color: COLORS[0],
+    ...(definition.operation ? { operation: { ...definition.operation } } : {}),
   };
 }
 /** Search the nearest lattice offsets; ties are ordered by y then x. */
@@ -241,7 +242,7 @@ export function rotateFurniture({
 }): CommandResult {
   const item = getItem(itemId);
   return item
-    ? validateAndCommit({ ...item, rotationDeg }, true)
+    ? commitItems(useProjectStore.getState().project.furniture.map(f => f.id === itemId ? { ...item, rotationDeg } : f), itemId)
     : missing(itemId);
 }
 export function duplicateFurniture({
@@ -342,4 +343,11 @@ export function resetFurnitureSize({
     },
     true,
   );
+}
+
+/** Operation allowances are advisory; structurally valid edits also work for invalid placements. */
+export function setFurnitureOperation({ itemId, operation }: { itemId: string; operation: FurnitureOperation }): CommandResult {
+  const item = getItem(itemId);
+  if (!item) return missing(itemId);
+  return commitItems(useProjectStore.getState().project.furniture.map(f => f.id === itemId ? { ...item, operation: { ...operation } } : f), itemId);
 }

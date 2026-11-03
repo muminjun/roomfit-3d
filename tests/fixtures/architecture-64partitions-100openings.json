@@ -1,0 +1,2142 @@
+{
+  "schemaVersion": 2,
+  "id": "51cfd590-5490-4913-b94a-40fbf6900fcf",
+  "title": "새 프로젝트",
+  "createdAt": "2026-11-03T10:24:33.775Z",
+  "updatedAt": "2026-11-03T10:24:33.775Z",
+  "unit": "mm",
+  "room": {
+    "id": "cdf2d4e2-936d-43a2-a861-10b616466838",
+    "name": "내 방",
+    "polygon": [
+      {
+        "id": "8c723461-af10-4980-a48c-6fb350bdb6c7",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "id": "8378192b-1861-4091-a742-fde75ba8c0f0",
+        "x": 30000,
+        "y": 0
+      },
+      {
+        "id": "7d3f51ac-0651-4bf4-8551-9ccf0c0ce416",
+        "x": 30000,
+        "y": 30000
+      },
+      {
+        "id": "0c2619d3-c4ca-4eef-9463-6d3cab4e9bdf",
+        "x": 0,
+        "y": 30000
+      }
+    ],
+    "wallHeightMm": 5000,
+    "wallThicknessMm": 120,
+    "partitions": [
+      {
+        "id": "wall0",
+        "name": "Wall0",
+        "start": {
+          "x": 100,
+          "y": 200
+        },
+        "end": {
+          "x": 29000,
+          "y": 200
+        },
+        "thicknessMm": 100,
+        "heightMm": 4800
+      },
+      {
+        "id": "wall1",
+        "name": "Wall1",
+        "start": {
+          "x": 103,
+          "y": 650
+        },
+        "end": {
+          "x": 28993,
+          "y": 650
+        },
+        "thicknessMm": 103,
+        "heightMm": 4789
+      },
+      {
+        "id": "wall2",
+        "name": "Wall2",
+        "start": {
+          "x": 106,
+          "y": 1100
+        },
+        "end": {
+          "x": 28986,
+          "y": 1100
+        },
+        "thicknessMm": 106,
+        "heightMm": 4778
+      },
+      {
+        "id": "wall3",
+        "name": "Wall3",
+        "start": {
+          "x": 109,
+          "y": 1550
+        },
+        "end": {
+          "x": 28979,
+          "y": 1550
+        },
+        "thicknessMm": 109,
+        "heightMm": 4767
+      },
+      {
+        "id": "wall4",
+        "name": "Wall4",
+        "start": {
+          "x": 112,
+          "y": 2000
+        },
+        "end": {
+          "x": 28972,
+          "y": 2000
+        },
+        "thicknessMm": 112,
+        "heightMm": 4756
+      },
+      {
+        "id": "wall5",
+        "name": "Wall5",
+        "start": {
+          "x": 115,
+          "y": 2450
+        },
+        "end": {
+          "x": 28965,
+          "y": 2450
+        },
+        "thicknessMm": 115,
+        "heightMm": 4745
+      },
+      {
+        "id": "wall6",
+        "name": "Wall6",
+        "start": {
+          "x": 118,
+          "y": 2900
+        },
+        "end": {
+          "x": 28958,
+          "y": 2900
+        },
+        "thicknessMm": 118,
+        "heightMm": 4734
+      },
+      {
+        "id": "wall7",
+        "name": "Wall7",
+        "start": {
+          "x": 121,
+          "y": 3350
+        },
+        "end": {
+          "x": 28951,
+          "y": 3350
+        },
+        "thicknessMm": 121,
+        "heightMm": 4723
+      },
+      {
+        "id": "wall8",
+        "name": "Wall8",
+        "start": {
+          "x": 124,
+          "y": 3800
+        },
+        "end": {
+          "x": 28944,
+          "y": 3800
+        },
+        "thicknessMm": 124,
+        "heightMm": 4712
+      },
+      {
+        "id": "wall9",
+        "name": "Wall9",
+        "start": {
+          "x": 127,
+          "y": 4250
+        },
+        "end": {
+          "x": 28937,
+          "y": 4250
+        },
+        "thicknessMm": 127,
+        "heightMm": 4701
+      },
+      {
+        "id": "wall10",
+        "name": "Wall10",
+        "start": {
+          "x": 130,
+          "y": 4700
+        },
+        "end": {
+          "x": 28930,
+          "y": 4700
+        },
+        "thicknessMm": 130,
+        "heightMm": 4690
+      },
+      {
+        "id": "wall11",
+        "name": "Wall11",
+        "start": {
+          "x": 133,
+          "y": 5150
+        },
+        "end": {
+          "x": 28923,
+          "y": 5150
+        },
+        "thicknessMm": 133,
+        "heightMm": 4679
+      },
+      {
+        "id": "wall12",
+        "name": "Wall12",
+        "start": {
+          "x": 136,
+          "y": 5600
+        },
+        "end": {
+          "x": 28916,
+          "y": 5600
+        },
+        "thicknessMm": 136,
+        "heightMm": 4668
+      },
+      {
+        "id": "wall13",
+        "name": "Wall13",
+        "start": {
+          "x": 139,
+          "y": 6050
+        },
+        "end": {
+          "x": 28909,
+          "y": 6050
+        },
+        "thicknessMm": 139,
+        "heightMm": 4657
+      },
+      {
+        "id": "wall14",
+        "name": "Wall14",
+        "start": {
+          "x": 142,
+          "y": 6500
+        },
+        "end": {
+          "x": 28902,
+          "y": 6500
+        },
+        "thicknessMm": 142,
+        "heightMm": 4646
+      },
+      {
+        "id": "wall15",
+        "name": "Wall15",
+        "start": {
+          "x": 145,
+          "y": 6950
+        },
+        "end": {
+          "x": 28895,
+          "y": 6950
+        },
+        "thicknessMm": 145,
+        "heightMm": 4635
+      },
+      {
+        "id": "wall16",
+        "name": "Wall16",
+        "start": {
+          "x": 148,
+          "y": 7400
+        },
+        "end": {
+          "x": 28888,
+          "y": 7400
+        },
+        "thicknessMm": 148,
+        "heightMm": 4624
+      },
+      {
+        "id": "wall17",
+        "name": "Wall17",
+        "start": {
+          "x": 151,
+          "y": 7850
+        },
+        "end": {
+          "x": 28881,
+          "y": 7850
+        },
+        "thicknessMm": 151,
+        "heightMm": 4613
+      },
+      {
+        "id": "wall18",
+        "name": "Wall18",
+        "start": {
+          "x": 154,
+          "y": 8300
+        },
+        "end": {
+          "x": 28874,
+          "y": 8300
+        },
+        "thicknessMm": 154,
+        "heightMm": 4602
+      },
+      {
+        "id": "wall19",
+        "name": "Wall19",
+        "start": {
+          "x": 157,
+          "y": 8750
+        },
+        "end": {
+          "x": 28867,
+          "y": 8750
+        },
+        "thicknessMm": 157,
+        "heightMm": 4591
+      },
+      {
+        "id": "wall20",
+        "name": "Wall20",
+        "start": {
+          "x": 160,
+          "y": 9200
+        },
+        "end": {
+          "x": 28860,
+          "y": 9200
+        },
+        "thicknessMm": 160,
+        "heightMm": 4580
+      },
+      {
+        "id": "wall21",
+        "name": "Wall21",
+        "start": {
+          "x": 163,
+          "y": 9650
+        },
+        "end": {
+          "x": 28853,
+          "y": 9650
+        },
+        "thicknessMm": 163,
+        "heightMm": 4569
+      },
+      {
+        "id": "wall22",
+        "name": "Wall22",
+        "start": {
+          "x": 166,
+          "y": 10100
+        },
+        "end": {
+          "x": 28846,
+          "y": 10100
+        },
+        "thicknessMm": 166,
+        "heightMm": 4558
+      },
+      {
+        "id": "wall23",
+        "name": "Wall23",
+        "start": {
+          "x": 169,
+          "y": 10550
+        },
+        "end": {
+          "x": 28839,
+          "y": 10550
+        },
+        "thicknessMm": 169,
+        "heightMm": 4547
+      },
+      {
+        "id": "wall24",
+        "name": "Wall24",
+        "start": {
+          "x": 172,
+          "y": 11000
+        },
+        "end": {
+          "x": 28832,
+          "y": 11000
+        },
+        "thicknessMm": 172,
+        "heightMm": 4536
+      },
+      {
+        "id": "wall25",
+        "name": "Wall25",
+        "start": {
+          "x": 175,
+          "y": 11450
+        },
+        "end": {
+          "x": 28825,
+          "y": 11450
+        },
+        "thicknessMm": 175,
+        "heightMm": 4525
+      },
+      {
+        "id": "wall26",
+        "name": "Wall26",
+        "start": {
+          "x": 178,
+          "y": 11900
+        },
+        "end": {
+          "x": 28818,
+          "y": 11900
+        },
+        "thicknessMm": 178,
+        "heightMm": 4514
+      },
+      {
+        "id": "wall27",
+        "name": "Wall27",
+        "start": {
+          "x": 181,
+          "y": 12350
+        },
+        "end": {
+          "x": 28811,
+          "y": 12350
+        },
+        "thicknessMm": 181,
+        "heightMm": 4503
+      },
+      {
+        "id": "wall28",
+        "name": "Wall28",
+        "start": {
+          "x": 184,
+          "y": 12800
+        },
+        "end": {
+          "x": 28804,
+          "y": 12800
+        },
+        "thicknessMm": 184,
+        "heightMm": 4492
+      },
+      {
+        "id": "wall29",
+        "name": "Wall29",
+        "start": {
+          "x": 187,
+          "y": 13250
+        },
+        "end": {
+          "x": 28797,
+          "y": 13250
+        },
+        "thicknessMm": 187,
+        "heightMm": 4481
+      },
+      {
+        "id": "wall30",
+        "name": "Wall30",
+        "start": {
+          "x": 190,
+          "y": 13700
+        },
+        "end": {
+          "x": 28790,
+          "y": 13700
+        },
+        "thicknessMm": 190,
+        "heightMm": 4470
+      },
+      {
+        "id": "wall31",
+        "name": "Wall31",
+        "start": {
+          "x": 193,
+          "y": 14150
+        },
+        "end": {
+          "x": 28783,
+          "y": 14150
+        },
+        "thicknessMm": 193,
+        "heightMm": 4459
+      },
+      {
+        "id": "wall32",
+        "name": "Wall32",
+        "start": {
+          "x": 196,
+          "y": 14600
+        },
+        "end": {
+          "x": 28776,
+          "y": 14600
+        },
+        "thicknessMm": 196,
+        "heightMm": 4448
+      },
+      {
+        "id": "wall33",
+        "name": "Wall33",
+        "start": {
+          "x": 199,
+          "y": 15050
+        },
+        "end": {
+          "x": 28769,
+          "y": 15050
+        },
+        "thicknessMm": 199,
+        "heightMm": 4437
+      },
+      {
+        "id": "wall34",
+        "name": "Wall34",
+        "start": {
+          "x": 202,
+          "y": 15500
+        },
+        "end": {
+          "x": 28762,
+          "y": 15500
+        },
+        "thicknessMm": 202,
+        "heightMm": 4426
+      },
+      {
+        "id": "wall35",
+        "name": "Wall35",
+        "start": {
+          "x": 205,
+          "y": 15950
+        },
+        "end": {
+          "x": 28755,
+          "y": 15950
+        },
+        "thicknessMm": 205,
+        "heightMm": 4415
+      },
+      {
+        "id": "wall36",
+        "name": "Wall36",
+        "start": {
+          "x": 208,
+          "y": 16400
+        },
+        "end": {
+          "x": 28748,
+          "y": 16400
+        },
+        "thicknessMm": 208,
+        "heightMm": 4404
+      },
+      {
+        "id": "wall37",
+        "name": "Wall37",
+        "start": {
+          "x": 211,
+          "y": 16850
+        },
+        "end": {
+          "x": 28741,
+          "y": 16850
+        },
+        "thicknessMm": 211,
+        "heightMm": 4393
+      },
+      {
+        "id": "wall38",
+        "name": "Wall38",
+        "start": {
+          "x": 214,
+          "y": 17300
+        },
+        "end": {
+          "x": 28734,
+          "y": 17300
+        },
+        "thicknessMm": 214,
+        "heightMm": 4382
+      },
+      {
+        "id": "wall39",
+        "name": "Wall39",
+        "start": {
+          "x": 217,
+          "y": 17750
+        },
+        "end": {
+          "x": 28727,
+          "y": 17750
+        },
+        "thicknessMm": 217,
+        "heightMm": 4371
+      },
+      {
+        "id": "wall40",
+        "name": "Wall40",
+        "start": {
+          "x": 220,
+          "y": 18200
+        },
+        "end": {
+          "x": 28720,
+          "y": 18200
+        },
+        "thicknessMm": 220,
+        "heightMm": 4360
+      },
+      {
+        "id": "wall41",
+        "name": "Wall41",
+        "start": {
+          "x": 223,
+          "y": 18650
+        },
+        "end": {
+          "x": 28713,
+          "y": 18650
+        },
+        "thicknessMm": 223,
+        "heightMm": 4349
+      },
+      {
+        "id": "wall42",
+        "name": "Wall42",
+        "start": {
+          "x": 226,
+          "y": 19100
+        },
+        "end": {
+          "x": 28706,
+          "y": 19100
+        },
+        "thicknessMm": 226,
+        "heightMm": 4338
+      },
+      {
+        "id": "wall43",
+        "name": "Wall43",
+        "start": {
+          "x": 229,
+          "y": 19550
+        },
+        "end": {
+          "x": 28699,
+          "y": 19550
+        },
+        "thicknessMm": 229,
+        "heightMm": 4327
+      },
+      {
+        "id": "wall44",
+        "name": "Wall44",
+        "start": {
+          "x": 232,
+          "y": 20000
+        },
+        "end": {
+          "x": 28692,
+          "y": 20000
+        },
+        "thicknessMm": 232,
+        "heightMm": 4316
+      },
+      {
+        "id": "wall45",
+        "name": "Wall45",
+        "start": {
+          "x": 235,
+          "y": 20450
+        },
+        "end": {
+          "x": 28685,
+          "y": 20450
+        },
+        "thicknessMm": 235,
+        "heightMm": 4305
+      },
+      {
+        "id": "wall46",
+        "name": "Wall46",
+        "start": {
+          "x": 238,
+          "y": 20900
+        },
+        "end": {
+          "x": 28678,
+          "y": 20900
+        },
+        "thicknessMm": 238,
+        "heightMm": 4294
+      },
+      {
+        "id": "wall47",
+        "name": "Wall47",
+        "start": {
+          "x": 241,
+          "y": 21350
+        },
+        "end": {
+          "x": 28671,
+          "y": 21350
+        },
+        "thicknessMm": 241,
+        "heightMm": 4283
+      },
+      {
+        "id": "wall48",
+        "name": "Wall48",
+        "start": {
+          "x": 244,
+          "y": 21800
+        },
+        "end": {
+          "x": 28664,
+          "y": 21800
+        },
+        "thicknessMm": 244,
+        "heightMm": 4272
+      },
+      {
+        "id": "wall49",
+        "name": "Wall49",
+        "start": {
+          "x": 247,
+          "y": 22250
+        },
+        "end": {
+          "x": 28657,
+          "y": 22250
+        },
+        "thicknessMm": 247,
+        "heightMm": 4261
+      },
+      {
+        "id": "wall50",
+        "name": "Wall50",
+        "start": {
+          "x": 250,
+          "y": 22700
+        },
+        "end": {
+          "x": 28650,
+          "y": 22700
+        },
+        "thicknessMm": 250,
+        "heightMm": 4250
+      },
+      {
+        "id": "wall51",
+        "name": "Wall51",
+        "start": {
+          "x": 253,
+          "y": 23150
+        },
+        "end": {
+          "x": 28643,
+          "y": 23150
+        },
+        "thicknessMm": 253,
+        "heightMm": 4239
+      },
+      {
+        "id": "wall52",
+        "name": "Wall52",
+        "start": {
+          "x": 256,
+          "y": 23600
+        },
+        "end": {
+          "x": 28636,
+          "y": 23600
+        },
+        "thicknessMm": 256,
+        "heightMm": 4228
+      },
+      {
+        "id": "wall53",
+        "name": "Wall53",
+        "start": {
+          "x": 259,
+          "y": 24050
+        },
+        "end": {
+          "x": 28629,
+          "y": 24050
+        },
+        "thicknessMm": 259,
+        "heightMm": 4217
+      },
+      {
+        "id": "wall54",
+        "name": "Wall54",
+        "start": {
+          "x": 262,
+          "y": 24500
+        },
+        "end": {
+          "x": 28622,
+          "y": 24500
+        },
+        "thicknessMm": 262,
+        "heightMm": 4206
+      },
+      {
+        "id": "wall55",
+        "name": "Wall55",
+        "start": {
+          "x": 265,
+          "y": 24950
+        },
+        "end": {
+          "x": 28615,
+          "y": 24950
+        },
+        "thicknessMm": 265,
+        "heightMm": 4195
+      },
+      {
+        "id": "wall56",
+        "name": "Wall56",
+        "start": {
+          "x": 268,
+          "y": 25400
+        },
+        "end": {
+          "x": 28608,
+          "y": 25400
+        },
+        "thicknessMm": 268,
+        "heightMm": 4184
+      },
+      {
+        "id": "wall57",
+        "name": "Wall57",
+        "start": {
+          "x": 271,
+          "y": 25850
+        },
+        "end": {
+          "x": 28601,
+          "y": 25850
+        },
+        "thicknessMm": 271,
+        "heightMm": 4173
+      },
+      {
+        "id": "wall58",
+        "name": "Wall58",
+        "start": {
+          "x": 274,
+          "y": 26300
+        },
+        "end": {
+          "x": 28594,
+          "y": 26300
+        },
+        "thicknessMm": 274,
+        "heightMm": 4162
+      },
+      {
+        "id": "wall59",
+        "name": "Wall59",
+        "start": {
+          "x": 277,
+          "y": 26750
+        },
+        "end": {
+          "x": 28587,
+          "y": 26750
+        },
+        "thicknessMm": 277,
+        "heightMm": 4151
+      },
+      {
+        "id": "wall60",
+        "name": "Wall60",
+        "start": {
+          "x": 280,
+          "y": 27200
+        },
+        "end": {
+          "x": 28580,
+          "y": 27200
+        },
+        "thicknessMm": 280,
+        "heightMm": 4140
+      },
+      {
+        "id": "wall61",
+        "name": "Wall61",
+        "start": {
+          "x": 283,
+          "y": 27650
+        },
+        "end": {
+          "x": 28573,
+          "y": 27650
+        },
+        "thicknessMm": 283,
+        "heightMm": 4129
+      },
+      {
+        "id": "wall62",
+        "name": "Wall62",
+        "start": {
+          "x": 286,
+          "y": 28100
+        },
+        "end": {
+          "x": 28566,
+          "y": 28100
+        },
+        "thicknessMm": 286,
+        "heightMm": 4118
+      },
+      {
+        "id": "wall63",
+        "name": "Wall63",
+        "start": {
+          "x": 289,
+          "y": 28550
+        },
+        "end": {
+          "x": 28559,
+          "y": 28550
+        },
+        "thicknessMm": 289,
+        "heightMm": 4107
+      }
+    ],
+    "openings": [
+      {
+        "id": "opening0",
+        "name": "Window0",
+        "kind": "window",
+        "hostId": "wall0",
+        "offsetMm": 300,
+        "widthMm": 400,
+        "heightMm": 600,
+        "sillMm": 300,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening1",
+        "name": "Window1",
+        "kind": "window",
+        "hostId": "wall1",
+        "offsetMm": 427,
+        "widthMm": 401,
+        "heightMm": 613,
+        "sillMm": 317,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening2",
+        "name": "Window2",
+        "kind": "window",
+        "hostId": "wall2",
+        "offsetMm": 554,
+        "widthMm": 402,
+        "heightMm": 626,
+        "sillMm": 334,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening3",
+        "name": "Window3",
+        "kind": "window",
+        "hostId": "wall3",
+        "offsetMm": 681,
+        "widthMm": 403,
+        "heightMm": 639,
+        "sillMm": 351,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening4",
+        "name": "Window4",
+        "kind": "window",
+        "hostId": "wall4",
+        "offsetMm": 808,
+        "widthMm": 404,
+        "heightMm": 652,
+        "sillMm": 368,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening5",
+        "name": "Window5",
+        "kind": "window",
+        "hostId": "wall5",
+        "offsetMm": 935,
+        "widthMm": 405,
+        "heightMm": 665,
+        "sillMm": 385,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening6",
+        "name": "Window6",
+        "kind": "window",
+        "hostId": "wall6",
+        "offsetMm": 1062,
+        "widthMm": 406,
+        "heightMm": 678,
+        "sillMm": 402,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening7",
+        "name": "Window7",
+        "kind": "window",
+        "hostId": "wall7",
+        "offsetMm": 1189,
+        "widthMm": 407,
+        "heightMm": 691,
+        "sillMm": 419,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening8",
+        "name": "Window8",
+        "kind": "window",
+        "hostId": "wall8",
+        "offsetMm": 1316,
+        "widthMm": 408,
+        "heightMm": 704,
+        "sillMm": 436,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening9",
+        "name": "Window9",
+        "kind": "window",
+        "hostId": "wall9",
+        "offsetMm": 1443,
+        "widthMm": 409,
+        "heightMm": 717,
+        "sillMm": 453,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening10",
+        "name": "Window10",
+        "kind": "window",
+        "hostId": "wall10",
+        "offsetMm": 1570,
+        "widthMm": 410,
+        "heightMm": 730,
+        "sillMm": 470,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening11",
+        "name": "Window11",
+        "kind": "window",
+        "hostId": "wall11",
+        "offsetMm": 1697,
+        "widthMm": 411,
+        "heightMm": 743,
+        "sillMm": 487,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening12",
+        "name": "Window12",
+        "kind": "window",
+        "hostId": "wall12",
+        "offsetMm": 1824,
+        "widthMm": 412,
+        "heightMm": 756,
+        "sillMm": 504,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening13",
+        "name": "Window13",
+        "kind": "window",
+        "hostId": "wall13",
+        "offsetMm": 1951,
+        "widthMm": 413,
+        "heightMm": 769,
+        "sillMm": 521,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening14",
+        "name": "Window14",
+        "kind": "window",
+        "hostId": "wall14",
+        "offsetMm": 2078,
+        "widthMm": 414,
+        "heightMm": 782,
+        "sillMm": 538,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening15",
+        "name": "Window15",
+        "kind": "window",
+        "hostId": "wall15",
+        "offsetMm": 2205,
+        "widthMm": 415,
+        "heightMm": 795,
+        "sillMm": 555,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening16",
+        "name": "Window16",
+        "kind": "window",
+        "hostId": "wall16",
+        "offsetMm": 2332,
+        "widthMm": 416,
+        "heightMm": 808,
+        "sillMm": 572,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening17",
+        "name": "Window17",
+        "kind": "window",
+        "hostId": "wall17",
+        "offsetMm": 2459,
+        "widthMm": 417,
+        "heightMm": 821,
+        "sillMm": 589,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening18",
+        "name": "Window18",
+        "kind": "window",
+        "hostId": "wall18",
+        "offsetMm": 2586,
+        "widthMm": 418,
+        "heightMm": 834,
+        "sillMm": 606,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening19",
+        "name": "Window19",
+        "kind": "window",
+        "hostId": "wall19",
+        "offsetMm": 2713,
+        "widthMm": 419,
+        "heightMm": 847,
+        "sillMm": 623,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening20",
+        "name": "Window20",
+        "kind": "window",
+        "hostId": "wall20",
+        "offsetMm": 2840,
+        "widthMm": 420,
+        "heightMm": 860,
+        "sillMm": 640,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening21",
+        "name": "Window21",
+        "kind": "window",
+        "hostId": "wall21",
+        "offsetMm": 2967,
+        "widthMm": 421,
+        "heightMm": 873,
+        "sillMm": 657,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening22",
+        "name": "Window22",
+        "kind": "window",
+        "hostId": "wall22",
+        "offsetMm": 3094,
+        "widthMm": 422,
+        "heightMm": 886,
+        "sillMm": 674,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening23",
+        "name": "Window23",
+        "kind": "window",
+        "hostId": "wall23",
+        "offsetMm": 3221,
+        "widthMm": 423,
+        "heightMm": 899,
+        "sillMm": 691,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening24",
+        "name": "Window24",
+        "kind": "window",
+        "hostId": "wall24",
+        "offsetMm": 3348,
+        "widthMm": 424,
+        "heightMm": 912,
+        "sillMm": 708,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening25",
+        "name": "Window25",
+        "kind": "window",
+        "hostId": "wall25",
+        "offsetMm": 3475,
+        "widthMm": 425,
+        "heightMm": 925,
+        "sillMm": 725,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening26",
+        "name": "Window26",
+        "kind": "window",
+        "hostId": "wall26",
+        "offsetMm": 3602,
+        "widthMm": 426,
+        "heightMm": 938,
+        "sillMm": 742,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening27",
+        "name": "Window27",
+        "kind": "window",
+        "hostId": "wall27",
+        "offsetMm": 3729,
+        "widthMm": 427,
+        "heightMm": 951,
+        "sillMm": 759,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening28",
+        "name": "Window28",
+        "kind": "window",
+        "hostId": "wall28",
+        "offsetMm": 3856,
+        "widthMm": 428,
+        "heightMm": 964,
+        "sillMm": 776,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening29",
+        "name": "Window29",
+        "kind": "window",
+        "hostId": "wall29",
+        "offsetMm": 3983,
+        "widthMm": 429,
+        "heightMm": 977,
+        "sillMm": 793,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening30",
+        "name": "Window30",
+        "kind": "window",
+        "hostId": "wall30",
+        "offsetMm": 4110,
+        "widthMm": 430,
+        "heightMm": 990,
+        "sillMm": 810,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening31",
+        "name": "Window31",
+        "kind": "window",
+        "hostId": "wall31",
+        "offsetMm": 4237,
+        "widthMm": 431,
+        "heightMm": 1003,
+        "sillMm": 827,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening32",
+        "name": "Window32",
+        "kind": "window",
+        "hostId": "wall32",
+        "offsetMm": 4364,
+        "widthMm": 432,
+        "heightMm": 1016,
+        "sillMm": 844,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening33",
+        "name": "Window33",
+        "kind": "window",
+        "hostId": "wall33",
+        "offsetMm": 4491,
+        "widthMm": 433,
+        "heightMm": 1029,
+        "sillMm": 861,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening34",
+        "name": "Window34",
+        "kind": "window",
+        "hostId": "wall34",
+        "offsetMm": 4618,
+        "widthMm": 434,
+        "heightMm": 1042,
+        "sillMm": 878,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening35",
+        "name": "Window35",
+        "kind": "window",
+        "hostId": "wall35",
+        "offsetMm": 4745,
+        "widthMm": 435,
+        "heightMm": 1055,
+        "sillMm": 895,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening36",
+        "name": "Window36",
+        "kind": "window",
+        "hostId": "wall36",
+        "offsetMm": 4872,
+        "widthMm": 436,
+        "heightMm": 1068,
+        "sillMm": 912,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening37",
+        "name": "Window37",
+        "kind": "window",
+        "hostId": "wall37",
+        "offsetMm": 4999,
+        "widthMm": 437,
+        "heightMm": 1081,
+        "sillMm": 929,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening38",
+        "name": "Window38",
+        "kind": "window",
+        "hostId": "wall38",
+        "offsetMm": 5126,
+        "widthMm": 438,
+        "heightMm": 1094,
+        "sillMm": 946,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening39",
+        "name": "Window39",
+        "kind": "window",
+        "hostId": "wall39",
+        "offsetMm": 5253,
+        "widthMm": 439,
+        "heightMm": 1107,
+        "sillMm": 963,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening40",
+        "name": "Window40",
+        "kind": "window",
+        "hostId": "wall40",
+        "offsetMm": 5380,
+        "widthMm": 440,
+        "heightMm": 1120,
+        "sillMm": 980,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening41",
+        "name": "Window41",
+        "kind": "window",
+        "hostId": "wall41",
+        "offsetMm": 5507,
+        "widthMm": 441,
+        "heightMm": 1133,
+        "sillMm": 997,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening42",
+        "name": "Window42",
+        "kind": "window",
+        "hostId": "wall42",
+        "offsetMm": 5634,
+        "widthMm": 442,
+        "heightMm": 1146,
+        "sillMm": 1014,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening43",
+        "name": "Window43",
+        "kind": "window",
+        "hostId": "wall43",
+        "offsetMm": 5761,
+        "widthMm": 443,
+        "heightMm": 1159,
+        "sillMm": 1031,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening44",
+        "name": "Window44",
+        "kind": "window",
+        "hostId": "wall44",
+        "offsetMm": 5888,
+        "widthMm": 444,
+        "heightMm": 1172,
+        "sillMm": 1048,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening45",
+        "name": "Window45",
+        "kind": "window",
+        "hostId": "wall45",
+        "offsetMm": 6015,
+        "widthMm": 445,
+        "heightMm": 1185,
+        "sillMm": 1065,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening46",
+        "name": "Window46",
+        "kind": "window",
+        "hostId": "wall46",
+        "offsetMm": 6142,
+        "widthMm": 446,
+        "heightMm": 1198,
+        "sillMm": 1082,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening47",
+        "name": "Window47",
+        "kind": "window",
+        "hostId": "wall47",
+        "offsetMm": 6269,
+        "widthMm": 447,
+        "heightMm": 1211,
+        "sillMm": 1099,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening48",
+        "name": "Window48",
+        "kind": "window",
+        "hostId": "wall48",
+        "offsetMm": 6396,
+        "widthMm": 448,
+        "heightMm": 1224,
+        "sillMm": 1116,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening49",
+        "name": "Window49",
+        "kind": "window",
+        "hostId": "wall49",
+        "offsetMm": 6523,
+        "widthMm": 449,
+        "heightMm": 1237,
+        "sillMm": 1133,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening50",
+        "name": "Window50",
+        "kind": "window",
+        "hostId": "wall50",
+        "offsetMm": 6650,
+        "widthMm": 450,
+        "heightMm": 1250,
+        "sillMm": 1150,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening51",
+        "name": "Window51",
+        "kind": "window",
+        "hostId": "wall51",
+        "offsetMm": 6777,
+        "widthMm": 451,
+        "heightMm": 1263,
+        "sillMm": 1167,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening52",
+        "name": "Window52",
+        "kind": "window",
+        "hostId": "wall52",
+        "offsetMm": 6904,
+        "widthMm": 452,
+        "heightMm": 1276,
+        "sillMm": 1184,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening53",
+        "name": "Window53",
+        "kind": "window",
+        "hostId": "wall53",
+        "offsetMm": 7031,
+        "widthMm": 453,
+        "heightMm": 1289,
+        "sillMm": 1201,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening54",
+        "name": "Window54",
+        "kind": "window",
+        "hostId": "wall54",
+        "offsetMm": 7158,
+        "widthMm": 454,
+        "heightMm": 1302,
+        "sillMm": 1218,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening55",
+        "name": "Window55",
+        "kind": "window",
+        "hostId": "wall55",
+        "offsetMm": 7285,
+        "widthMm": 455,
+        "heightMm": 1315,
+        "sillMm": 1235,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening56",
+        "name": "Window56",
+        "kind": "window",
+        "hostId": "wall56",
+        "offsetMm": 7412,
+        "widthMm": 456,
+        "heightMm": 1328,
+        "sillMm": 1252,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening57",
+        "name": "Window57",
+        "kind": "window",
+        "hostId": "wall57",
+        "offsetMm": 7539,
+        "widthMm": 457,
+        "heightMm": 1341,
+        "sillMm": 1269,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening58",
+        "name": "Window58",
+        "kind": "window",
+        "hostId": "wall58",
+        "offsetMm": 7666,
+        "widthMm": 458,
+        "heightMm": 1354,
+        "sillMm": 1286,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening59",
+        "name": "Window59",
+        "kind": "window",
+        "hostId": "wall59",
+        "offsetMm": 7793,
+        "widthMm": 459,
+        "heightMm": 1367,
+        "sillMm": 1303,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening60",
+        "name": "Window60",
+        "kind": "window",
+        "hostId": "wall60",
+        "offsetMm": 7920,
+        "widthMm": 460,
+        "heightMm": 1380,
+        "sillMm": 1320,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening61",
+        "name": "Window61",
+        "kind": "window",
+        "hostId": "wall61",
+        "offsetMm": 8047,
+        "widthMm": 461,
+        "heightMm": 1393,
+        "sillMm": 1337,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening62",
+        "name": "Window62",
+        "kind": "window",
+        "hostId": "wall62",
+        "offsetMm": 8174,
+        "widthMm": 462,
+        "heightMm": 1406,
+        "sillMm": 1354,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening63",
+        "name": "Window63",
+        "kind": "window",
+        "hostId": "wall63",
+        "offsetMm": 8301,
+        "widthMm": 463,
+        "heightMm": 1419,
+        "sillMm": 1371,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening64",
+        "name": "Window64",
+        "kind": "window",
+        "hostId": "wall0",
+        "offsetMm": 8428,
+        "widthMm": 464,
+        "heightMm": 1432,
+        "sillMm": 1388,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening65",
+        "name": "Window65",
+        "kind": "window",
+        "hostId": "wall1",
+        "offsetMm": 8555,
+        "widthMm": 465,
+        "heightMm": 1445,
+        "sillMm": 1405,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening66",
+        "name": "Window66",
+        "kind": "window",
+        "hostId": "wall2",
+        "offsetMm": 8682,
+        "widthMm": 466,
+        "heightMm": 1458,
+        "sillMm": 1422,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening67",
+        "name": "Window67",
+        "kind": "window",
+        "hostId": "wall3",
+        "offsetMm": 8809,
+        "widthMm": 467,
+        "heightMm": 1471,
+        "sillMm": 1439,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening68",
+        "name": "Window68",
+        "kind": "window",
+        "hostId": "wall4",
+        "offsetMm": 8936,
+        "widthMm": 468,
+        "heightMm": 1484,
+        "sillMm": 1456,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening69",
+        "name": "Window69",
+        "kind": "window",
+        "hostId": "wall5",
+        "offsetMm": 9063,
+        "widthMm": 469,
+        "heightMm": 1497,
+        "sillMm": 1473,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening70",
+        "name": "Window70",
+        "kind": "window",
+        "hostId": "wall6",
+        "offsetMm": 9190,
+        "widthMm": 470,
+        "heightMm": 1510,
+        "sillMm": 1490,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening71",
+        "name": "Window71",
+        "kind": "window",
+        "hostId": "wall7",
+        "offsetMm": 9317,
+        "widthMm": 471,
+        "heightMm": 1523,
+        "sillMm": 1507,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening72",
+        "name": "Window72",
+        "kind": "window",
+        "hostId": "wall8",
+        "offsetMm": 9444,
+        "widthMm": 472,
+        "heightMm": 1536,
+        "sillMm": 1524,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening73",
+        "name": "Window73",
+        "kind": "window",
+        "hostId": "wall9",
+        "offsetMm": 9571,
+        "widthMm": 473,
+        "heightMm": 1549,
+        "sillMm": 1541,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening74",
+        "name": "Window74",
+        "kind": "window",
+        "hostId": "wall10",
+        "offsetMm": 9698,
+        "widthMm": 474,
+        "heightMm": 1562,
+        "sillMm": 1558,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening75",
+        "name": "Window75",
+        "kind": "window",
+        "hostId": "wall11",
+        "offsetMm": 9825,
+        "widthMm": 475,
+        "heightMm": 1575,
+        "sillMm": 1575,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening76",
+        "name": "Window76",
+        "kind": "window",
+        "hostId": "wall12",
+        "offsetMm": 9952,
+        "widthMm": 476,
+        "heightMm": 1588,
+        "sillMm": 1592,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening77",
+        "name": "Window77",
+        "kind": "window",
+        "hostId": "wall13",
+        "offsetMm": 10079,
+        "widthMm": 477,
+        "heightMm": 1601,
+        "sillMm": 1609,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening78",
+        "name": "Window78",
+        "kind": "window",
+        "hostId": "wall14",
+        "offsetMm": 10206,
+        "widthMm": 478,
+        "heightMm": 1614,
+        "sillMm": 1626,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening79",
+        "name": "Window79",
+        "kind": "window",
+        "hostId": "wall15",
+        "offsetMm": 10333,
+        "widthMm": 479,
+        "heightMm": 1627,
+        "sillMm": 1643,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening80",
+        "name": "Window80",
+        "kind": "window",
+        "hostId": "wall16",
+        "offsetMm": 10460,
+        "widthMm": 480,
+        "heightMm": 1640,
+        "sillMm": 1660,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening81",
+        "name": "Window81",
+        "kind": "window",
+        "hostId": "wall17",
+        "offsetMm": 10587,
+        "widthMm": 481,
+        "heightMm": 1653,
+        "sillMm": 1677,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening82",
+        "name": "Window82",
+        "kind": "window",
+        "hostId": "wall18",
+        "offsetMm": 10714,
+        "widthMm": 482,
+        "heightMm": 1666,
+        "sillMm": 1694,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening83",
+        "name": "Window83",
+        "kind": "window",
+        "hostId": "wall19",
+        "offsetMm": 10841,
+        "widthMm": 483,
+        "heightMm": 1679,
+        "sillMm": 1711,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening84",
+        "name": "Window84",
+        "kind": "window",
+        "hostId": "wall20",
+        "offsetMm": 10968,
+        "widthMm": 484,
+        "heightMm": 1692,
+        "sillMm": 1728,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening85",
+        "name": "Window85",
+        "kind": "window",
+        "hostId": "wall21",
+        "offsetMm": 11095,
+        "widthMm": 485,
+        "heightMm": 1705,
+        "sillMm": 1745,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening86",
+        "name": "Window86",
+        "kind": "window",
+        "hostId": "wall22",
+        "offsetMm": 11222,
+        "widthMm": 486,
+        "heightMm": 1718,
+        "sillMm": 1762,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening87",
+        "name": "Window87",
+        "kind": "window",
+        "hostId": "wall23",
+        "offsetMm": 11349,
+        "widthMm": 487,
+        "heightMm": 1731,
+        "sillMm": 1779,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening88",
+        "name": "Window88",
+        "kind": "window",
+        "hostId": "wall24",
+        "offsetMm": 11476,
+        "widthMm": 488,
+        "heightMm": 1744,
+        "sillMm": 1796,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening89",
+        "name": "Window89",
+        "kind": "window",
+        "hostId": "wall25",
+        "offsetMm": 11603,
+        "widthMm": 489,
+        "heightMm": 1757,
+        "sillMm": 1813,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening90",
+        "name": "Window90",
+        "kind": "window",
+        "hostId": "wall26",
+        "offsetMm": 11730,
+        "widthMm": 490,
+        "heightMm": 1770,
+        "sillMm": 1830,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening91",
+        "name": "Window91",
+        "kind": "window",
+        "hostId": "wall27",
+        "offsetMm": 11857,
+        "widthMm": 491,
+        "heightMm": 1783,
+        "sillMm": 1847,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening92",
+        "name": "Window92",
+        "kind": "window",
+        "hostId": "wall28",
+        "offsetMm": 11984,
+        "widthMm": 492,
+        "heightMm": 1796,
+        "sillMm": 1864,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening93",
+        "name": "Window93",
+        "kind": "window",
+        "hostId": "wall29",
+        "offsetMm": 12111,
+        "widthMm": 493,
+        "heightMm": 1809,
+        "sillMm": 1881,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening94",
+        "name": "Window94",
+        "kind": "window",
+        "hostId": "wall30",
+        "offsetMm": 12238,
+        "widthMm": 494,
+        "heightMm": 1822,
+        "sillMm": 1898,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening95",
+        "name": "Window95",
+        "kind": "window",
+        "hostId": "wall31",
+        "offsetMm": 12365,
+        "widthMm": 495,
+        "heightMm": 1835,
+        "sillMm": 1915,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening96",
+        "name": "Window96",
+        "kind": "window",
+        "hostId": "wall32",
+        "offsetMm": 12492,
+        "widthMm": 496,
+        "heightMm": 1848,
+        "sillMm": 1932,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening97",
+        "name": "Window97",
+        "kind": "window",
+        "hostId": "wall33",
+        "offsetMm": 12619,
+        "widthMm": 497,
+        "heightMm": 1861,
+        "sillMm": 1949,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening98",
+        "name": "Window98",
+        "kind": "window",
+        "hostId": "wall34",
+        "offsetMm": 12746,
+        "widthMm": 498,
+        "heightMm": 1874,
+        "sillMm": 1966,
+        "hinge": "start",
+        "swing": "inward"
+      },
+      {
+        "id": "opening99",
+        "name": "Window99",
+        "kind": "window",
+        "hostId": "wall35",
+        "offsetMm": 12873,
+        "widthMm": 499,
+        "heightMm": 1887,
+        "sillMm": 1983,
+        "hinge": "start",
+        "swing": "inward"
+      }
+    ]
+  },
+  "furniture": [],
+  "settings": {
+    "gridSizeMm": 100,
+    "snapEnabled": true,
+    "gridVisible": true
+  }
+}

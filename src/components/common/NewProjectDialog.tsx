@@ -22,7 +22,7 @@ const parseInteger = (value: string): number | null => {
   const number = Number(cleaned);
   return Number.isSafeInteger(number) ? number : null;
 };
-export function NewProjectDialog({ onClose }: { onClose: () => void }) {
+export function NewProjectDialog({ onClose, onCreated }: { onClose: () => void; onCreated?: () => void }) {
   const loadProject = useProjectStore((s) => s.loadProject);
   const [values, setValues] = useState<Dimensions>({
     width: "4200",
@@ -93,8 +93,10 @@ export function NewProjectDialog({ onClose }: { onClose: () => void }) {
       )
     )
       return;
-    loadProject(candidate);
-    onClose();
+    if (loadProject(candidate)) {
+      onClose();
+      onCreated?.();
+    }
   }
   return (
     <div className={styles.overlay}>
@@ -119,13 +121,14 @@ export function NewProjectDialog({ onClose }: { onClose: () => void }) {
                   onChange={(event) =>
                     setValues({ ...values, [field.key]: event.target.value })
                   }
-                  aria-describedby={`${field.key}-range`}
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={`${field.key}-range${error ? " new-error" : ""}`}
                 />
                 <small id={`${field.key}-range`}>{field.range} mm</small>
               </label>
             ))}
           </div>
-          {error && <p role="alert">{error}</p>}
+          {error && <p id="new-error" role="alert">{error}</p>}
           <div className={styles.modalActions}>
             <button type="button" onClick={onClose}>
               취소

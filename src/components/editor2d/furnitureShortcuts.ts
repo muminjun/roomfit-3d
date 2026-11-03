@@ -8,6 +8,17 @@ import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import type { RotationDeg } from "../../types/model";
 import type { ShortcutAction } from "../../config/shortcuts";
+export function describeFurnitureIssues(
+  issues: { message: string; targetId?: string }[],
+  furniture: { id: string; name: string }[],
+) {
+  return issues
+    .map((issue) => {
+      const obstacle = furniture.find((item) => item.id === issue.targetId);
+      return obstacle ? `${issue.message} (${obstacle.name})` : issue.message;
+    })
+    .join(" ");
+}
 export function handleFurnitureShortcut(
   action: ShortcutAction | undefined,
   event: KeyboardEvent,
@@ -22,14 +33,24 @@ export function handleFurnitureShortcut(
   if (action === "delete") {
     const result = deleteFurniture({ itemId: item.id });
     if (result.ok) ui.setSelected(null);
+    ui.setFurnitureMessage(
+      result.ok
+        ? ""
+        : describeFurnitureIssues(result.issues, project.furniture),
+    );
     return true;
   }
   if (action === "rotate" || action === "rotateBack") {
-    rotateFurniture({
+    const result = rotateFurniture({
       itemId: item.id,
       rotationDeg: ((item.rotationDeg + (action === "rotateBack" ? 270 : 90)) %
         360) as RotationDeg,
     });
+    ui.setFurnitureMessage(
+      result.ok
+        ? ""
+        : describeFurnitureIssues(result.issues, project.furniture),
+    );
     return true;
   }
   if (action === "duplicate") {
@@ -38,6 +59,11 @@ export function handleFurnitureShortcut(
       ui.setSelected({ kind: "furniture", id: result.affectedIds[0] });
     else if (!result.ok && result.issues.some((i) => i.code === "NO_PLACEMENT"))
       ui.setDuplicatePlacementId(item.id);
+    ui.setFurnitureMessage(
+      result.ok
+        ? ""
+        : describeFurnitureIssues(result.issues, project.furniture),
+    );
     return true;
   }
   const directions: Partial<Record<ShortcutAction, [number, number]>> = {
@@ -51,7 +77,7 @@ export function handleFurnitureShortcut(
     const step = event.altKey
       ? 1
       : project.settings.gridSizeMm * (event.shiftKey ? 5 : 1);
-    moveFurniture(
+    const result = moveFurniture(
       {
         itemId: item.id,
         position: {
@@ -60,6 +86,11 @@ export function handleFurnitureShortcut(
         },
       },
       `nudge:${item.id}`,
+    );
+    ui.setFurnitureMessage(
+      result.ok
+        ? ""
+        : describeFurnitureIssues(result.issues, project.furniture),
     );
     return true;
   }

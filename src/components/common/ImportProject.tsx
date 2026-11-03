@@ -4,7 +4,7 @@ import { parseProjectJson } from "../../features/project/json";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import styles from "../../styles/App.module.css";
-export function ImportProject() {
+export function ImportProject({ onImported }: { onImported?: () => void }) {
   const [error, setError] = useState("");
   async function load(event: ChangeEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
@@ -44,6 +44,7 @@ export function ImportProject() {
     useUIStore.getState().setSelected(null);
     useUIStore.getState().setTool("select");
     setError("");
+    onImported?.();
   }
   return (
     <>

@@ -17,6 +17,20 @@ const integer = (min: number, max: number) =>
   z.number().int().min(min).max(max);
 const coordinate = integer(-LIMITS.roomMax, LIMITS.roomMax);
 const point = z.object({ id, x: coordinate, y: coordinate }).strict();
+const position = z.object({ x: coordinate, y: coordinate }).strict();
+const partition = z.object({
+  id, name: text(40), start: position, end: position,
+  thicknessMm: integer(50, 500), heightMm: integer(1800, 5000),
+}).strict().refine(p => (p.start.x === p.end.x) !== (p.start.y === p.end.y) && Math.abs(p.end.x - p.start.x) + Math.abs(p.end.y - p.start.y) >= 100, "칸막이는 100 mm 이상의 수평 또는 수직 벽이어야 합니다.");
+const opening = z.object({
+  id, name: text(40), kind: z.enum(["door", "entrance", "window"]), hostId: id,
+  offsetMm: integer(0, 30000), widthMm: integer(100, 10000), heightMm: integer(100, 5000), sillMm: integer(0, 5000),
+  hinge: z.enum(["start", "end"]), swing: z.enum(["inward", "outward"]),
+}).strict().refine(o => o.kind === "window" || o.sillMm === 0, "문 하단 높이는 0 mm여야 합니다.");
+const zone = z.object({
+  id, name: text(40), kind: z.enum(["bathroom", "kitchen", "entry", "living", "bedroom"]),
+  x: coordinate, y: coordinate, widthMm: integer(100, 30000), depthMm: integer(100, 30000),
+}).strict();
 const half = z
   .number()
   .finite()
@@ -36,6 +50,7 @@ const furniture = z
       "washingMachine",
       "chair",
       "other",
+      "toilet", "basin", "shower", "bathtub", "sink", "counter", "hob", "dishwasher", "oven",
     ]),
     name: text(40),
     position: z.object({ x: half, y: half }).strict(),
@@ -49,6 +64,10 @@ const furniture = z
       z.literal(270),
     ]),
     color: z.enum(COLORS).optional(),
+    operation: z.object({
+      kind: z.enum(["swing", "doubleSwing", "drawer", "sliding", "top"]),
+      clearanceMm: integer(0, 3000), enabled: z.boolean(),
+    }).strict().optional(),
   })
   .strict();
 export const rawProjectSchema = z
@@ -66,6 +85,9 @@ export const rawProjectSchema = z
         polygon: z.array(point).min(4).max(LIMITS.maxVertices),
         wallHeightMm: integer(1800, 5000),
         wallThicknessMm: integer(50, 500),
+        partitions: z.array(partition).max(64).optional(),
+        openings: z.array(opening).max(100).optional(),
+        zones: z.array(zone).max(32).optional(),
       })
       .strict(),
     furniture: z.array(furniture).max(LIMITS.maxFurniture),
@@ -89,6 +111,9 @@ export const projectSchema = rawProjectSchema.superRefine((p, ctx) => {
     p.room.id,
     ...p.room.polygon.map((v) => v.id),
     ...p.furniture.map((f) => f.id),
+    ...(p.room.partitions ?? []).map(x => x.id),
+    ...(p.room.openings ?? []).map(x => x.id),
+    ...(p.room.zones ?? []).map(x => x.id),
   ];
   if (new Set(ids).size !== ids.length)
     ctx.addIssue({ code: "custom", message: "중복 ID" });

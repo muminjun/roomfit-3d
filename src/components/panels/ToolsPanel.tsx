@@ -24,7 +24,10 @@ export function ToolsPanel() {
       ...project,
       id: createId(),
       room: {
-        ...project.room,
+        id: project.room.id,
+        name: project.room.name,
+        wallHeightMm: project.room.wallHeightMm,
+        wallThicknessMm: project.room.wallThicknessMm,
         polygon: preset.points.map(([x, y]) => ({ id: createId(), x, y })),
       },
       furniture: [],
@@ -49,6 +52,7 @@ export function ToolsPanel() {
         ).map(([id, label]) => (
           <button
             key={id}
+            title={{select:"가구와 벽을 선택합니다. Space를 누른 채 드래그하면 화면만 이동합니다.",wallMove:"벽을 선택하고 벽에 수직으로 드래그합니다. 양수 수치 이동은 바깥쪽입니다.",indent:"벽 위에서 구간을 드래그한 뒤 실내 쪽 깊이를 지정해 함몰을 만듭니다.",protrude:"벽 위에서 구간을 드래그한 뒤 바깥쪽 깊이를 지정해 돌출을 만듭니다."}[id]}
             aria-pressed={tool === id}
             onClick={() => setTool(id)}
           >
@@ -63,7 +67,7 @@ export function ToolsPanel() {
       <h3>방 예제</h3>
       <div className={styles.toolList}>
         {roomPresets.map((p) => (
-          <button key={p.id} onClick={() => preset(p.id)}>
+          <button key={p.id} title="현재 도면을 이 예제로 교체합니다. 교체 전 JSON 백업 여부를 확인하세요." onClick={() => preset(p.id)}>
             {p.name}
           </button>
         ))}

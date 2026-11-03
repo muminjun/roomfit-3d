@@ -1,27 +1,9 @@
-import { useState } from "react";
 import { createProject, createId } from "../../features/project/createProject";
 import { createFurnitureCandidate } from "../../features/furniture/commands";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import styles from "../../styles/App.module.css";
-const key = `roomfit3d:v2:${import.meta.env.BASE_URL}:welcome`;
-export function WelcomeCard({ onNew }: { onNew: () => void }) {
-  const [visible, setVisible] = useState(() => {
-      try {
-        return localStorage.getItem(key) !== "dismissed";
-      } catch {
-        return true;
-      }
-    }),
-    save = useUIStore((s) => s.saveStatus);
-  function dismiss() {
-    try {
-      localStorage.setItem(key, "dismissed");
-    } catch {
-      /* Intro preference is optional. */
-    }
-    setVisible(false);
-  }
+export function WelcomeCard({ onNew, onEnter, canContinue }: { onNew: () => void; onEnter: () => void; canContinue: boolean }) {
   function example() {
     if (
       !window.confirm(
@@ -42,13 +24,12 @@ export function WelcomeCard({ onNew }: { onNew: () => void }) {
     if (useProjectStore.getState().loadProject(project)) {
       useUIStore.getState().setSelected(null);
       useUIStore.getState().setTool("select");
-      dismiss();
+      onEnter();
     }
   }
-  if (!visible) return null;
   return (
-    <div className={styles.welcome}>
-      <b>RoomFit 3D에 오신 것을 환영합니다</b>
+    <main className={styles.welcome}>
+      <h1>RoomFit 3D에 오신 것을 환영합니다</h1>
       <p>① 방 치수 입력 → ② 벽과 가구 배치 → ③ 3D 확인과 JSON 백업</p>
       <small>
         배치 시뮬레이션이며 실제 제품과 현장 치수를 다시 확인해 주세요. 자동
@@ -57,9 +38,8 @@ export function WelcomeCard({ onNew }: { onNew: () => void }) {
       <div className={styles.actions}>
         <button onClick={onNew}>방 새로 만들기</button>
         <button onClick={example}>예제 보기</button>
-        {save === "saved" && <button onClick={dismiss}>계속 편집</button>}
-        <button onClick={dismiss}>닫기</button>
+        {canContinue && <button onClick={onEnter}>계속 편집</button>}
       </div>
-    </div>
+    </main>
   );
 }

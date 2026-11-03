@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 
 test("잘못된 JSON과 교체 취소는 현재 프로젝트를 보존한다", async ({ page }) => {
   await page.goto("/");

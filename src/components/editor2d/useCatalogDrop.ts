@@ -13,6 +13,7 @@ import {
 } from "../../lib/geometry";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
+import { describeFurnitureIssues } from "./furnitureShortcuts";
 export function useCatalogDrop(
   ref: RefObject<HTMLDivElement | null>,
   view: Viewport,
@@ -49,7 +50,7 @@ export function useCatalogDrop(
       useUIStore.getState().setFurniturePreview({
         item: result.item,
         valid: result.validation.valid,
-        message: result.validation.issues.map((i) => i.message).join(" "),
+        message: describeFurnitureIssues(result.validation.issues,[...useProjectStore.getState().project.furniture,...(useProjectStore.getState().project.room.partitions ?? [])]),
       });
   }
   function onDrop(event: DragEvent) {
@@ -59,7 +60,7 @@ export function useCatalogDrop(
       useUIStore
         .getState()
         .setFurnitureMessage(
-          result.validation.issues.map((i) => i.message).join(" "),
+          describeFurnitureIssues(result.validation.issues,[...useProjectStore.getState().project.furniture,...(useProjectStore.getState().project.room.partitions ?? [])]),
         );
     if (result?.validation.valid) {
       useUIStore.getState().setFurnitureMessage("");

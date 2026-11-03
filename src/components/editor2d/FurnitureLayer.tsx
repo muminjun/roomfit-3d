@@ -1,3 +1,4 @@
+import { describeFurnitureIssues } from "./furnitureShortcuts";
 import { Circle, Group, Rect, Text } from "./konva";
 import type { KonvaEventObject } from "konva/lib/Node";
 import {
@@ -8,7 +9,6 @@ import {
 } from "../../features/furniture/commands";
 import {
   getFurnitureRect,
-  getNearestClearance,
   snapFurniture,
   validateAllPlacements,
   validatePlacement,
@@ -16,10 +16,18 @@ import {
 import type { FurnitureItem } from "../../types/model";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type Konva from "konva";
 type Corner = "nw" | "ne" | "sw" | "se";
-export function FurnitureLayer({ zoom }: { zoom: number }) {
+export function FurnitureLayer({
+  zoom,
+  isPan,
+  onHover,
+}: {
+  zoom: number;
+  isPan: (event: MouseEvent) => boolean;
+  onHover: (id: string | null) => void;
+}) {
   const project = useProjectStore((s) => s.project),
     selected = useUIStore((s) => s.selected),
     preview = useUIStore((s) => s.furniturePreview),
@@ -45,39 +53,16 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
       resize.current = null;
       setPreview(null);
     };
-    const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") cancel();
-    };
-    window.addEventListener("keydown", key);
     window.addEventListener("blur", cancel);
     window.addEventListener("pointercancel", cancel);
     window.addEventListener("roomfit-cancel-drag", cancel);
     return () => {
-      window.removeEventListener("keydown", key);
+      cancel();
       window.removeEventListener("blur", cancel);
       window.removeEventListener("pointercancel", cancel);
       window.removeEventListener("roomfit-cancel-drag", cancel);
     };
   }, [setPreview]);
-  const [hovered, setHovered] = useState<string | null>(null),
-    [altDown, setAltDown] = useState(false);
-  useEffect(() => {
-    const down = (event: KeyboardEvent) => {
-      if (event.key === "Alt") setAltDown(true);
-    };
-    const up = (event: KeyboardEvent) => {
-      if (event.key === "Alt") setAltDown(false);
-    };
-    const clear = () => setAltDown(false);
-    window.addEventListener("keydown", down);
-    window.addEventListener("keyup", up);
-    window.addEventListener("blur", clear);
-    return () => {
-      window.removeEventListener("keydown", down);
-      window.removeEventListener("keyup", up);
-      window.removeEventListener("blur", clear);
-    };
-  }, []);
   const validity = validateAllPlacements(project.room, project.furniture);
   function candidate(
     item: FurnitureItem,
@@ -86,10 +71,10 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
   ) {
     let dx = position.x - item.position.x,
       dy = position.y - item.position.y;
-    if (shift) {
-      if (Math.abs(dx) > Math.abs(dy)) dy = 0;
-      else dx = 0;
-    }
+    const horizontal = shift && Math.abs(dx) > Math.abs(dy);
+    const vertical = shift && !horizontal;
+    if (horizontal) dy = 0;
+    if (vertical) dx = 0;
     let next = {
       ...item,
       position: {
@@ -99,6 +84,8 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
     };
     if (project.settings.snapEnabled)
       next = snapFurniture(next, project.settings.gridSizeMm);
+    if (horizontal) next.position.y = item.position.y;
+    if (vertical) next.position.x = item.position.x;
     return next;
   }
   function update(item: FurnitureItem) {
@@ -111,11 +98,16 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
     setPreview({
       item,
       valid: validation.valid,
-      message: validation.issues.map((i) => i.message).join(" "),
+      message: describeFurnitureIssues(validation.issues, project.furniture),
     });
   }
   function begin(e: KonvaEventObject<DragEvent>, item: FurnitureItem) {
     e.cancelBubble = true;
+    if (useUIStore.getState().tool !== "select") {
+      e.target.position(item.position);
+      e.target.stopDrag();
+      return;
+    }
     original.current = item;
     cancelled.current = false;
     activeNode.current = e.target;
@@ -136,6 +128,19 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
   function end(e: KonvaEventObject<DragEvent>) {
     if (!original.current || cancelled.current) return;
     activeNode.current = null;
+    if (
+      Math.hypot(
+        e.target.x() - original.current.position.x,
+        e.target.y() - original.current.position.y,
+      ) *
+        zoom <
+      3
+    ) {
+      e.target.position(original.current.position);
+      original.current = null;
+      setPreview(null);
+      return;
+    }
     const next = candidate(
       original.current,
       { x: e.target.x(), y: e.target.y() },
@@ -151,7 +156,9 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
     if (!validation.valid)
       useUIStore
         .getState()
-        .setFurnitureMessage(validation.issues.map((i) => i.message).join(" "));
+        .setFurnitureMessage(
+          describeFurnitureIssues(validation.issues, project.furniture),
+        );
     else useUIStore.getState().setFurnitureMessage("");
     if (validation.valid) {
       const result = alt.current
@@ -159,6 +166,12 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
         : moveFurniture({ itemId: next.id, position: next.position });
       if (result.ok && result.kind === "Committed")
         setSelected({ kind: "furniture", id: result.affectedIds[0] });
+      else if (!result.ok)
+        useUIStore
+          .getState()
+          .setFurnitureMessage(
+            describeFurnitureIssues(result.issues, project.furniture),
+          );
     }
     original.current = null;
     setPreview(null);
@@ -204,9 +217,32 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
             x={item.position.x}
             y={item.position.y}
             draggable={tool === "select"}
-            onMouseEnter={() => setHovered(item.id)}
-            onMouseLeave={() => setHovered(null)}
+            onMouseEnter={() => onHover(item.id)}
+            onMouseLeave={() => onHover(null)}
+            onMouseDown={(e) => {
+              if (!isPan(e.evt)) return;
+              const group = e.currentTarget;
+              const target = e.target;
+              const groupDraggable = group.draggable();
+              const targetDraggable = target.draggable();
+              group.draggable(false);
+              target.draggable(false);
+              const restore = () => {
+                const canEdit = useUIStore.getState().tool === "select";
+                group.draggable(groupDraggable && canEdit);
+                target.draggable(targetDraggable && canEdit);
+                window.removeEventListener("mouseup", restore);
+                window.removeEventListener("blur", restore);
+                window.removeEventListener("pointercancel", restore);
+                window.removeEventListener("roomfit-cancel-drag", restore);
+              };
+              window.addEventListener("mouseup", restore);
+              window.addEventListener("blur", restore);
+              window.addEventListener("pointercancel", restore);
+              window.addEventListener("roomfit-cancel-drag", restore);
+            }}
             onClick={(e) => {
+              if (isPan(e.evt)) return;
               e.cancelBubble = true;
               setSelected({ kind: "furniture", id: item.id });
             }}
@@ -245,7 +281,7 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
                     fill="white"
                     stroke="#168b81"
                     strokeWidth={2 / zoom}
-                    draggable
+                    draggable={tool === "select"}
                     onDragStart={(e) => {
                       e.cancelBubble = true;
                       resize.current = { item, corner: c };
@@ -295,7 +331,10 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
                         .setFurnitureMessage(
                           result.ok
                             ? ""
-                            : result.issues.map((i) => i.message).join(" "),
+                            : describeFurnitureIssues(
+                                result.issues,
+                                project.furniture,
+                              ),
                         );
                       resize.current = null;
                       setPreview(null);
@@ -306,31 +345,6 @@ export function FurnitureLayer({ zoom }: { zoom: number }) {
           </Group>
         );
       })}
-      {altDown &&
-        hovered &&
-        (() => {
-          const item = project.furniture.find((f) => f.id === hovered);
-          if (!item) return null;
-          const r = getFurnitureRect(item);
-          const valid = validity[item.id]?.valid;
-          const d = valid
-            ? getNearestClearance(project.room, project.furniture, item)
-            : null;
-          return (
-            <Text
-              x={r.minX}
-              y={r.minY - 35 / zoom}
-              fontSize={12 / zoom}
-              fill="#244c49"
-              text={
-                d
-                  ? `도면상 최단거리: ←${d.left} →${d.right} ↑${d.up} ↓${d.down} mm`
-                  : "배치 경고: 유효하지 않은 배치의 거리는 표시하지 않습니다."
-              }
-              listening={false}
-            />
-          );
-        })()}
       {preview &&
         !project.furniture.some((i) => i.id === preview.item.id) &&
         (() => {

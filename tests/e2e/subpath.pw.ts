@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('AC-39/80: 동일 dist가 저장소 하위 경로에서 정적·동적 자산을 로드한다', async ({ page, baseURL }) => {
   if (!baseURL) throw new Error('Production subpath baseURL is required.');

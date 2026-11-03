@@ -1,4 +1,5 @@
 export type ShortcutAction =
+  | "cancel"
   | "select"
   | "wallMove"
   | "indent"
@@ -31,6 +32,12 @@ type Definition = {
 const plain = (e: KeyboardEvent) => !e.ctrlKey && !e.metaKey && !e.altKey;
 const mod = (e: KeyboardEvent) => e.ctrlKey || e.metaKey;
 export const shortcuts: Definition[] = [
+  {
+    action: "cancel",
+    label: "Esc",
+    description: "진행 중인 작업 취소 또는 선택 해제",
+    match: (e) => plain(e) && !e.shiftKey && e.code === "Escape",
+  },
   {
     action: "select",
     label: "V",
@@ -155,7 +162,6 @@ export const shortcuts: Definition[] = [
   },
 ];
 export const shortcutHelp = [
-  { label: "Esc", description: "진행 중인 작업 취소" },
   ...shortcuts.map(({ label, description }) => ({ label, description })),
   { label: "Space / 가운데 버튼 드래그", description: "화면 이동" },
   { label: "Alt + 가구 드래그", description: "가구 복제" },

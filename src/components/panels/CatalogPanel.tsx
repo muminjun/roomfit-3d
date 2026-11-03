@@ -8,6 +8,7 @@ import {
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import styles from "../../styles/App.module.css";
+import { CatalogThumbnail } from "./CatalogThumbnail";
 export function CatalogPanel() {
   const [query, setQuery] = useState(""),
     [category, setCategory] = useState("전체"),
@@ -66,6 +67,7 @@ export function CatalogPanel() {
           .map((item) => (
             <button
               key={item.id}
+              title={`${item.name} 추가 · ${item.widthMm} × ${item.depthMm} × ${item.heightMm} mm. 클릭하거나 도면으로 끌어 놓으세요.`}
               draggable
               onDragStart={(e) => {
                 setTool("select");
@@ -80,7 +82,7 @@ export function CatalogPanel() {
               onClick={() => add(item.id)}
             >
               <span className={styles.thumbnail} aria-hidden="true">
-                ▦
+                <CatalogThumbnail item={item} />
               </span>
               <span>
                 <b>{item.name}</b>

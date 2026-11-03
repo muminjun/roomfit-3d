@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 test("벽 수치 변경과 되돌리기에서 실제 방 면적이 바뀐다", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "벽 1 선택" }).click();

@@ -1,8 +1,13 @@
 import { resolveShortcut } from "../../config/shortcuts";
-import { handleFurnitureShortcut } from "./furnitureShortcuts";
+import {
+  describeFurnitureIssues,
+  handleFurnitureShortcut,
+} from "./furnitureShortcuts";
 import { exportJson } from "../../features/project/exportJson";
 import { useDuplicatePlacement } from "./useDuplicatePlacement";
 import { FurnitureLayer } from "./FurnitureLayer";
+import { OpeningLayer, ZonePartitionLayer } from "./ArchitectureLayer";
+import { OperationOverlay } from "./OperationOverlay";
 import { useCatalogDrop } from "./useCatalogDrop";
 import { useEffect, useRef, useState } from "react";
 import { clamp, useViewport } from "./useViewport";
@@ -11,6 +16,9 @@ import type { KonvaEventObject } from "konva/lib/Node";
 import {
   addNotch,
   getBBox,
+  getFurnitureRect,
+  getNearestClearance,
+  validateAllPlacements,
   moveWall,
   screenToWorld,
   zoomAtPointer,
@@ -55,17 +63,41 @@ export function Editor2D() {
   const gesture = useRef<Gesture | null>(null),
     space = useRef(false);
   const [message, setMessage] = useState("");
+  const [altDown, setAltDown] = useState(false);
+  const [hoverTarget, setHoverTarget] = useState<{
+    kind: "wall" | "furniture";
+    id: string;
+  } | null>(null);
+  const project = useProjectStore((s) => s.project);
+  useEffect(() => { setHoverTarget(null); }, [selected?.id, view]);
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.isComposing || document.querySelector('[aria-modal="true"]'))
         return;
-      if (e.key === "Escape") {
+      if (e.key === "Alt" && document.activeElement === ref.current)
+        setAltDown(true);
+      if (
+        resolveShortcut(e) === "cancel" &&
+        document.activeElement === ref.current
+      ) {
+        const ui = useUIStore.getState();
+        const hadDraft =
+          !!gesture.current ||
+          !!ui.preview ||
+          !!ui.furniturePreview ||
+          !!ui.duplicatePlacementId ||
+          !!ui.draggedCatalogId;
         gesture.current = null;
+        space.current = false;
         setPreview(null);
         setMessage("");
-        useUIStore.getState().setDuplicatePlacementId(null);
-        useUIStore.getState().setFurniturePreview(null);
-        useUIStore.getState().setDraggedCatalogId(null);
+        ui.setDuplicatePlacementId(null);
+        ui.setFurniturePreview(null);
+        ui.setDraggedCatalogId(null);
+        window.dispatchEvent(new Event("roomfit-cancel-drag"));
+        if (!hadDraft) ui.setSelected(null);
+        e.preventDefault();
+        return;
       }
       if (e.code === "Space" && document.activeElement === ref.current) {
         e.preventDefault();
@@ -85,7 +117,29 @@ export function Editor2D() {
           setView((v) =>
             zoomAtPointer(v, { x: size.width / 2, y: size.height / 2 }, 1),
           );
-        else if (action === "fitSelection" && selected?.kind === "wall") {
+        else if (action === "fitSelection" && selected?.kind === "furniture") {
+          const item = useProjectStore
+            .getState()
+            .project.furniture.find((f) => f.id === selected.id);
+          if (item) {
+            const r = getFurnitureRect(item),
+              width = r.maxX - r.minX,
+              height = r.maxY - r.minY;
+            const zoom = clamp(
+              Math.min(
+                (size.width - 100) / width,
+                (size.height - 100) / height,
+              ),
+              0.02,
+              1.5,
+            );
+            setView({
+              zoom,
+              panX: size.width / 2 - ((r.minX + r.maxX) / 2) * zoom,
+              panY: size.height / 2 - ((r.minY + r.maxY) / 2) * zoom,
+            });
+          }
+        } else if (action === "fitSelection" && selected?.kind === "wall") {
           const i = room.polygon.findIndex((p) => p.id === selected.id);
           if (i >= 0) {
             const a = room.polygon[i],
@@ -130,11 +184,14 @@ export function Editor2D() {
     };
     const keyup = (e: KeyboardEvent) => {
       if (e.code === "Space") space.current = false;
+      if (e.key === "Alt") setAltDown(false);
     };
     const cancel = () => {
       gesture.current = null;
       setPreview(null);
       space.current = false;
+      setAltDown(false);
+      setHoverTarget(null);
       useUIStore.getState().setDuplicatePlacementId(null);
       useUIStore.getState().setFurniturePreview(null);
       useUIStore.getState().setDraggedCatalogId(null);
@@ -151,8 +208,9 @@ export function Editor2D() {
   useEffect(() => {
     gesture.current = null;
     setPreview(null);
+    useUIStore.getState().setFurnitureMessage("");
     window.dispatchEvent(new Event("roomfit-cancel-drag"));
-  }, [tool, setPreview]);
+  }, [tool, project, setPreview]);
   function pointer(e: KonvaEventObject<MouseEvent>): Point | null {
     const pos = e.target.getStage()?.getPointerPosition();
     return pos ? screenToWorld(pos, view) : null;
@@ -328,10 +386,6 @@ export function Editor2D() {
   }
   function downStage(e: KonvaEventObject<MouseEvent>) {
     ref.current?.focus();
-    if (useUIStore.getState().duplicatePlacementId) {
-      duplicate.commit();
-      return;
-    }
     const screen = e.target.getStage()?.getPointerPosition();
     if (!screen) return;
     if (e.evt.button === 1 || space.current) {
@@ -341,6 +395,10 @@ export function Editor2D() {
         panX: view.panX,
         panY: view.panY,
       };
+      return;
+    }
+    if (useUIStore.getState().duplicatePlacementId) {
+      duplicate.commit();
       return;
     }
     const g = gesture.current;
@@ -373,9 +431,10 @@ export function Editor2D() {
   return (
     <div className={styles.editor}>
       <div className={styles.viewControls}>
-        <button onClick={fit}>전체 보기</button>
+        <button title="방 전체가 캔버스 안에 들어오도록 화면을 맞춥니다. 도면 데이터는 바뀌지 않습니다." onClick={fit}>전체 보기</button>
         <button
           aria-label="축소"
+          title="캔버스 중심을 기준으로 화면을 축소합니다."
           onClick={() =>
             setView((v) =>
               zoomAtPointer(
@@ -391,6 +450,7 @@ export function Editor2D() {
         <span>{Math.round(view.zoom * 1000) / 10}%</span>
         <button
           aria-label="확대"
+          title="캔버스 중심을 기준으로 화면을 확대합니다."
           onClick={() =>
             setView((v) =>
               zoomAtPointer(
@@ -404,6 +464,7 @@ export function Editor2D() {
           +
         </button>
         <button
+          title="휠을 줌에 사용할지 화면 이동에 사용할지 전환합니다. Space·중간 버튼 드래그로도 이동할 수 있습니다."
           onClick={() =>
             setMode((m) => {
               const next = m === "zoom" ? "pan" : "zoom";
@@ -430,12 +491,17 @@ export function Editor2D() {
           gesture.current = null;
           setPreview(null);
           setMessage("");
+          setHoverTarget(null);
           window.dispatchEvent(new Event("roomfit-cancel-drag"));
           duplicate.cancel();
         }}
         onPointerCancel={() => {
           gesture.current = null;
           setPreview(null);
+          space.current = false;
+          setAltDown(false);
+          setHoverTarget(null);
+          window.dispatchEvent(new Event("roomfit-cancel-drag"));
         }}
       >
         <Stage
@@ -487,7 +553,18 @@ export function Editor2D() {
               strokeWidth={5 / view.zoom}
               listening={false}
             />
-            <FurnitureLayer zoom={view.zoom} />
+            <ZonePartitionLayer room={room} zoom={view.zoom} />
+            {selected?.kind === "furniture" && (() => {
+              const item = project.furniture.find(f => f.id === selected.id);
+              return item ? <OperationOverlay item={item} room={room} items={project.furniture}/> : null;
+            })()}
+            <FurnitureLayer
+              zoom={view.zoom}
+              isPan={(event) => event.button === 1 || space.current}
+              onHover={(id) =>
+                setHoverTarget(id ? { kind: "furniture", id } : null)
+              }
+            />
             {room.polygon.map((a, i) => {
               const b = room.polygon[(i + 1) % room.polygon.length];
               return (
@@ -497,10 +574,15 @@ export function Editor2D() {
                   stroke={selected?.id === a.id ? "#1a9a8d" : "#263d50"}
                   strokeWidth={(selected?.id === a.id ? 6 : 3) / view.zoom}
                   hitStrokeWidth={12 / view.zoom}
+                  onMouseEnter={() =>
+                    setHoverTarget({ kind: "wall", id: a.id })
+                  }
+                  onMouseLeave={() => setHoverTarget(null)}
                   onMouseDown={(e) => downEdge(e, a.id)}
                 />
               );
             })}
+            <OpeningLayer room={room} items={project.furniture} zoom={view.zoom}/>
             {room.polygon.map((a, i) => {
               const b = room.polygon[(i + 1) % room.polygon.length];
               const length = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
@@ -527,6 +609,37 @@ export function Editor2D() {
           </Layer>
         </Stage>
       </div>
+      {altDown &&
+        hoverTarget &&
+        selected?.kind === "furniture" &&
+        (() => {
+          const item = project.furniture.find((f) => f.id === selected.id);
+          if (
+            !item ||
+            (hoverTarget.kind === "furniture" && hoverTarget.id === item.id)
+          )
+            return null;
+          const target =
+            hoverTarget.kind === "wall"
+              ? "벽"
+              : project.furniture.find((f) => f.id === hoverTarget.id)?.name;
+          if (!target) return null;
+          const validity = validateAllPlacements(
+            project.room,
+            project.furniture,
+          )[item.id];
+          const d = validity?.valid
+            ? getNearestClearance(project.room, project.furniture, item)
+            : null;
+          return (
+            <div role="status" aria-label="거리 측정">
+              {item.name} → {target}:{" "}
+              {d
+                ? `도면상 최단거리: ←${d.left} →${d.right} ↑${d.up} ↓${d.down} mm`
+                : `먼저 배치 오류를 해결하세요: ${describeFurnitureIssues(validity?.issues ?? [], project.furniture)}`}
+            </div>
+          );
+        })()}
       {(message ||
         preview?.message ||
         furniturePreview?.message ||

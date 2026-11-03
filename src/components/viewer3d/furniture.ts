@@ -138,6 +138,33 @@ export function buildFurnitureObject(item: FurnitureItem): Group {
       }
       break;
     }
+    case "toilet":
+      box(w * 0.75, h * 0.45, d, 0, h * 0.225, 0, light);
+      box(w, h * 0.22, d * 0.65, 0, h * 0.56, -d * 0.175, light);
+      box(w * 0.8, h * 0.35, d * 0.25, 0, h * 0.825, d * 0.375, light);
+      break;
+    case "basin": case "sink": case "bathtub":
+      box(w, h * 0.18, d, 0, h * 0.91, 0, light);
+      box(w * 0.08, h * 0.82, d, -w * 0.46, h * 0.41, 0, body);
+      box(w * 0.08, h * 0.82, d, w * 0.46, h * 0.41, 0, body);
+      box(w * 0.8, h * 0.025, d * 0.7, 0, h * 0.985, 0, accent);
+      break;
+    case "shower":
+      box(w, h * 0.05, d, 0, h * 0.025, 0, light);
+      box(w * 0.04, h * 0.95, d, -w * 0.48, h * 0.525, 0, body);
+      box(w, h * 0.95, d * 0.04, 0, h * 0.525, d * 0.48, body);
+      break;
+    case "hob":
+      box(w, h, d, 0, h / 2, 0, body);
+      for (const x of [-0.22, 0.22]) for (const z of [-0.22, 0.22]) {
+        const ring = new Mesh(new CylinderGeometry(Math.min(w,d)*0.13, Math.min(w,d)*0.13, h*0.01, 24), accent);
+        ring.position.set(x*w,h*0.995,z*d); group.add(ring);
+      }
+      break;
+    case "counter": case "dishwasher": case "oven":
+      box(w, h, d, 0, h / 2, 0, body, true);
+      box(w * 0.8, h * 0.04, d * 0.01, 0, h * 0.8, -d * 0.495, accent);
+      break;
     default:
       box(w, h, d, 0, h / 2, 0, body, true);
       break;

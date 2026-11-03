@@ -14,7 +14,9 @@ import {
   resizeFurniture,
   rotateFurniture,
   setFurnitureColor,
+  setFurnitureOperation,
 } from "../../features/furniture/commands";
+import { getOperationWarnings } from "../../features/furniture/operation";
 import type { CommandResult } from "../../features/room/commands";
 import type { FurnitureItem, RotationDeg } from "../../types/model";
 import { useProjectStore } from "../../store/useProjectStore";
@@ -147,6 +149,7 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
       </label>
       <div className={styles.toolList}>
         <button
+          title="중심을 유지하며 90° 회전합니다. 공간이 부족해도 회전하고 배치 경고를 표시합니다."
           onClick={() =>
             result(
               rotateFurniture({
@@ -159,12 +162,14 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
           90° 회전
         </button>
         <button
+          title="가로·깊이·높이를 카탈로그의 원래 치수로 되돌립니다. 배치할 수 없는 크기면 사유를 안내합니다."
           disabled={!catalog.some((entry) => entry.id === item.catalogId)}
           onClick={() => result(resetFurnitureSize({ itemId: item.id }))}
         >
           원래 크기로
         </button>
         <button
+          title="원본 주변의 빈자리에 복제합니다. 빈자리를 찾지 못하면 도면에서 복제 위치를 지정하세요."
           onClick={() => {
             const r = duplicateFurniture({ itemId: item.id });
             if (!r.ok && r.issues.some((i) => i.code === "NO_PLACEMENT")) {
@@ -176,6 +181,7 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
           복제
         </button>
         <button
+          title="선택한 가구를 삭제합니다. 실행 취소로 복원할 수 있습니다."
           onClick={() => {
             const r = deleteFurniture({ itemId: item.id });
             result(r);
@@ -188,6 +194,20 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
       {!validation.valid && (
         <p className={styles.muted}>먼저 배치 오류를 해결하세요.</p>
       )}
+      {item.operation && <div className={styles.controlGroup}>
+        <b>여는 공간 계획 여유</b>
+        <small>앞면 전체를 기준으로 한 보수적인 계획 여유입니다. 실제 제품의 문 궤적이나 설치 기준은 아닙니다.</small>
+        <label><input type="checkbox" checked={item.operation.enabled} onChange={e => result(setFurnitureOperation({itemId:item.id, operation:{...item.operation!, enabled:e.target.checked}}))} /> 여는 공간 표시</label>
+        <label className={styles.field}>여는 공간 여유 (mm)
+          <input type="number" min={0} max={3000} step={1} key={item.operation.clearanceMm} defaultValue={item.operation.clearanceMm} onBlur={e => {
+            const raw = e.currentTarget.value, value = Number(raw);
+            if (raw.trim() === "" || !Number.isInteger(value) || value < 0 || value > 3000) { setError("여는 공간은 0–3000 mm 정수로 입력해 주세요."); return; }
+            result(setFurnitureOperation({itemId:item.id, operation:{...item.operation!, clearanceMm:value}}));
+          }} onKeyDown={e => { if (e.key === "Enter") e.currentTarget.blur(); }} />
+          <small>0–3000 mm</small>
+        </label>
+        {item.operation.enabled && item.operation.clearanceMm > 0 && <p role="status">{(() => { const warnings = getOperationWarnings(project.room, project.furniture, item); return warnings.length ? `여는 공간에 장애물: ${warnings.map(w => w.name).join(", ")}` : "여는 공간에 장애물이 없습니다."; })()}</p>}
+      </div>}
       {clearance && (
         <div className={styles.controlGroup}>
           <b>도면상 최단거리</b>

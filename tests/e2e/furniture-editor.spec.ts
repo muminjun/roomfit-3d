@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 test("카탈로그에서 가구를 추가하고 회전과 실행 취소를 할 수 있다", async ({
   page,
 }) => {
