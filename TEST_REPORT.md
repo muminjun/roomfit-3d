@@ -1,3 +1,52 @@
+# 검증 보고서 — 2026-11-03 최종 보완
+
+현재 코드 반영 커밋은 `cb84a44651792d1644fea1f6e850f609e284a15f`이며, 클라이언트 구현 커밋은 `319f6c0`이다. 기존의 일괄 통과 표시를 대신하는 기준별 원문·코드·검증·남은 조항은 [81개 AC 근거표](docs/ac-evidence-2026-11-03.md)다. 원문 파일은 수정하지 않았고 Downloads 원본과 SHA256이 같다.
+
+## 실제 실행 결과
+
+| 명령/대상 | 종료 코드와 결과 |
+|---|---|
+| npm ci | 종료0; jsdom27.4.0, whatwg-encoding 제거 |
+| npm run typecheck | 종료0; 별도 고의 TS2322는 종료1, 즉시 제거 후 종료0 |
+| npm run lint | 종료0 |
+| npm run test | 종료0, 126개 / 16파일; main 병합 후도126개 종료0 |
+| npm run test:e2e -- --workers=1 | 종료0, Chromium/Firefox154개 (2.0분) |
+| VITE_BASE_PATH=/roomfit-3d/ npm run build | 종료0, 최종 클라이언트 수정 후 빌드 |
+| VITE_BASE_PATH=/roomfit-3d/ npm run check:dist | 종료0, 26참조/7JS 검사 |
+| npm run test:e2e:subpath | 종료0, 같은 dist에서 Chromium/Firefox2개 |
+| 기존 설치된 실제 Chrome 대표 시나리오 | 종료0, 15개 |
+| node scripts/verify-live.mjs — 로컬 production4175 | 종료0, Chromium/Firefox의 P0 및 확장 기능 여정 |
+| npm audit --omit=dev --json | 종료0, 취약점0 |
+| [Pages Actions41643720875](https://github.com/muminjun/roomfit-3d/actions/runs/41643720875) | success, cb84a44 main push / deploy job125943459722 전체 단계 성공 |
+
+최종 전체 E2E의 로그는 `/tmp/roomfit-final-e2e-recorded.log`, 보존된 종료코드는 `/tmp/roomfit-final-e2e-exit-code.txt`의0이다. 병렬 부하가 있던 이전 전체 실행은153통과/1지연 실패였고, 테스트와 기본 대기 시간을 바꾸지 않은 해당 시나리오 재실행1/1, 단독 전체154/154, 종료코드 보존 전체154/154가 차례로 통과했다. 최초 지연의 원인은 확정하지 않았으며 아래 이력에서 숨기지 않는다. 재시도 설정·시간제한·검증 조건을 느슨하게 바꾸지 않았다.
+
+최종 dist10개 파일의 SHA256은 서브경로 검사 전후 같으며 [build-evidence](docs/build-evidence-2026-11-03.json)에 있다. Actions는 base를 적용해 한 번 빌드하고 검사한 동일 dist를 업로드한다.
+
+## 재현과 해결
+
+- Space/중간 버튼 팬이 가구/핸들 편집보다 우선한다. Space에서 X2100→2700으로 바뀌던 실패를 먼저 재현했다. 팬 중 도구 변경으로 draggable이 복원되는 별도 실패도 재현해 보완했다.
+- Shift 가로 드래그의 Y1755→1800 스냅 실패를 먼저 재현하고, 스냅 후 고정 축을 정확히 보존했다. 반 mm/홀수/90도/스냅OFF와 Undo1건·취소0건을 확인했다.
+- Shift+2 가구 맞춤, draft 취소 후 idle Esc 선택 해제, 키보드 실패 사유/겹친 가구 이름, 선택 가구 기준 Alt 측정과 벽 호버를 보완했다. Undo 중 stale drag 재확정도 재현해 차단했다.
+- 사용자 요청에 따라 공간이 부족한 회전은 확정하고 파생 배치 경고를 남긴다. 이는 원문 무효 회전 금지의 명시적인 변경이다. 이동/리사이즈/새 배치의 유효 최종 상태 계약은 유지한다.
+- 칸막이·문/현관문·창문·화장실/주방/현관 등의 계획 구역, 실제3D 개구부,45종 카탈로그, 가구/가전 여는 공간을 추가했다. 경첩/열림 방향·개구부 하단 높이와 가구 여유 치수를 설정할 수 있다.
+- 리뷰에서 교차 벽까지 개구부가 지우는 문제,64칸막이/100개구부의 전역 격자 폭발, CCW JSON 문 위치 변경, 무효 개구부의 충돌/3D 불일치를 재현해 고쳤다. 오목한 방의 외벽 실내 침범도 별도 회귀로 보완했다.
+- 독립 welcome/유효 저장본 이어하기, 방 속성 진입, 상태바, 썸네일/툴팁, 반응형과 실제 Tab/Enter 여정을 보완했다. 첫 welcome JSON import가 편집기로 진입하지 않던 연결 누락도 실패 후 수정했다.
+
+## 한계와 남은 확인
+
+각 AC의 전체 문구를 직접 확인했는지는 근거표를 따른다. 부분 검증은 코드 누락 개수와 같지 않으며, 구체적인 미실행 조합/수동 확인 조항을 남겼다. S6 AC52–60은 제외한다. 독립된 여러 방의 연결 모델·여러 층·AI·GLB·로그인/서버는 구현 범위가 아니다.
+
+Edge는 사용자 지시로 검증을 중단하고 다운로드 패키지·추출 앱·이번 실행에서 생성된 지원 데이터/환경설정·프로세스를 삭제했다. 다시 설치/실행하지 않는다. Safari27.2는 Remote Automation 비활성으로 WebDriver세션 생성500이었다. 실제 스크린리더·물리 트랙패드/핀치는 미검증이다. [수동 확인 절차](docs/manual-verification-2026-11-03.md)를 제공한다.
+
+30벽/50가구의 실제 렌더 CPU제출·프레임 간격·draw calls/삼각형과 별도 rAF cadence를 [측정 표본](docs/performance-2026-11-03.json)에 기록했다. GPU타이머가 없어 GPU완료 시간 또는 모든 환경에서 지속30fps 달성은 확인하지 않았다. 개발 도구 moderate10개는 한 minimatch advisory의 전파로 남아 있으며 force/미검증 override는 하지 않았다. 런타임 audit0 및 whatwg-encoding 제거는 별도 사실이다.
+
+## 실제 서비스 검증
+
+실제 https://muminjun.github.io/roomfit-3d/ 에서 Chromium156.0.8078.4 및 Firefox157의 사용자 여정 검증이 종료0으로 통과했다. 새 공간 생성, 가구 위 Space팬 좌표 불변, Shift축Y1755 보존, Undo/Esc, 창문·주방 구역·양변기 추가, 실제3D, JSON백업, 자동저장/새로고침복원, 자산404·페이지오류 없음을 확인했다. 배포된 index-8-FBkCca.js와3D청크 등 실제 자산 경로는 [remote-evidence-2026-11-03.json](docs/remote-evidence-2026-11-03.json)에 기록했다. 기록 파일을 추가하는 후속 문서 커밋은 클라이언트 소스를 바꾸지 않는다.
+
+<details><summary>이전 실행 기록 — 위 최종 확인보다 이전 상태</summary>
+
 # 검증 보고서 — 2026-11-03
 
 현재 소스의 기준별 원문·코드·실제 테스트·잔여 항목은 [AC 근거표](docs/ac-evidence-2026-11-03.md)가 유일한 기준이다. S6 AC-52–60은 제외한다. 기존의 일괄 통과 표는 이전 리비전의 기록이며 현재 소스의 통과를 뜻하지 않는다.
@@ -226,5 +275,7 @@ S4 중간: strictJSON raw검사→정규화→확정스키마검사→파생경�
 ## 원격 배포 최종 확인
 
 사용자의 push 승인과 별도 공개 전환 승인 후, PUBLIC 저장소/Pages workflow source/HTTPS를 확인했다. [Actions](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) attempt2는 success이며 ci/typecheck/lint/unit97/build/check-dist/configure/upload/deploy 모두 성공했다. 실제 https://muminjun.github.io/roomfit-3d/ 에서 Chromium156.0.8078.4와 Firefox157.0 각 새 컨텍스트로 HTTP200, 기본2D, 퀸 침대 추가·90° 회전·JSON실측값, 실제3D·Orbit·카메라 초기화·데이터 불변, 2D복귀, localStorage 저장·새로고침 동일JSON, favicon/CSS/lazy3D 응답을 확인했다. 자산13/14건, 404·pageerror0. `/tmp/roomfit-remote-smoke.mjs` 실제 실행 종료0; 원격 근거를 `docs/remote-evidence.json`에 보존했다.
+
+</details>
 
 </details>

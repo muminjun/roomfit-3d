@@ -10,8 +10,8 @@
 | 칸막이·문·창문·구역·실제3D 개구부 | 구현·통합 회귀 통과 | architecture/unit9geometry + browser | 독립된 다중방/여러층 범위 아님 |
 | 코드 리뷰 후 보완 | 중요4건+오목실내침범+stale drag 수정 | 교차벽,64/100스트레스,CCW연결,무효통로,오목클리핑,Undo중드래그 red→green | 전체 게이트 후 커밋 |
 | 의존성 | jsdom27.4.0, 폐기경고 제거 | npm ci/type/lint/unit exit0, productionaudit0 | minimatch 단일advisory 전파 moderate10 잔존 |
-| 검증·감사 | unit126, 기본E2E154 종료0 및 subpath2 종료0 | type/lint/build/check:dist exit0 | main push·Pages (Edge는 사용자 지시로 삭제·중단) |
-| 배포 | 검증 대기 | 기존공개repo/main 그대로 보존 | 커밋→main→push→Actions→서비스회귀 |
+| 검증·감사 | unit126, 기본E2E154 종료0 및 subpath2 종료0 | type/lint/build/check:dist exit0 | main/Pages/실제URL 확인 완료 (Edge는 사용자 지시로 삭제·중단) |
+| 배포 | main push·Pages·실제 서비스 확인 완료 | cb84a44 / Actions41643720875 success, Chromium/Firefox 실제URL 여정 종료0 | 문서 근거 커밋·동일 클라이언트 재배포 확인 |
 
 원문 AC81개의 정확한 증거와 부분/미검증은 docs/ac-evidence-2026-11-03.md를 따른다. 통과 개수는 모든 요구사항/환경의 충족을 증명하지 않는다. Safari27.2는 원격자동화 설정 비활성으로 WebDriver세션 생성500, 스크린리더/물리트랙패드 미검증. Edge 검증은 사용자 요청으로 중단했고 다운로드·추출 앱·생성 데이터·프로세스를 삭제했다. 재설치·재실행하지 않는다.
 

@@ -31,7 +31,7 @@ The lockfile uses version 3. Its root runtime and development dependency entries
 
 ## Release gates and monitoring
 
-At the time of this configuration review, the coordinator reported the latest 154-case browser run as **153 passed, 1 failed**: the first Chromium architecture-editor scenario was under investigation. This document therefore does not mark that run or the release as passing. The coordinator owns the final corrected test evidence, commit, main integration and push.
+The initial configuration review occurred while a 154-case browser run had **153 passed, 1 failed**. The coordinator subsequently reported a fresh corrected full run with **154 passed, exit 0**, followed by **126 unit tests passing, exit 0** on integrated `main`, and pushed `cb84a44651792d1644fea1f6e850f609e284a15f`. Those local browser results are coordinator evidence; the independent CI results below were read directly from GitHub.
 
 After the final push:
 
@@ -42,4 +42,18 @@ After the final push:
 
 The connected `github_fetch_commit_workflow_runs` wrapper documents that it filters pull-request-triggered runs, so an empty result from it must not be treated as absence or failure of this push deployment. Use the connected generic GitHub GET endpoint for `/repos/muminjun/roomfit-3d/actions/runs?head_sha=<SHA>&event=push`, or the workflow run collection, and inspect the resulting jobs. No rerun, workflow dispatch, force push or repository setting change is part of this read-only monitoring task.
 
-**Current monitoring state:** awaiting the final pushed SHA; no current release deployment result is asserted here.
+## Observed Pages deployment
+
+The exact pushed commit's [Deploy Pages run 41643720875](https://github.com/muminjun/roomfit-3d/actions/runs/41643720875) completed with **success**. The run payload confirms:
+
+- Commit: `cb84a44651792d1644fea1f6e850f609e284a15f`.
+- Event/branch: `push` / `main`; attempt 1.
+- Started: `2026-11-03T13:22:13Z`; completed run last update: `2026-11-03T13:23:51Z`.
+- Deployment job: `125943459722`, conclusion **success**; no failed steps.
+- `npm ci`, typecheck, lint, unit tests, production build, artifact check, Pages configuration, artifact upload and Pages deployment all completed successfully, as did checkout/setup and post-job cleanup.
+
+The deployment job log independently reports **16 unit test files / 126 tests passed**. Its artifact check reports **26 asset references in 7 JavaScript files under `/roomfit-3d/`**. The evaluated environment URL is **[https://muminjun.github.io/roomfit-3d/](https://muminjun.github.io/roomfit-3d/)**.
+
+These results were obtained using connected read-only GitHub run, job and job-log tools. No workflow rerun, dispatch or repository/configuration mutation was performed. This documentation records the deployment after it completed and is therefore a subsequent documentation change, not content inside that deployment's commit.
+
+**Current monitoring state:** exact-commit Actions deployment succeeded. Live browser verification is a separate coordinator task and is not claimed by this CI monitor.

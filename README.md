@@ -47,3 +47,5 @@ Actions는 같은 base로 한 번 빌드한 `dist`를 검사한 후 그대로 �
 Space/중간 버튼 팬은 가구·핸들 위에서도 편집을 시작하지 않습니다. Shift 드래그는 고정 축의 반 mm·격자 밖 좌표를 보존합니다. Shift+2는 선택 가구/벽을 맞추고, Esc는 진행 중 작업을 먼저 취소한 다음 idle에서 선택을 해제합니다. Alt는 선택 가구를 기준으로 호버한 다른 가구·벽과의 네 방향 자유 거리를 표시합니다.
 
 `?measure=1`로 3D를 열면 실제 렌더 프레임의 CPU 제출 시간·프레임 간격·draw calls/삼각형 수를 진단할 수 있습니다. GPU 완료 시간이나 모든 기기에서의 30fps 보장을 뜻하지 않습니다. 런타임 audit은0개, 개발 도구 moderate10개는 한 minimatch advisory의 전파입니다. jsdom27.4.0으로 whatwg-encoding deprecation은 제거했습니다. 근거는 [dependency-audit.md](docs/dependency-audit.md)에 있습니다. 의존성을 재설치한 뒤 개발 서버가 예전 최적화 URL에서504를 내면 서버를 재시작하세요.
+
+2026-11-03 보완 배포: [Actions41643720875](https://github.com/muminjun/roomfit-3d/actions/runs/41643720875) 성공 후 실제 서비스 Chromium/Firefox 여정도 종료0으로 확인했습니다. [새 원격 근거](docs/remote-evidence-2026-11-03.json)를 참고하세요. 추가 문서 커밋은 클라이언트 소스를 변경하지 않습니다.

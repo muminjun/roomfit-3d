@@ -42,7 +42,7 @@
 - [x] Recheck dependency audit with compatible fixes only. Measure actual renderer frame/draw-call data independently of rAF cadence (GPU timing unavailable).
 - [x] Run typecheck/lint/test/full single-worker E2E, one subpath build, check same dist, subpath E2E.
 - [x] Fresh-context final code review, fix material findings, update reports/README/DECISIONS/PROGRESS.
-- [ ] Commit, integrate main without deleting user work, push, verify Actions and live URL regressions.
+- [x] Commit, integrate main without deleting user work, push, verify Actions and live URL regressions.
 
 ## Baseline
 2026-11-03: clean main at a088b54. New branch `fix/interaction-and-home-planning`. `npm run test`: exit 0, 97 tests / 10 files. No claim about current browser suite yet.
