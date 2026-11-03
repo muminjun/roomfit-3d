@@ -1,0 +1,52 @@
+{
+  "source": "Actual rendered-frame telemetry + separate rAF cadence from completed E2E run; that full run had one unrelated lazy-loading timeout.",
+  "fixture": "30 walls / 50 furniture",
+  "limitations": [
+    "Shared headless macOS environment; CPU/action timings include workload and automation overhead.",
+    "frameMs is an actual rendered frame interval sample, not a sustained GPU throughput measurement.",
+    "cpuMs measures CPU submission, not GPU completion.",
+    "GPU timer query unavailable in recorded environments."
+  ],
+  "measurements": [
+    {
+      "rendered": {
+        "frames": "40",
+        "drawCalls": "552",
+        "triangles": "4180",
+        "cpuMs": "3.2000000029802322",
+        "frameMs": "57.599999994039536",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)",
+        "gpuTimerAvailable": "false"
+      },
+      "browserName": "chromium",
+      "headless": true,
+      "fixture": "30 walls / 50 furniture",
+      "selectionMs": 1528,
+      "editMs": 260,
+      "samples": 20,
+      "elapsedMs": 1506.8999999970201,
+      "rafHz": 12.608666799414408,
+      "note": "Playwright end-to-end action times and requestAnimationFrame cadence; CPU submission and requestAnimationFrame cadence do not measure GPU completion or guarantee performance."
+    },
+    {
+      "rendered": {
+        "frames": "20",
+        "drawCalls": "552",
+        "triangles": "4180",
+        "cpuMs": "4",
+        "frameMs": "94",
+        "renderer": "Apple M1, or similar",
+        "gpuTimerAvailable": "false"
+      },
+      "browserName": "firefox",
+      "headless": true,
+      "fixture": "30 walls / 50 furniture",
+      "selectionMs": 1159,
+      "editMs": 293,
+      "samples": 18,
+      "elapsedMs": 1577.2200000000003,
+      "rafHz": 10.778458300046916,
+      "note": "Playwright end-to-end action times and requestAnimationFrame cadence; CPU submission and requestAnimationFrame cadence do not measure GPU completion or guarantee performance."
+    }
+  ]
+}

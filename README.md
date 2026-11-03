@@ -1,5 +1,5 @@
 # RoomFit 3D
-실측 mm 기반 단일 공간·한 층의 2D·3D 가구 배치 도구입니다. 2D·3D 편집기와 로컬 배포 검증을 구현했습니다. 원격 GitHub Pages 배포와 실제 브라우저 검증까지 완료했습니다. 단계별 상태와 실제 검증 결과는 [PROGRESS.md](PROGRESS.md), [TEST_REPORT.md](TEST_REPORT.md)를 확인하세요. 기준 명세는 [원본 요구사항](docs/requirements/RoomFit3D_PROMPT.md)입니다.
+실측 mm 기반 한 층의 2D·3D 공간 배치 도구입니다. 외곽 방 안에 칸막이, 문·현관문·창문, 화장실·주방·현관 등의 계획 구역과 45종 가구·설비를 배치합니다. 현재 변경의 배포·검증 상태는 아래 연결 문서에서 확인하세요. 단계별 상태와 실제 검증 결과는 [PROGRESS.md](PROGRESS.md), [TEST_REPORT.md](TEST_REPORT.md)를 확인하세요. 기준 명세는 [원본 요구사항](docs/requirements/RoomFit3D_PROMPT.md)입니다.
 
 Node **22.15.0**과 npm을 사용합니다. React19 + TypeScript strict + Vite, react-konva, Three.js/R3F9/Drei10, Zustand, Zod, CSS Modules로 구성합니다. 런타임 의존성은 명세 허용 목록으로 제한하며 외부 폰트·사진·모델·아이콘을 사용하지 않습니다.
 
@@ -21,11 +21,11 @@ npm run preview
 
 `typecheck`는 `tsc -b`로 실제 소스를 검사합니다. Vitest는 `tests/e2e`를 수집하지 않습니다. 기본 E2E는 Chromium과 Firefox를 실행합니다. 설치된 실제 Chrome은 `RUN_CHROME=1` 및 `--project=chrome`, Edge는 `PLAYWRIGHT_EDGE=1` 및 `--project=edge`로 선택 실행하며 해당 브라우저 설치가 필요합니다. 설치하지 못한 브라우저 결과는 통과로 표시하지 않습니다.
 
-실내 polygon은 직각 단순 다각형이며 좌표와 치수는 mm 정수입니다. 가구 위치는 바닥 footprint 중심이며 0.5mm 단위로 보존합니다. 방 경계 접촉·가구끼리의 접촉은 허용하고 양의 면적 겹침은 차단합니다. 방을 줄인 뒤 기존 가구가 무효가 되면 가구를 유지하며 경고를 표시합니다.
+실내 polygon은 직각 단순 다각형이며 좌표와 치수는 mm 정수입니다. 가구 위치는 바닥 footprint 중심이며 0.5mm 단위로 보존합니다. 방 경계 접촉·가구끼리의 접촉은 허용합니다. 새 배치·이동·리사이즈의 양의 면적 겹침은 차단하지만, 회전은 공간이 부족해도 적용하고 배치 오류를 표시합니다. 이동·크기 조정·회전 또는 Undo로 해결할 수 있습니다. 방을 줄인 뒤 기존 가구가 무효가 되면 가구를 유지하며 경고를 표시합니다.
 
 자동 저장은 현재 브라우저에만 적용됩니다. 다른 기기·브라우저·시크릿 모드와 동기화하지 않으며 브라우저 데이터를 삭제하면 복구되지 않을 수 있습니다. JSON 파일을 별도로 백업하세요. 여러 탭 동시 편집은 지원하지 않으며 localStorage만으로 경쟁 저장의 무충돌을 보장할 수 없습니다. 손상 저장본은 명시적 처리 전 덮어쓰지 않습니다. schemaVersion2 JSON을 사용하며 v1 마이그레이션은 제공하지 않습니다.
 
-RoomFit 3D는 공간 배치 계획 도구입니다. 가구 샘플은 제품 규격이 아닌 예시이며 몰딩·문틀·설치 여유·배송 반입 경로·전문 실측·구조 안전·시공 가능성을 판정하지 않습니다. 구매와 시공 전 현장 및 제품 치수를 다시 확인하세요. 문·창·여러 방·GLB·AI·실시간 협업은 이번 MVP 범위에 포함하지 않습니다.
+RoomFit 3D는 공간 배치 계획 도구입니다. 가구 샘플은 제품 규격이 아닌 예시이며 몰딩·문틀·설치 여유·배송 반입 경로·전문 실측·구조 안전·시공 가능성을 판정하지 않습니다. 구매와 시공 전 현장 및 제품 치수를 다시 확인하세요. 문·창문·칸막이와 화장실·주방·현관 구역은 추가 요청에 따라 포함했습니다. 독립된 여러 방의 연결 모델·여러 층·GLB·AI·실시간 협업은 포함하지 않습니다.
 
 GitHub Pages 프로젝트 경로는 설정 저장소명에서 파생합니다. `VITE_BASE_PATH`가 우선하며 다음 명령으로 하위 경로를 확인합니다.
 
@@ -36,9 +36,14 @@ npm run test:e2e:subpath
 VITE_BASE_PATH=/roomfit-3d/ npm run preview -- --host 127.0.0.1
 ```
 
-Actions는 같은 base로 한 번 빌드한 `dist`를 검사한 후 그대로 업로드합니다. 사용자 승인으로 저장소를 공개 전환하고 `Settings → Pages → GitHub Actions`를 활성화했습니다. 실제 사이트는 **https://muminjun.github.io/roomfit-3d/** 입니다. [Actions 실행](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) 재실행2가 성공했고 Chromium/Firefox에서 2D·가구 편집·실제3D·JSON·자동저장·새로고침·동적 자산 로딩을 확인했습니다. 브라우저별 자산 응답 근거는 [remote-evidence.json](docs/remote-evidence.json)에 있습니다.
+Actions는 같은 base로 한 번 빌드한 `dist`를 검사한 후 그대로 업로드합니다. 서비스는 **https://muminjun.github.io/roomfit-3d/** 입니다. 현재 리비전의 Actions 링크와 배포 검증은 [TEST_REPORT.md](TEST_REPORT.md)를 확인하세요. 기존 `docs/remote-evidence.json`은 이전 배포의 자료입니다.
 
+실행한 자동 검증은 단위/통합126개, Chromium/Firefox 기본 E2E154개와 서브경로2개입니다. 기준별 잔여 증거는 [81개 P0 AC 근거표](docs/ac-evidence-2026-11-03.md)에 구분했습니다. 테스트 수만으로 모든 요구·실기기 환경을 충족했다고 주장하지 않습니다. 실제 Safari는 Remote Automation 비활성으로 세션 생성이 거절됐으며 스크린리더·물리 트랙패드/핀치는 미검증입니다. Edge는 사용자 요청으로 검증을 중단하고 내려받은 앱·생성 데이터를 삭제했습니다. 재설치하거나 실행하지 않습니다.
 
-최종 검증: 단위/통합97개, 동일 dist의 하위 경로 Chromium/Firefox2개 통과. 실제Chrome 대표5개 추가 통과. 기본 전체 E2E92개도 통과했습니다. 상세 결과는 TEST_REPORT에 기록합니다. 의존성을 재설치한 뒤 기존 개발 서버가 오래된 최적화 URL을 참조하면 서버를 다시 시작하세요.
+방 속성의 **문·창문·구역**을 펼치면 칸막이, 문/현관문/창문과 구역을 숫자로 생성·편집·삭제할 수 있습니다. 개구부는 외벽 또는 칸막이에 연결하며 시작 위치는 선택한 벽의 시작점에서 측정합니다. 창문은 하단 높이도 설정합니다. 문이 있는 칸막이를 삭제하려면 연결된 문·창문을 먼저 삭제하세요. 2D에는 문 여는 방향과 창문 위치를, 3D에는 실제 벽 개구부를 표시합니다. 구역은 계획용 표시이며 구역을 추가해도 벽이나 가구가 자동 생성되지 않습니다.
 
-최종 번들은 앱164.88kB, React347.58kB, Konva133.03kB와 지연3D195.48kB, Three renderer365.22kB/core383.44kB로 분리되어 Vite 청크 크기 경고가 없습니다. 런타임 보안 audit은0개이며 개발 도구의 moderate10개 및 테스트 의존성 deprecation은 `docs/dependency-audit.md`에 한계를 기록했습니다. 실제 Edge/Safari·스크린리더·물리 트랙패드/핀치는 미검증이고, 측정된 rAF 주기는 GPU fps 또는30fps 보장이 아닙니다.
+냉장고·세탁기·옷장·서랍장 등은 선택 후 **여는 공간 여유**를 조절할 수 있습니다. 점선 영역은 앞면 전체를 기준으로 한 보수적인 계획 여유이며 벽·다른 가구·칸막이가 막으면 이름과 함께 경고합니다. 실제 제조사 문 궤적/설치 규격이 아니며 배치를 차단하는 하드 오류와 별도입니다. 기존 v2 파일도 계속 읽고 새 건축/여유 설정은 같은 schemaVersion2에 선택 필드로 저장합니다. 새 필드가 있는 파일은 예전 앱 버전에서는 지원하지 않을 수 있습니다.
+
+Space/중간 버튼 팬은 가구·핸들 위에서도 편집을 시작하지 않습니다. Shift 드래그는 고정 축의 반 mm·격자 밖 좌표를 보존합니다. Shift+2는 선택 가구/벽을 맞추고, Esc는 진행 중 작업을 먼저 취소한 다음 idle에서 선택을 해제합니다. Alt는 선택 가구를 기준으로 호버한 다른 가구·벽과의 네 방향 자유 거리를 표시합니다.
+
+`?measure=1`로 3D를 열면 실제 렌더 프레임의 CPU 제출 시간·프레임 간격·draw calls/삼각형 수를 진단할 수 있습니다. GPU 완료 시간이나 모든 기기에서의 30fps 보장을 뜻하지 않습니다. 런타임 audit은0개, 개발 도구 moderate10개는 한 minimatch advisory의 전파입니다. jsdom27.4.0으로 whatwg-encoding deprecation은 제거했습니다. 근거는 [dependency-audit.md](docs/dependency-audit.md)에 있습니다. 의존성을 재설치한 뒤 개발 서버가 예전 최적화 URL에서504를 내면 서버를 재시작하세요.

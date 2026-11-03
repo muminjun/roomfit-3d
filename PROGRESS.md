@@ -1,3 +1,22 @@
+# RoomFit 3D — P0 보완·주거 계획 확장 진행 장부
+
+최신 작업 브랜치 `fix/interaction-and-home-planning`, 기준 `a088b54`. 사용자가 이번 수정·검증·main push·Pages 재배포와 문/창문/욕실/주방/현관/카탈로그 확장을 요청했다. text-auto-wrap은 수정하지 않았다. 아래가 과거 기록보다 우선한다.
+
+| 작업 | 현재 상태 | 실행 근거 | 남은 일 |
+|---|---|---|---|
+| Space 팬 / Shift 스냅 / 단축키 / Alt | 구현·집중 회귀 통과 | p0-interactions24(도구전환 포함) + lifecycle8 Chromium/Firefox | 최종 전체 게이트 |
+| 첫 화면·상태·접근성·반응형 | 구현·키보드 여정 통과 | ui-journey,390/800/1023/1280, 실제Tab여정 | 실제 보조기술/물리입력 제약 |
+| 회전 허용·여는 공간·45종 | 구현·회귀 통과 | home-planning/operation/unit + browser | 원문 회전 규칙의 의도적 변경 기록 |
+| 칸막이·문·창문·구역·실제3D 개구부 | 구현·통합 회귀 통과 | architecture/unit9geometry + browser | 독립된 다중방/여러층 범위 아님 |
+| 코드 리뷰 후 보완 | 중요4건+오목실내침범+stale drag 수정 | 교차벽,64/100스트레스,CCW연결,무효통로,오목클리핑,Undo중드래그 red→green | 전체 게이트 후 커밋 |
+| 의존성 | jsdom27.4.0, 폐기경고 제거 | npm ci/type/lint/unit exit0, productionaudit0 | minimatch 단일advisory 전파 moderate10 잔존 |
+| 검증·감사 | unit126, 기본E2E154 및 subpath2 통과; 최종 종료코드 기록 중 | type/lint/build/check:dist exit0 | 종료코드 기록·main push·Pages (Edge는 사용자 지시로 삭제·중단) |
+| 배포 | 검증 대기 | 기존공개repo/main 그대로 보존 | 커밋→main→push→Actions→서비스회귀 |
+
+원문 AC81개의 정확한 증거와 부분/미검증은 docs/ac-evidence-2026-11-03.md를 따른다. 통과 개수는 모든 요구사항/환경의 충족을 증명하지 않는다. Safari27.2는 원격자동화 설정 비활성으로 WebDriver세션 생성500, 스크린리더/물리트랙패드 미검증. Edge 검증은 사용자 요청으로 중단했고 다운로드·추출 앱·생성 데이터·프로세스를 삭제했다. 재설치·재실행하지 않는다.
+
+<details><summary>기존 단계 장부 보관 — 현재 상태 아님</summary>
+
 # RoomFit 3D 진행 장부
 - 저장소: PUBLIC `muminjun/roomfit-3d`, 기본/현재 브랜치 `main`. 사용자 승인으로 원격 push·공개 전환·Pages 배포 완료. 기존 개발 브랜치 `feat/roomfit-mvp` 보존.
 - 상태: S0~S5 구현·로컬 검증 및 원격 Pages 배포 확인 완료. 실제 수동 환경 제약은 TEST_REPORT 참조. S6 협업은 범위 밖.
@@ -82,3 +101,5 @@ S1 게이트:48unit 및 공간E2E18개(Chrome계열/Firefox),root독립12개 통
 
 ## 최종 원격 인계
 사용자 `ㅇㅇ`으로 push 승인, `승인`으로 공개 전환 승인. 현재 저장소 PUBLIC, 기본브랜치 main. 실제 https://muminjun.github.io/roomfit-3d/ 배포 성공 및 Chromium/Firefox 사용자 흐름 검증 통과. AC-40 이전 미실행/승인대기 문구는 과거 이력이며 최신 상태는 이 절과 상단 표를 따른다. 실제 Edge/Safari/스크린리더/물리입력/GPU보장 제약은 여전히 유지한다.
+
+</details>

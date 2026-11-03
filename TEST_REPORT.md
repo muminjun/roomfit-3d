@@ -1,3 +1,39 @@
+# 검증 보고서 — 2026-11-03
+
+현재 소스의 기준별 원문·코드·실제 테스트·잔여 항목은 [AC 근거표](docs/ac-evidence-2026-11-03.md)가 유일한 기준이다. S6 AC-52–60은 제외한다. 기존의 일괄 통과 표는 이전 리비전의 기록이며 현재 소스의 통과를 뜻하지 않는다.
+
+## 현재 실행 결과
+
+| 명령 / 검증 | 결과 |
+|---|---|
+| `npm ci` | jsdom 27.4.0 설치 후 종료 0; whatwg-encoding 경고 없음 |
+| `npm run typecheck`, `npm run lint`, `npm run test` | 각각 종료 0; 단위 126개 / 16파일 |
+| 의도적인 타입 오류 음성 검사 | 종료 비0, TS2322 확인; 임시 파일 삭제 후 typecheck 종료 0 (`/tmp/roomfit-typecheck-negative.log`, `/tmp/roomfit-typecheck-restored.log`) |
+| 하위 경로 production build / `check:dist` | 종료 0; 26개 참조 및 JS 7개 파일 검사. 엔트리 `index-8-FBkCca.js` |
+| `npm run test:e2e:subpath` | Chromium/Firefox 2/2 통과, 종료 0 |
+| 전체 Chromium/Firefox E2E, 이전 완료 실행 | 152/152 통과; 별도 pan tool 전환 회귀 2/2 통과 |
+| 전체 Chromium/Firefox E2E, 최신 154개 실행 | **153 통과, 1 실패**: Chromium `architecture can be created, edited, saved and undone`에서 3D canvas가 5초 안에 나타나지 않음. 원인 조사 중 (`/tmp/roomfit-final-154-e2e.log`) |
+| 실패한 Chromium 건축 시나리오 동일 조건 재검사 | 기존 assertion과 timeout을 바꾸지 않고 1/1 통과; 첫 실패의 근본 원인은 아직 확인되지 않음 |
+| 최종 전체 브라우저 단독 실행 | 로그상 Chromium/Firefox **154개 통과** (2.0분), 변경 없는 테스트 및 설정 (`/tmp/roomfit-final-serial-e2e.log`). 프로세스 종료 코드는 별도로 보존되지 않음 |
+| 로컬 production `scripts/verify-live.mjs` | Chromium/Firefox 통과. Space 팬·Shift 축·Undo·문/구역·가구·실제 3D·JSON·자동저장/복원 확인 (`/tmp/roomfit-local-live-check.json`) |
+| 실제 Chrome 대표 검사 | 앞선 실행 15개 통과 |
+| production dependency audit / 전체 audit | production 0개; 전체 moderate 10개 항목은 하나의 minimatch advisory에서 전파 |
+| 현재 GitHub Actions / Pages | 현재 리비전 배포 및 원격 검증 대기 |
+
+`/tmp/roomfit-final-dist-before.json`의 dist 10개 SHA-256을 현재 파일과 대조해 모두 일치했고 추가 파일도 없다. 원본 요구 파일의 SHA-256 `25cabf1861d7e9fe305cfbd328a8e7aabf4b6f95d5683cb3ee1dc265edb21065`는 `git show HEAD` 원본과 일치한다.
+
+## 회귀와 검증 한계
+
+초기 전체 실행에서 NumberField 접근 이름 회귀가 확인되어 고친 뒤 root-smoke 14/14가 통과했다. 팬 도구 전환 중 기존 드래그가 x=2100에서 2400으로 잘못 커밋되는 회귀도 재현 후 수정했고 집중 브라우저 테스트 2/2가 통과했다. 최신 154개 실행의 3D canvas 시간 초과 사례는 assertion과 timeout을 변경하지 않은 단독 재검사에서 1/1 통과했다. 최초 실패의 원인은 확인되지 않았고, 다른 브라우저 검사 없이 실행한 최종 전체 검사 로그에는 154개 통과가 기록됐다. 종료 코드는 별도로 보존되지 않았다.
+
+`p0-interactions.spec.ts`의 Space 팬, Shift 축, Escape, fit selection, Alt 거리 표시 및 중간 버튼과 Tab/Enter 전체 키보드 여정은 완료된 자동 검사에 포함된다. 각 원본 AC에 남은 미검증 조항은 [AC 근거표](docs/ac-evidence-2026-11-03.md)에 기록한다. 사용자가 후속 요청으로 잘못된 배치가 되는 회전을 허용했으므로 원래 금지 조건과 의도적으로 다르다.
+
+실제 Safari 27.2 safaridriver 세션 생성은 Remote Automation 비활성으로 HTTP 500이었다. Edge는 사용자 중단·삭제 지시에 따라 내려받은 패키지·앱·생성 지원 데이터와 프로세스를 제거했고 실제 제품 여정은 미검증이다. 실제 스크린리더와 물리 트랙패드 핀치도 미검증이다.
+
+30벽/50가구의 headless Chromium 표본은 draw calls 552, triangles 4,180, CPU 제출 0.8ms, 프레임 간격 17.2ms였다. GPU 완료 시간이나 지속 처리량을 측정한 결과가 아니다. 이전 Actions/Pages 성공은 이전 리비전의 기록이다.
+
+<details><summary>이전 검증 보고서 보관 (현재 상태 아님)</summary>
+
 # 검증 보고서
 
 최종 갱신: 2026-11-03. 상태: **원격 배포 확인 완료**. 아래 최신 결과가 과거 단계 중간 기록보다 우선한다.
@@ -190,3 +226,5 @@ S4 중간: strictJSON raw검사→정규화→확정스키마검사→파생경�
 ## 원격 배포 최종 확인
 
 사용자의 push 승인과 별도 공개 전환 승인 후, PUBLIC 저장소/Pages workflow source/HTTPS를 확인했다. [Actions](https://github.com/muminjun/roomfit-3d/actions/runs/41546473922) attempt2는 success이며 ci/typecheck/lint/unit97/build/check-dist/configure/upload/deploy 모두 성공했다. 실제 https://muminjun.github.io/roomfit-3d/ 에서 Chromium156.0.8078.4와 Firefox157.0 각 새 컨텍스트로 HTTP200, 기본2D, 퀸 침대 추가·90° 회전·JSON실측값, 실제3D·Orbit·카메라 초기화·데이터 불변, 2D복귀, localStorage 저장·새로고침 동일JSON, favicon/CSS/lazy3D 응답을 확인했다. 자산13/14건, 404·pageerror0. `/tmp/roomfit-remote-smoke.mjs` 실제 실행 종료0; 원격 근거를 `docs/remote-evidence.json`에 보존했다.
+
+</details>
