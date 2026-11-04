@@ -165,6 +165,14 @@ export function buildFurnitureObject(item: FurnitureItem): Group {
       box(w, h, d, 0, h / 2, 0, body, true);
       box(w * 0.8, h * 0.04, d * 0.01, 0, h * 0.8, -d * 0.495, accent);
       break;
+    case "other":
+      if (item.catalogId === "column-round") {
+        const column = new Mesh(new CylinderGeometry(1, 1, h, 32), body);
+        column.scale.set(w / 2, 1, d / 2);
+        column.position.y = h / 2;
+        group.add(column);
+      } else box(w, h, d, 0, h / 2, 0, body);
+      break;
     default:
       box(w, h, d, 0, h / 2, 0, body, true);
       break;

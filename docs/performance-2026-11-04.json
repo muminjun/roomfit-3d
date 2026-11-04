@@ -1,0 +1,49 @@
+{
+  "environment": {
+    "node": "22.15.0",
+    "headless": true
+  },
+  "measurements": [
+    {
+      "rendered": {
+        "frames": "100",
+        "drawCalls": "553",
+        "triangles": "4180",
+        "cpuMs": "0.5",
+        "frameMs": "16.700000002980232",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)",
+        "gpuTimerAvailable": "false"
+      },
+      "browserName": "chromium",
+      "headless": true,
+      "fixture": "30 walls / 50 furniture",
+      "selectionMs": 324,
+      "editMs": 29,
+      "samples": 92,
+      "elapsedMs": 1515.5,
+      "rafHz": 60.046189376443415,
+      "note": "Playwright end-to-end action times and requestAnimationFrame cadence; CPU submission and requestAnimationFrame cadence do not measure GPU completion or guarantee performance."
+    },
+    {
+      "rendered": {
+        "frames": "100",
+        "drawCalls": "553",
+        "triangles": "4180",
+        "cpuMs": "6",
+        "frameMs": "16",
+        "renderer": "Apple M1, or similar",
+        "gpuTimerAvailable": "false"
+      },
+      "browserName": "firefox",
+      "headless": true,
+      "fixture": "30 walls / 50 furniture",
+      "selectionMs": 188,
+      "editMs": 41,
+      "samples": 91,
+      "elapsedMs": 1511.08,
+      "rafHz": 59.560049765730476,
+      "note": "Playwright end-to-end action times and requestAnimationFrame cadence; CPU submission and requestAnimationFrame cadence do not measure GPU completion or guarantee performance."
+    }
+  ],
+  "limitation": "CPU submission, renderer counters and frame cadence; not GPU completion, sustained GPU throughput or hardware 30fps guarantee."
+}

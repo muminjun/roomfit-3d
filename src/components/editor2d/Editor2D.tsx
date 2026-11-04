@@ -1,3 +1,19 @@
+import {
+  saveOpening,
+  savePartition,
+  saveZone,
+} from "../../features/architecture/commands";
+import {
+  getOpeningHost,
+  validateArchitecture,
+} from "../../features/architecture/geometry";
+import { projectSchema } from "../../types/schema";
+import type { Opening, Partition, Zone, Room } from "../../types/model";
+import {
+  MeasurementControls,
+  MeasurementLayer,
+  type MeasurementPoint,
+} from "./MeasurementLayer";
 import { resolveShortcut } from "../../config/shortcuts";
 import {
   describeFurnitureIssues,
@@ -29,7 +45,19 @@ import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import styles from "../../styles/App.module.css";
 type Point = { x: number; y: number };
+type ArchitectureItem =
+  | { kind: "zone"; item: Zone }
+  | { kind: "partition"; item: Partition }
+  | { kind: "opening"; item: Opening };
 type Gesture =
+  | {
+      kind: "architecture";
+      original: ArchitectureItem;
+      start: Point;
+      current: ArchitectureItem;
+      valid: boolean;
+      moved: boolean;
+    }
   | { kind: "move"; id: string; start: Point; offset: number }
   | { kind: "span"; id: string; start: Point; end: Point }
   | {
@@ -63,13 +91,19 @@ export function Editor2D() {
   const gesture = useRef<Gesture | null>(null),
     space = useRef(false);
   const [message, setMessage] = useState("");
+  const [architecturePreview, setArchitecturePreview] =
+    useState<ArchitectureItem | null>(null);
+  const [measurement, setMeasurement] = useState<MeasurementPoint[]>([]);
+  const activeView = useUIStore((s) => s.view);
   const [altDown, setAltDown] = useState(false);
   const [hoverTarget, setHoverTarget] = useState<{
     kind: "wall" | "furniture";
     id: string;
   } | null>(null);
   const project = useProjectStore((s) => s.project);
-  useEffect(() => { setHoverTarget(null); }, [selected?.id, view]);
+  useEffect(() => {
+    setHoverTarget(null);
+  }, [selected?.id, view]);
   useEffect(() => {
     const keydown = (e: KeyboardEvent) => {
       if (e.isComposing || document.querySelector('[aria-modal="true"]'))
@@ -86,11 +120,14 @@ export function Editor2D() {
           !!ui.preview ||
           !!ui.furniturePreview ||
           !!ui.duplicatePlacementId ||
-          !!ui.draggedCatalogId;
+          !!ui.draggedCatalogId ||
+          measurement.length > 0;
         gesture.current = null;
         space.current = false;
         setPreview(null);
         setMessage("");
+        setMeasurement([]);
+        setArchitecturePreview(null);
         ui.setDuplicatePlacementId(null);
         ui.setFurniturePreview(null);
         ui.setDraggedCatalogId(null);
@@ -118,11 +155,18 @@ export function Editor2D() {
             zoomAtPointer(v, { x: size.width / 2, y: size.height / 2 }, 1),
           );
         else if (action === "fitSelection" && selected?.kind === "furniture") {
-          const item = useProjectStore
+          const ids = useUIStore.getState().selectedFurnitureIds;
+          const items = useProjectStore
             .getState()
-            .project.furniture.find((f) => f.id === selected.id);
-          if (item) {
-            const r = getFurnitureRect(item),
+            .project.furniture.filter((f) => ids.includes(f.id));
+          if (items.length) {
+            const bounds = items.map(getFurnitureRect);
+            const r = {
+                minX: Math.min(...bounds.map((b) => b.minX)),
+                maxX: Math.max(...bounds.map((b) => b.maxX)),
+                minY: Math.min(...bounds.map((b) => b.minY)),
+                maxY: Math.max(...bounds.map((b) => b.maxY)),
+              },
               width = r.maxX - r.minX,
               height = r.maxY - r.minY;
             const zoom = clamp(
@@ -165,7 +209,8 @@ export function Editor2D() {
           action === "select" ||
           action === "wallMove" ||
           action === "indent" ||
-          action === "protrude"
+          action === "protrude" ||
+          action === "measure"
         )
           useUIStore.getState().setTool(action);
         else if (action === "zoomIn" || action === "zoomOut")
@@ -191,6 +236,8 @@ export function Editor2D() {
       setPreview(null);
       space.current = false;
       setAltDown(false);
+      setMeasurement([]);
+      setArchitecturePreview(null);
       setHoverTarget(null);
       useUIStore.getState().setDuplicatePlacementId(null);
       useUIStore.getState().setFurniturePreview(null);
@@ -204,13 +251,26 @@ export function Editor2D() {
       window.removeEventListener("keyup", keyup);
       window.removeEventListener("blur", cancel);
     };
-  }, [fit, setPreview, size, selected, room.polygon, ref, setView]);
+  }, [
+    fit,
+    setPreview,
+    size,
+    selected,
+    room.polygon,
+    ref,
+    setView,
+    measurement,
+  ]);
   useEffect(() => {
     gesture.current = null;
+    setArchitecturePreview(null);
     setPreview(null);
     useUIStore.getState().setFurnitureMessage("");
     window.dispatchEvent(new Event("roomfit-cancel-drag"));
-  }, [tool, project, setPreview]);
+  }, [tool, project, activeView, setPreview]);
+  useEffect(() => {
+    setMeasurement([]);
+  }, [tool, projectId, activeView]);
   function pointer(e: KonvaEventObject<MouseEvent>): Point | null {
     const pos = e.target.getStage()?.getPointerPosition();
     return pos ? screenToWorld(pos, view) : null;
@@ -256,9 +316,66 @@ export function Editor2D() {
       type: tool === "protrude" ? ("protrude" as const) : ("indent" as const),
     };
   }
+  function roomWithArchitecture(base: Room, draft: ArchitectureItem): Room {
+    if (draft.kind === "zone")
+      return {
+        ...base,
+        zones: base.zones?.map((i) =>
+          i.id === draft.item.id ? draft.item : i,
+        ),
+      };
+    if (draft.kind === "partition")
+      return {
+        ...base,
+        partitions: base.partitions?.map((i) =>
+          i.id === draft.item.id ? draft.item : i,
+        ),
+      };
+    return {
+      ...base,
+      openings: base.openings?.map((i) =>
+        i.id === draft.item.id ? draft.item : i,
+      ),
+    };
+  }
+  function downArchitecture(
+    e: KonvaEventObject<MouseEvent>,
+    kind: "zone" | "partition" | "opening",
+    id: string,
+  ) {
+    if (tool !== "architectureMove" || e.evt.button !== 0 || space.current)
+      return;
+    const p = pointer(e);
+    if (!p) return;
+    const item =
+      kind === "zone"
+        ? room.zones?.find((i) => i.id === id)
+        : kind === "partition"
+          ? room.partitions?.find((i) => i.id === id)
+          : room.openings?.find((i) => i.id === id);
+    if (!item) return;
+    e.cancelBubble = true;
+    ref.current?.focus();
+    setSelected({ kind, id });
+    const original = { kind, item } as ArchitectureItem;
+    gesture.current = {
+      kind: "architecture",
+      original,
+      start: p,
+      current: original,
+      valid: true,
+      moved: false,
+    };
+  }
   function downEdge(e: KonvaEventObject<MouseEvent>, id: string) {
     ref.current?.focus();
-    if (e.evt.button === 1 || space.current) return;
+    if (
+      e.evt.button === 1 ||
+      space.current ||
+      tool === "measure" ||
+      tool === "architectureMove"
+    )
+      return;
     e.cancelBubble = true;
     const p = pointer(e);
     if (!p) return;
@@ -290,6 +407,62 @@ export function Editor2D() {
     }
     const p = pointer(e);
     if (!p) return;
+    if (g.kind === "architecture") {
+      if (Math.hypot(p.x - g.start.x, p.y - g.start.y) * view.zoom < 3) {
+        g.current = g.original;
+        g.moved = false;
+        g.valid = true;
+        setArchitecturePreview(null);
+        setMessage("");
+        return;
+      }
+      const dx = snap(p.x - g.start.x),
+        dy = snap(p.y - g.start.y);
+      let next: ArchitectureItem;
+      if (g.original.kind === "zone") {
+        const item = g.original.item;
+        next = {
+          kind: "zone",
+          item: { ...item, x: item.x + dx, y: item.y + dy },
+        };
+      } else if (g.original.kind === "partition") {
+        const item = g.original.item;
+        next = {
+          kind: "partition",
+          item: {
+            ...item,
+            start: { x: item.start.x + dx, y: item.start.y + dy },
+            end: { x: item.end.x + dx, y: item.end.y + dy },
+          },
+        };
+      } else {
+        const item = g.original.item,
+          host = getOpeningHost(room, item);
+        if (!host) return;
+        const shift =
+          (p.x - g.start.x) * host.tangent.x +
+          (p.y - g.start.y) * host.tangent.y;
+        next = {
+          kind: "opening",
+          item: { ...item, offsetMm: snap(item.offsetMm + shift) },
+        };
+      }
+      const nextRoom = roomWithArchitecture(room, next);
+      const errors = validateArchitecture(nextRoom).filter(
+        (i) => i.itemId === next.item.id,
+      );
+      const parsed = projectSchema.safeParse({ ...project, room: nextRoom });
+      g.current = next;
+      g.moved = JSON.stringify(next.item) !== JSON.stringify(g.original.item);
+      g.valid = parsed.success && errors.length === 0;
+      setArchitecturePreview(next);
+      setMessage(
+        g.valid
+          ? ""
+          : errors.map((i) => i.message).join(" ") || "유효한 위치가 아닙니다.",
+      );
+      return;
+    }
     if (g.kind === "move") {
       g.offset = moveOffset(g.id, g.start, p);
       const result = moveWall(room.polygon, g.id, g.offset);
@@ -354,6 +527,22 @@ export function Editor2D() {
   function up() {
     const g = gesture.current;
     if (!g) return;
+    if (g.kind === "architecture") {
+      if (g.valid && g.moved) {
+        const result =
+          g.current.kind === "zone"
+            ? saveZone(g.current.item)
+            : g.current.kind === "partition"
+              ? savePartition(g.current.item)
+              : saveOpening(g.current.item);
+        setMessage(
+          result.ok ? "" : result.issues.map((i) => i.message).join(" "),
+        );
+      }
+      gesture.current = null;
+      setArchitecturePreview(null);
+      return;
+    }
     if (g.kind === "move") {
       if (g.offset) {
         const result = moveWallSegment({
@@ -397,6 +586,19 @@ export function Editor2D() {
       };
       return;
     }
+    if (tool === "measure") {
+      const p = pointer(e);
+      if (p) {
+        const point = {
+          x: settings.snapEnabled ? snap(p.x) : Math.round(p.x * 2) / 2,
+          y: settings.snapEnabled ? snap(p.y) : Math.round(p.y * 2) / 2,
+        };
+        setMeasurement((current) =>
+          current.length === 1 ? [...current, point] : [point],
+        );
+      }
+      return;
+    }
     if (useUIStore.getState().duplicatePlacementId) {
       duplicate.commit();
       return;
@@ -431,7 +633,18 @@ export function Editor2D() {
   return (
     <div className={styles.editor}>
       <div className={styles.viewControls}>
-        <button title="방 전체가 캔버스 안에 들어오도록 화면을 맞춥니다. 도면 데이터는 바뀌지 않습니다." onClick={fit}>전체 보기</button>
+        <button
+          title="방 전체가 캔버스 안에 들어오도록 화면을 맞춥니다. 도면 데이터는 바뀌지 않습니다."
+          onClick={fit}
+        >
+          전체 보기
+        </button>
+        <button
+          onClick={() => useUIStore.getState().setTool("architectureMove")}
+          aria-pressed={tool === "architectureMove"}
+        >
+          구조 편집
+        </button>
         <button
           aria-label="축소"
           title="캔버스 중심을 기준으로 화면을 축소합니다."
@@ -486,12 +699,18 @@ export function Editor2D() {
         data-zoom={view.zoom}
         data-pan-x={view.panX}
         data-pan-y={view.panY}
+        data-architecture-preview-valid={
+          gesture.current?.kind === "architecture" && architecturePreview
+            ? String(gesture.current.valid)
+            : undefined
+        }
         aria-label="2D 편집 영역"
         onPointerLeave={() => {
           gesture.current = null;
           setPreview(null);
           setMessage("");
           setHoverTarget(null);
+          setArchitecturePreview(null);
           window.dispatchEvent(new Event("roomfit-cancel-drag"));
           duplicate.cancel();
         }}
@@ -500,7 +719,9 @@ export function Editor2D() {
           setPreview(null);
           space.current = false;
           setAltDown(false);
+          setMeasurement([]);
           setHoverTarget(null);
+          setArchitecturePreview(null);
           window.dispatchEvent(new Event("roomfit-cancel-drag"));
         }}
       >
@@ -553,11 +774,37 @@ export function Editor2D() {
               strokeWidth={5 / view.zoom}
               listening={false}
             />
-            <ZonePartitionLayer room={room} zoom={view.zoom} />
-            {selected?.kind === "furniture" && (() => {
-              const item = project.furniture.find(f => f.id === selected.id);
-              return item ? <OperationOverlay item={item} room={room} items={project.furniture}/> : null;
-            })()}
+            <ZonePartitionLayer
+              room={
+                architecturePreview
+                  ? roomWithArchitecture(room, architecturePreview)
+                  : room
+              }
+              zoom={view.zoom}
+              interactive={tool === "architectureMove"}
+              selectedId={selected?.id}
+              invalidId={
+                gesture.current?.kind === "architecture" &&
+                !gesture.current.valid
+                  ? gesture.current.current.item.id
+                  : undefined
+              }
+              onDown={downArchitecture}
+            />
+            <MeasurementLayer points={measurement} zoom={view.zoom} />
+            {selected?.kind === "furniture" &&
+              (() => {
+                const item = project.furniture.find(
+                  (f) => f.id === selected.id,
+                );
+                return item ? (
+                  <OperationOverlay
+                    item={item}
+                    room={room}
+                    items={project.furniture}
+                  />
+                ) : null;
+              })()}
             <FurnitureLayer
               zoom={view.zoom}
               isPan={(event) => event.button === 1 || space.current}
@@ -582,7 +829,24 @@ export function Editor2D() {
                 />
               );
             })}
-            <OpeningLayer room={room} items={project.furniture} zoom={view.zoom}/>
+            <OpeningLayer
+              room={
+                architecturePreview
+                  ? roomWithArchitecture(room, architecturePreview)
+                  : room
+              }
+              items={project.furniture}
+              zoom={view.zoom}
+              interactive={tool === "architectureMove"}
+              selectedId={selected?.id}
+              invalidId={
+                gesture.current?.kind === "architecture" &&
+                !gesture.current.valid
+                  ? gesture.current.current.item.id
+                  : undefined
+              }
+              onDown={downArchitecture}
+            />
             {room.polygon.map((a, i) => {
               const b = room.polygon[(i + 1) % room.polygon.length];
               const length = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
@@ -609,6 +873,9 @@ export function Editor2D() {
           </Layer>
         </Stage>
       </div>
+      {tool === "measure" && (
+        <MeasurementControls points={measurement} onChange={setMeasurement} />
+      )}
       {altDown &&
         hoverTarget &&
         selected?.kind === "furniture" &&

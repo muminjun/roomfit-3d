@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { LIMITS } from "../../config/limits";
 import { NumberField } from "../common/NumberField";
 import {
   addRoomNotch,
@@ -19,6 +20,11 @@ export function RoomPanel() {
     selected = useUIStore((s) => s.selected),
     setSelected = useUIStore((s) => s.setSelected),
     setSettings = useProjectStore((s) => s.setSettings);
+  const nameErrorId = useId(), draftId = useId(), cancelNameBlur = useRef(false);
+  type DraftKey = "offset" | "start" | "width" | "depth";
+  const [draftErrors, setDraftErrors] = useState<Partial<Record<DraftKey, string>>>({});
+  const draftBaseline = useRef<Partial<Record<DraftKey, string>>>({});
+  const [nameError, setNameError] = useState("");
   const [error, setError] = useState(""),
     [offset, setOffset] = useState("200"),
     [start, setStart] = useState("1700"),
@@ -39,18 +45,50 @@ export function RoomPanel() {
   useEffect(() => {
     if (selected?.kind === "wall" && index < 0) setSelected(null);
   }, [index, selected, setSelected]);
-  function result(result: CommandResult) {
-    if (!result.ok) setError(result.issues.map((i) => i.message).join(" "));
+  function result(result: CommandResult, field = false): CommandResult {
+    if (!result.ok) { if (!field) setError(result.issues.map((i) => i.message).join(" ")); }
     else {
       setError("");
       if (result.kind === "Committed" && result.selectedEdgeId)
         setSelected({ kind: "wall", id: result.selectedEdgeId });
     }
+    return result;
   }
   function numeric(value: string) {
     return /^-?\d+$/.test(value.replace(/[\s,]/g, ""))
       ? Number(value.replace(/[\s,]/g, ""))
       : NaN;
+  }
+  function draftField(key: DraftKey, label: string, value: string, setValue: (value: string) => void) {
+    const error = draftErrors[key], hint = `${draftId}-${key}-hint`, errorId = `${draftId}-${key}-error`;
+    return <label className={styles.field}>{label}
+      <input aria-label={label} value={value} aria-invalid={error ? true : undefined} aria-describedby={`${hint}${error ? ` ${errorId}` : ""}`}
+        onFocus={() => { if (!error) draftBaseline.current[key] = value; }}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={e => { if (e.key === "Escape" && (value !== draftBaseline.current[key] || error)) { e.preventDefault(); e.stopPropagation(); setValue(draftBaseline.current[key] ?? value); setDraftErrors(current => ({...current,[key]:undefined})); e.currentTarget.blur(); } }} />
+      <small id={hint}>정수 mm 단위</small>
+      {error && <small id={errorId} role="alert" className={styles.error}>{error}</small>}
+    </label>;
+  }
+  function applyWall() {
+    const distance = numeric(offset);
+    if (!Number.isSafeInteger(distance)) { setDraftErrors({offset:"정수 치수를 입력해 주세요."}); return; }
+    if (!a) return;
+    const r = moveWallSegment({startVertexId:a.id, offsetMm:distance});
+    setDraftErrors(r.ok ? {} : {offset:r.issues.map(i => i.message).join(" ")});
+    result(r, true);
+  }
+  function applyNotch(type: "indent" | "protrude") {
+    if (!a) return;
+    const values = {start:numeric(start), width:numeric(width), depth:numeric(depth)};
+    const field = (["start", "width", "depth"] as const).find(key => !Number.isSafeInteger(values[key]));
+    if (field) { setDraftErrors({[field]:"정수 치수를 입력해 주세요."}); return; }
+    const short = (["start", "width", "depth"] as const).find(key => values[key] < LIMITS.minWallLength);
+    if (short) { setDraftErrors({[short]:`최소 ${LIMITS.minWallLength} mm 이상 입력해 주세요.`}); return; }
+    if (values.start + values.width > length - LIMITS.minWallLength) { setDraftErrors({width:`선택한 벽 양 끝에 ${LIMITS.minWallLength} mm 이상 남겨 주세요.`}); return; }
+    const r = addRoomNotch({startVertexId:a.id,startOffsetMm:values.start,widthMm:values.width,depthMm:values.depth,type});
+    setDraftErrors(r.ok ? {} : {depth:r.issues.map(i => i.message).join(" ")});
+    result(r, true);
   }
   return (
     <aside className={styles.panel}>
@@ -61,11 +99,21 @@ export function RoomPanel() {
         <input
           defaultValue={project.title}
           key={project.title}
-          onBlur={(e) => result(renameProject({ title: e.target.value }))}
+          aria-invalid={nameError ? true : undefined}
+          aria-describedby={nameError ? nameErrorId : undefined}
+          onBlur={(e) => {
+            if (cancelNameBlur.current) { cancelNameBlur.current = false; return; }
+            const r = renameProject({ title: e.target.value });
+            setNameError(r.ok ? "" : r.issues.map(i => i.message).join(" "));
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") e.currentTarget.blur();
+            if (e.key === "Escape" && (e.currentTarget.value !== project.title || nameError)) {
+              e.preventDefault(); e.stopPropagation(); e.currentTarget.value = project.title; setNameError(""); cancelNameBlur.current = true; e.currentTarget.blur();
+            }
           }}
         />
+        {nameError && <small id={nameErrorId} role="alert" className={styles.error}>{nameError}</small>}
       </label>
       <div className={styles.info}>
         <span>바닥 면적</span>
@@ -78,7 +126,7 @@ export function RoomPanel() {
             value={box.width}
             onCommit={(value) =>
               result(
-                setRectangleDimensions({ widthMm: value, depthMm: box.depth }),
+                setRectangleDimensions({ widthMm: value, depthMm: box.depth }), true,
               )
             }
           />
@@ -87,7 +135,7 @@ export function RoomPanel() {
             value={box.depth}
             onCommit={(value) =>
               result(
-                setRectangleDimensions({ widthMm: box.width, depthMm: value }),
+                setRectangleDimensions({ widthMm: box.width, depthMm: value }), true,
               )
             }
           />
@@ -103,13 +151,13 @@ export function RoomPanel() {
       <NumberField
         label="벽 높이 (mm)"
         value={project.room.wallHeightMm}
-        onCommit={(value) => result(updateRoomHeight({ wallHeightMm: value }))}
+        onCommit={(value) => result(updateRoomHeight({ wallHeightMm: value }), true)}
       />
       <NumberField
         label="벽 두께 (mm)"
         value={project.room.wallThicknessMm}
         onCommit={(value) =>
-          result(updateWallThickness({ wallThicknessMm: value }))
+          result(updateWallThickness({ wallThicknessMm: value }), true)
         }
       />
       <div className={styles.controlGroup}>
@@ -166,66 +214,15 @@ export function RoomPanel() {
             ({a.x}, {a.y}) → ({b.x}, {b.y})
           </small>
           <p>바깥쪽 + / 안쪽 −</p>
-          <label className={styles.field}>
-            벽 이동 거리 (mm)
-            <input value={offset} onChange={(e) => setOffset(e.target.value)} />
-          </label>
-          <button
-            onClick={() =>
-              result(
-                moveWallSegment({
-                  startVertexId: a.id,
-                  offsetMm: numeric(offset),
-                }),
-              )
-            }
-          >
-            벽 이동 적용
-          </button>
+          {draftField("offset", "벽 이동 거리 (mm)", offset, setOffset)}
+          <button onClick={applyWall}>벽 이동 적용</button>
           <hr />
-          <label className={styles.field}>
-            시작 위치 (mm)
-            <input value={start} onChange={(e) => setStart(e.target.value)} />
-          </label>
-          <label className={styles.field}>
-            폭 (mm)
-            <input value={width} onChange={(e) => setWidth(e.target.value)} />
-          </label>
-          <label className={styles.field}>
-            깊이 (mm)
-            <input value={depth} onChange={(e) => setDepth(e.target.value)} />
-          </label>
+          {draftField("start", "시작 위치 (mm)", start, setStart)}
+          {draftField("width", "폭 (mm)", width, setWidth)}
+          {draftField("depth", "깊이 (mm)", depth, setDepth)}
           <div className={styles.actions}>
-            <button
-              onClick={() =>
-                result(
-                  addRoomNotch({
-                    startVertexId: a.id,
-                    startOffsetMm: numeric(start),
-                    widthMm: numeric(width),
-                    depthMm: numeric(depth),
-                    type: "indent",
-                  }),
-                )
-              }
-            >
-              함몰 적용
-            </button>
-            <button
-              onClick={() =>
-                result(
-                  addRoomNotch({
-                    startVertexId: a.id,
-                    startOffsetMm: numeric(start),
-                    widthMm: numeric(width),
-                    depthMm: numeric(depth),
-                    type: "protrude",
-                  }),
-                )
-              }
-            >
-              돌출 적용
-            </button>
+            <button onClick={() => applyNotch("indent")}>함몰 적용</button>
+            <button onClick={() => applyNotch("protrude")}>돌출 적용</button>
           </div>
         </div>
       )}

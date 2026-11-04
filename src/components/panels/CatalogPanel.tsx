@@ -20,7 +20,7 @@ export function CatalogPanel() {
   function add(id: string) {
     const project = useProjectStore.getState().project,
       origin = useUIStore.getState().viewportCenter;
-    const candidate = origin && createFurnitureCandidate(id, origin);
+    const candidate = origin && createFurnitureCandidate(id, origin, undefined, project.room.wallHeightMm);
     const position =
       candidate && origin
         ? findValidPlacement(project.room, project.furniture, candidate, origin)

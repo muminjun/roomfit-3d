@@ -1,3 +1,34 @@
+# 작업대 통합 검증 — 2026-11-04
+
+현재 변경은 `495c7df` 이후의 작업대 확장이다. 아래2026-11-03 결과는 이전 릴리스 기록이며 현재 변경의 통과 근거로 대신하지 않는다. 원문 AC별 현재 결과는 [81개 근거표](docs/ac-evidence-2026-11-04.md)를 따른다.
+
+현재 검증: 타입/린트 종료0, 단위·통합162개(22파일) 종료0. 의도적 TS2322 음성 검사는 종료1, 임시 파일 제거 후 정상 타입 검사는 종료0. 런타임 audit0, 개발 moderate10은 기존 단일 minimatch advisory 전파로 동일하다.
+
+최초 전체 브라우저 실행은266개 중264통과/2실패(종료1)였다. 실패는 양쪽 브라우저의 같은 기존 건축 편집 테스트였다.3D에서도 속성 패널을 유지하도록 변경됐는데, 테스트가 복귀 후 열린 details를 다시 클릭하여 닫은 뒤 내부 버튼을 기다렸다. 토글을 제거하고 패널이 열린 상태임을 직접 검증하도록 수정했다. 제한시간/재시도/제품 검증 조건은 완화하지 않았다. 해당 기존 시나리오 및 새 구조 드래그 blur/뷰/프로젝트 교체 취소는 집중10/10(종료0)으로 확인했다. 최종 전체 결과는 아래 완료 기록을 따른다.
+
+독립 리뷰로 XML 비허용 문자 처리, 낮은 방의 기둥 DnD 후보 높이 일치, 다중 선택 생존자 보존, 구조 폼 삭제/드래프트 유지, 무효 프리뷰 색, 미세 흔들림/오른쪽 버튼 방어를 보완했다.3D blur/pointercancel/프로젝트 교체 취소도 집중 회귀로 확인했다. 한 번 관측됐던 Firefox React 렌더 경고는 전체 실행과 개발 서버의 실제 여정에서 재현되지 않았으며 원인을 확정하지 않았다.
+
+## 작업대 최종 로컬 게이트
+
+| 실행 명령 | 종료 코드 / 결과 |
+|---|---|
+| npm run typecheck | 0 (TS2322 음성 검사1, 복구 후0) |
+| npm run lint | 0 |
+| npm run test | 0, 162개 / 22파일 |
+| npm run test:e2e -- --workers=1 | 0, Chromium/Firefox272개, 3.5분 |
+| RUN_CHROME=1 npx playwright test (건축·기둥·보관함·3D 대표4파일) --workers=1 --project=chrome | 0, 설치된 Chrome156.0.8078.80에서25개 |
+| VITE_BASE_PATH=/roomfit-3d/ npm run build | 0, 단일 최종 빌드 |
+| VITE_BASE_PATH=/roomfit-3d/ npm run check:dist | 0, 26참조 / 7JS 검사 |
+| npm run test:e2e:subpath | 0, 2개; 검사 전후 dist10개 SHA256 동일 |
+| node scripts/verify-live.mjs http://127.0.0.1:4175/roomfit-3d/ | 0, Chromium/Firefox 실제 production 여정 |
+| 설치된 Chrome production 분할 보기390/800/1023px | 0, 두 캔버스 표시 및 가로 overflow 없음(뷰포트 에뮬레이션) |
+
+명령별 종료코드와 최종 파일 해시는 [검증 기록](docs/verification-2026-11-04.json), 실제 렌더 측정은 [성능 기록](docs/performance-2026-11-04.json)에 보존했다. Chromium SwiftShader에서 마지막 CPU 제출0.5ms/프레임 간격16.7ms, Firefox Apple M1 계열에서6ms/16ms였고 두 장면은553 draw calls/4180 triangles였다. GPU 완료 측정이나 지속30fps 보장이 아니다.
+
+원문 SHA256은 `25cabf1861d7e9fe305cfbd328a8e7aabf4b6f95d5683cb3ee1dc265edb21065`로 Downloads 원본과 동일하다. 실제 Safari·스크린리더·물리 입력장치와 AC별 구체적인 잔여 증거는 최신 근거표의 부분 검증 항목으로 남긴다. Edge는 설치·실행하지 않았다. 원격 배포 결과는 완료 후 추가한다.
+
+---
+
 # 검증 보고서 — 2026-11-03 최종 보완
 
 현재 코드 반영 커밋은 `cb84a44651792d1644fea1f6e850f609e284a15f`이며, 클라이언트 구현 커밋은 `319f6c0`이다. 기존의 일괄 통과 표시를 대신하는 기준별 원문·코드·검증·남은 조항은 [81개 AC 근거표](docs/ac-evidence-2026-11-03.md)다. 원문 파일은 수정하지 않았고 Downloads 원본과 SHA256이 같다.

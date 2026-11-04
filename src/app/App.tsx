@@ -3,12 +3,16 @@ import { StorageNotice } from "../components/common/StorageNotice";
 import { exportJson } from "../features/project/exportJson";
 import { HelpDialog } from "../components/common/HelpDialog";
 import { WelcomeCard } from "../components/common/WelcomeCard";
+import { ClearancePanel } from "../components/panels/ClearancePanel";
 import { FurniturePanel } from "../components/panels/FurniturePanel";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Editor2D } from "../components/editor2d/Editor2D";
 import { ToolsPanel } from "../components/panels/ToolsPanel";
 import { RoomPanel } from "../components/panels/RoomPanel";
 import { ArchitecturePanel } from "../components/panels/ArchitecturePanel";
+import { ProjectLibraryDialog } from "../components/common/ProjectLibraryDialog";
+import { ExportTools } from "../components/common/ExportTools";
+import { SelectionToolbar } from "../components/editor2d/SelectionToolbar";
 import { NewProjectDialog } from "../components/common/NewProjectDialog";
 import { autosaveKey, startAutosave } from "../features/project/autosave";
 import { projectSchema } from "../types/schema";
@@ -54,22 +58,30 @@ export function App() {
     setWelcome(false);
   }, []);
   const changeView = useCallback(
-    (next: "2d" | "3d") => {
+    (next: "2d" | "3d" | "split") => {
       window.dispatchEvent(new Event("roomfit-cancel-drag"));
       setView(next);
     },
     [setView],
   );
   const [modal, setModal] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const closeLibrary = useCallback(() => setLibraryOpen(false), []);
+  const selectedLibraryProject = useCallback(() => {
+    window.dispatchEvent(new Event("roomfit-cancel-drag"));
+    useUIStore.getState().setSelected(null);
+    setView("2d");
+    enterEditor();
+    setLibraryOpen(false);
+  }, [enterEditor, setView]);
   const closeModal = useCallback(() => setModal(false), []);
   const closeHelp = useCallback(() => setHelpOpen(false), [setHelpOpen]);
   useEffect(() => startAutosave(), []);
   useEffect(() => {
-    if (
-      selection?.kind === "furniture" &&
-      !project.furniture.some((item) => item.id === selection.id)
-    )
-      useUIStore.getState().setSelected(null);
+    const ui = useUIStore.getState();
+    const surviving = ui.selectedFurnitureIds.filter(id => project.furniture.some(item => item.id === id));
+    if (surviving.length !== ui.selectedFurnitureIds.length) ui.setFurnitureSelection(surviving);
+    else if (selection?.kind === "furniture" && !project.furniture.some(item => item.id === selection.id)) ui.setSelected(null);
   }, [selection, project.furniture]);
 
   useEffect(() => {
@@ -125,13 +137,15 @@ export function App() {
             다시 실행
           </button>
           <ImportProject onImported={enterEditor} />
+          <button onClick={() => { window.dispatchEvent(new Event("roomfit-cancel-drag")); setLibraryOpen(true); }}>프로젝트 보관함</button>
+          <ExportTools />
           <button title="현재 도면을 JSON 파일로 내려받습니다. 브라우저 자동 저장과 별도로 보관하세요." onClick={() => exportJson(project)}>JSON 내보내기</button>
           <button onClick={() => setHelpOpen(true)}>단축키 도움말</button>
         </div>
       </header>
       <StorageNotice />
-      {welcome ? <WelcomeCard onNew={() => setModal(true)} onEnter={enterEditor} canContinue={canContinue && saveDetail !== "conflict" && hasSavedProject()} /> : <main className={view === "2d" ? styles.layout : styles.layout3d}>
-        {view === "2d" && <details open className={styles.panelSlot}><summary>도구와 가구 카탈로그</summary><ToolsPanel /></details>}
+      {welcome ? <WelcomeCard onNew={() => setModal(true)} onEnter={enterEditor} canContinue={canContinue && saveDetail !== "conflict" && hasSavedProject()} /> : <main className={view === "3d" ? styles.layout3d : styles.layout}>
+        {view !== "3d" && <details open className={styles.panelSlot}><summary>도구와 가구 카탈로그</summary><ToolsPanel /></details>}
         <section className={styles.workspace}>
           <div className={styles.toolbar}>
             <div className={styles.actions}>
@@ -147,20 +161,25 @@ export function App() {
               >
                 3D 보기
               </button>
+              <button aria-pressed={view === "split"} onClick={() => changeView("split")}>분할 보기</button>
             </div>
-            {view === "2d" && <button title="가구 선택을 해제하고 방 속성을 엽니다" onClick={() => useUIStore.getState().setSelected(null)}>방 속성</button>}
+            <button title="가구 선택을 해제하고 방 속성을 엽니다" onClick={() => useUIStore.getState().setSelected(null)}>방 속성</button>
             <span className={styles.subtle}>
               {view === "2d"
                 ? "내 방을 위에서 바라본 모습"
                 : "동일한 방과 가구를 입체로 확인하세요"}
             </span>
           </div>
-          {view === "2d" ? (
-            <Editor2D />
+          <SelectionToolbar />
+          {view === "2d" ? <Editor2D /> : view === "split" ? (
+            <div className={styles.splitWorkspace}>
+              <Editor2D />
+              <Suspense fallback={<div className={styles.view3dLoading}>3D 보기를 준비하고 있습니다.</div>}><Viewer3D /></Suspense>
+            </div>
           ) : (
             <>
               <div className={styles.view3dNote}>
-                방과 가구는 2D에서 편집할 수 있습니다.{" "}
+                3D 이동 모드와 속성 입력으로 가구를 편집할 수 있습니다.{" "}
                 <button onClick={() => changeView("2d")}>2D에서 편집</button>
               </div>
               <Suspense
@@ -178,17 +197,18 @@ export function App() {
             <span>
               {project.title} · {project.room.wallHeightMm} mm 높이
             </span>
-            <span>모드: {view === "3d" ? "3D" : ({ select: "선택", wallMove: "벽 이동", indent: "함몰", protrude: "돌출" }[tool])} · 격자 {project.settings.gridVisible ? `${project.settings.gridSizeMm} mm` : "숨김"} · 스냅 {project.settings.snapEnabled ? "켜짐" : "꺼짐"} · 단위 mm · 배치 오류 {warningCount}개</span>
+            <span>모드: {view === "3d" ? "3D" : ({ select: "선택", wallMove: "벽 이동", indent: "함몰", protrude: "돌출", measure: "두 점 실측", architectureMove: "구조 편집" }[tool])} · 격자 {project.settings.gridVisible ? `${project.settings.gridSizeMm} mm` : "숨김"} · 스냅 {project.settings.snapEnabled ? "켜짐" : "꺼짐"} · 단위 mm · 배치 오류 {warningCount}개</span>
             <span>{saveLabel}</span>
           </div>
         </section>
-        {view === "2d" && <details open className={styles.panelSlot}><summary>속성</summary>
+        <details open className={styles.panelSlot}><summary>속성</summary><div className={styles.propertyStack}>
           {selectedFurniture ? (
             <FurniturePanel key={selectedFurniture.id} item={selectedFurniture} />
           ) : (
-            <div className={styles.panel}><RoomPanel /><ArchitecturePanel /></div>
-          )}</details>}
+            <><RoomPanel /><ArchitecturePanel /></>
+          )}<ClearancePanel /></div></details>
       </main>}
+      {libraryOpen && <ProjectLibraryDialog onClose={closeLibrary} onSelectedProject={selectedLibraryProject} />}
       {modal && <NewProjectDialog onClose={closeModal} onCreated={enterEditor} />}
       {helpOpen && <HelpDialog onClose={closeHelp} />}
     </div>

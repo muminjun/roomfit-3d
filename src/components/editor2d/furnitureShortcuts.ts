@@ -1,4 +1,14 @@
 import {
+  deleteFurnitureBatch,
+  duplicateFurnitureBatch,
+  moveFurnitureBatch,
+} from "../../features/furniture/batchCommands";
+import {
+  applyBatchResult,
+  copySelectedFurniture,
+  pasteFurniture,
+} from "./SelectionToolbar";
+import {
   deleteFurniture,
   duplicateFurniture,
   moveFurniture,
@@ -29,6 +39,64 @@ export function handleFurnitureShortcut(
       ui.selected?.kind === "furniture"
         ? project.furniture.find((f) => f.id === ui.selected?.id)
         : null;
+  if (action === "selectAll") {
+    ui.setFurnitureSelection(project.furniture.map((f) => f.id));
+    return true;
+  }
+  if (action === "copy") {
+    copySelectedFurniture();
+    return true;
+  }
+  if (action === "paste") {
+    applyBatchResult(pasteFurniture(), true);
+    return true;
+  }
+  const ids = ui.selectedFurnitureIds;
+  if (ids.length > 1) {
+    if (action === "delete") {
+      const result = deleteFurnitureBatch(ids);
+      applyBatchResult(result);
+      if (result.ok) ui.setFurnitureSelection([]);
+      return true;
+    }
+    if (action === "duplicate") {
+      applyBatchResult(duplicateFurnitureBatch(ids), true);
+      return true;
+    }
+    const direction =
+      action === "nudgeLeft"
+        ? [-1, 0]
+        : action === "nudgeRight"
+          ? [1, 0]
+          : action === "nudgeUp"
+            ? [0, -1]
+            : action === "nudgeDown"
+              ? [0, 1]
+              : null;
+    if (direction) {
+      const step = event.altKey
+        ? 1
+        : project.settings.gridSizeMm * (event.shiftKey ? 5 : 1);
+      applyBatchResult(
+        moveFurnitureBatch(
+          project.furniture
+            .filter((f) => ids.includes(f.id))
+            .map((f) => ({
+              id: f.id,
+              position: {
+                x: f.position.x + direction[0] * step,
+                y: f.position.y + direction[1] * step,
+              },
+            })),
+        ),
+      );
+      return true;
+    }
+    if (action === "rotate" || action === "rotateBack") {
+      ui.setFurnitureMessage("여러 가구는 개별 회전해 주세요.");
+      return true;
+    }
+  }
   if (!item) return false;
   if (action === "delete") {
     const result = deleteFurniture({ itemId: item.id });

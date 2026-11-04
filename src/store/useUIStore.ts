@@ -1,11 +1,13 @@
 import { create } from "zustand";
 import type { FurnitureItem, PointMm } from "../types/model";
-type Tool = "select" | "wallMove" | "indent" | "protrude";
+type Tool = "select" | "wallMove" | "indent" | "protrude" | "measure" | "architectureMove";
 type UIStore = {
-  selected: { kind: "room" | "wall" | "furniture"; id: string } | null;
+  selected: { kind: "room" | "wall" | "furniture" | "partition" | "opening" | "zone"; id: string } | null;
   setSelected: (selected: UIStore["selected"]) => void;
-  view: "2d" | "3d";
-  setView: (view: "2d" | "3d") => void;
+  selectedFurnitureIds: string[];
+  setFurnitureSelection: (ids: string[]) => void;
+  view: "2d" | "3d" | "split";
+  setView: (view: "2d" | "3d" | "split") => void;
   tool: Tool;
   setTool: (tool: Tool) => void;
   preview: { polygon: PointMm[]; valid: boolean; message: string } | null;
@@ -35,8 +37,13 @@ type UIStore = {
 };
 export const useUIStore = create<UIStore>((set) => ({
   selected: null,
+  selectedFurnitureIds: [],
   setSelected: (selected) =>
-    set({ selected, preview: null, furniturePreview: null }),
+    set({ selected, selectedFurnitureIds: selected?.kind === "furniture" ? [selected.id] : [], preview: null, furniturePreview: null }),
+  setFurnitureSelection: (ids) => {
+    const unique = [...new Set(ids)];
+    set({ selectedFurnitureIds: unique, selected: unique.length ? {kind:"furniture",id:unique[unique.length-1]} : null, preview:null, furniturePreview:null });
+  },
   view: "2d",
   setView: (view) =>
     set({

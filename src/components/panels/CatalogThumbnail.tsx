@@ -42,6 +42,9 @@ export function CatalogThumbnail({ item }: { item: CatalogItem }) {
       drawing = <><rect x="5" y="9" width="38" height="30" rx="2"/>{item.kind === "hob" ? <><circle cx="16" cy="19" r="5"/><circle cx="32" cy="29" r="6"/></> : <path d="M5 19h38M16 19v20m16-20v20"/>}</>; break;
     case "dishwasher": case "oven":
       drawing = <><rect x="9" y="5" width="30" height="39" rx="2"/><path d="M9 14h30M15 10h3m5 0h3"/><rect x="14" y="20" width="20" height="16" rx="2"/></>; break;
+    case "other":
+      drawing = item.id === "column-round" ? <><ellipse cx="24" cy="9" rx="12" ry="5"/><path d="M12 9v30c0 7 24 7 24 0V9"/></> : <><path d="M12 10l16-5 9 5v31l-16 5-9-5zM12 10l9 5 16-5M21 15v31"/></>;
+      break;
     default:
       drawing = <><rect x="9" y="10" width="30" height="30" rx="4" /><path d="M9 20h30M19 10v30" /></>;
   }

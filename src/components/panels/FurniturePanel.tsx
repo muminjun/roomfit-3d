@@ -23,10 +23,12 @@ import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
 import { NumberField } from "../common/NumberField";
 import styles from "../../styles/App.module.css";
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 export function FurniturePanel({ item }: { item: FurnitureItem }) {
   const project = useProjectStore((s) => s.project),
     setSelected = useUIStore((s) => s.setSelected);
+  const nameErrorId = useId(), cancelNameBlur = useRef(false);
+  const [nameError, setNameError] = useState("");
   const [error, setError] = useState("");
   const validation = validateAllPlacements(project.room, project.furniture)[
       item.id
@@ -41,8 +43,8 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
     );
     return other ? `${issue.message}（${other.name}）` : issue.message;
   }
-  function result(r: CommandResult) {
-    if (!r.ok) setError(r.issues.map(issueText).join(" "));
+  function result(r: CommandResult, field = false): CommandResult {
+    if (!r.ok) { if (!field) setError(r.issues.map(issueText).join(" ")); }
     else {
       setError("");
       if (
@@ -52,15 +54,16 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
       )
         setSelected({ kind: "furniture", id: r.affectedIds[0] });
     }
+    return r;
   }
   function resize(key: "widthMm" | "depthMm" | "heightMm", value: number) {
-    result(
+    return result(
       resizeFurniture({
         itemId: item.id,
         widthMm: key === "widthMm" ? value : item.widthMm,
         depthMm: key === "depthMm" ? value : item.depthMm,
         heightMm: key === "heightMm" ? value : item.heightMm,
-      }),
+      }), true,
     );
   }
   return (
@@ -81,13 +84,21 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
         <input
           key={item.name}
           defaultValue={item.name}
-          onBlur={(e) =>
-            result(renameFurniture({ itemId: item.id, name: e.target.value }))
-          }
+          aria-invalid={nameError ? true : undefined}
+          aria-describedby={nameError ? nameErrorId : undefined}
+          onBlur={(e) => {
+            if (cancelNameBlur.current) { cancelNameBlur.current = false; return; }
+            const r = renameFurniture({ itemId: item.id, name: e.target.value });
+            setNameError(r.ok ? "" : r.issues.map(issueText).join(" "));
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") e.currentTarget.blur();
+            if (e.key === "Escape" && (e.currentTarget.value !== item.name || nameError)) {
+              e.preventDefault(); e.stopPropagation(); e.currentTarget.value = item.name; setNameError(""); cancelNameBlur.current = true; e.currentTarget.blur();
+            }
           }}
         />
+        {nameError && <small id={nameErrorId} role="alert" className={styles.error}>{nameError}</small>}
       </label>
       <NumberField
         half
@@ -98,7 +109,7 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
             moveFurniture({
               itemId: item.id,
               position: { ...item.position, x: value },
-            }),
+            }), true,
           )
         }
       />
@@ -111,7 +122,7 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
             moveFurniture({
               itemId: item.id,
               position: { ...item.position, y: value },
-            }),
+            }), true,
           )
         }
       />
@@ -198,14 +209,8 @@ export function FurniturePanel({ item }: { item: FurnitureItem }) {
         <b>여는 공간 계획 여유</b>
         <small>앞면 전체를 기준으로 한 보수적인 계획 여유입니다. 실제 제품의 문 궤적이나 설치 기준은 아닙니다.</small>
         <label><input type="checkbox" checked={item.operation.enabled} onChange={e => result(setFurnitureOperation({itemId:item.id, operation:{...item.operation!, enabled:e.target.checked}}))} /> 여는 공간 표시</label>
-        <label className={styles.field}>여는 공간 여유 (mm)
-          <input type="number" min={0} max={3000} step={1} key={item.operation.clearanceMm} defaultValue={item.operation.clearanceMm} onBlur={e => {
-            const raw = e.currentTarget.value, value = Number(raw);
-            if (raw.trim() === "" || !Number.isInteger(value) || value < 0 || value > 3000) { setError("여는 공간은 0–3000 mm 정수로 입력해 주세요."); return; }
-            result(setFurnitureOperation({itemId:item.id, operation:{...item.operation!, clearanceMm:value}}));
-          }} onKeyDown={e => { if (e.key === "Enter") e.currentTarget.blur(); }} />
-          <small>0–3000 mm</small>
-        </label>
+        <NumberField label="여는 공간 여유 (mm)" value={item.operation.clearanceMm} min={0} max={3000}
+          onCommit={value => result(setFurnitureOperation({itemId:item.id, operation:{...item.operation!, clearanceMm:value}}), true)} />
         {item.operation.enabled && item.operation.clearanceMm > 0 && <p role="status">{(() => { const warnings = getOperationWarnings(project.room, project.furniture, item); return warnings.length ? `여는 공간에 장애물: ${warnings.map(w => w.name).join(", ")}` : "여는 공간에 장애물이 없습니다."; })()}</p>}
       </div>}
       {clearance && (

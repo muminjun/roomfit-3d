@@ -33,6 +33,7 @@ export function useCatalogDrop(
       id,
       { x: Math.round(world.x * 2) / 2, y: Math.round(world.y * 2) / 2 },
       previewId.current,
+      project.room.wallHeightMm,
     );
     if (!item) return null;
     if (project.settings.snapEnabled)

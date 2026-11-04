@@ -6,7 +6,12 @@ import {
   validatePlacement,
 } from "../../lib/geometry";
 import { useProjectStore } from "../../store/useProjectStore";
-import type { FurnitureItem, FurnitureOperation, Room, RotationDeg } from "../../types/model";
+import type {
+  FurnitureItem,
+  FurnitureOperation,
+  Room,
+  RotationDeg,
+} from "../../types/model";
 import { projectSchema } from "../../types/schema";
 import { createId } from "../project/createProject";
 import type { CommandResult } from "../room/commands";
@@ -28,6 +33,7 @@ export function createFurnitureCandidate(
   catalogId: string,
   position: Position,
   id: string = createId(),
+  roomHeightMm?: number,
 ): FurnitureItem | null {
   const definition = catalog.find((item) => item.id === catalogId);
   if (!definition) return null;
@@ -39,10 +45,13 @@ export function createFurnitureCandidate(
     position: { ...position },
     widthMm: definition.widthMm,
     depthMm: definition.depthMm,
-    heightMm: definition.heightMm,
+    heightMm: catalogId.startsWith("column-") && roomHeightMm !== undefined ? roomHeightMm : definition.heightMm,
     rotationDeg: 0,
     color: COLORS[0],
     ...(definition.operation ? { operation: { ...definition.operation } } : {}),
+    ...((definition as { locked?: boolean }).locked !== undefined
+      ? { locked: (definition as { locked?: boolean }).locked }
+      : {}),
   };
 }
 /** Search the nearest lattice offsets; ties are ordered by y then x. */
@@ -178,7 +187,7 @@ export function addFurniture({
       x: (box.minX + box.maxX) / 2,
       y: (box.minY + box.maxY) / 2,
     };
-  const candidate = createFurnitureCandidate(catalogId, origin);
+  const candidate = createFurnitureCandidate(catalogId, origin, undefined, project.room.wallHeightMm);
   if (!candidate)
     return invalid("UNKNOWN_CATALOG", "카탈로그 항목을 찾을 수 없습니다.");
   if (!position) {
@@ -199,11 +208,13 @@ export function moveFurniture(
 ): CommandResult {
   const item = getItem(itemId);
   return item
-    ? validateAndCommit(
-        { ...item, position: { ...position } },
-        true,
-        coalesceKey,
-      )
+    ? item.locked
+      ? invalid("LOCKED", "잠긴 가구는 변경할 수 없습니다.", item.id)
+      : validateAndCommit(
+          { ...item, position: { ...position } },
+          true,
+          coalesceKey,
+        )
     : missing(itemId);
 }
 export function resizeFurniture({
@@ -221,16 +232,18 @@ export function resizeFurniture({
 }): CommandResult {
   const item = getItem(itemId);
   return item
-    ? validateAndCommit(
-        {
-          ...item,
-          widthMm,
-          depthMm,
-          heightMm,
-          position: position ? { ...position } : item.position,
-        },
-        true,
-      )
+    ? item.locked
+      ? invalid("LOCKED", "잠긴 가구는 변경할 수 없습니다.", item.id)
+      : validateAndCommit(
+          {
+            ...item,
+            widthMm,
+            depthMm,
+            heightMm,
+            position: position ? { ...position } : item.position,
+          },
+          true,
+        )
     : missing(itemId);
 }
 export function rotateFurniture({
@@ -242,7 +255,16 @@ export function rotateFurniture({
 }): CommandResult {
   const item = getItem(itemId);
   return item
-    ? commitItems(useProjectStore.getState().project.furniture.map(f => f.id === itemId ? { ...item, rotationDeg } : f), itemId)
+    ? item.locked
+      ? invalid("LOCKED", "잠긴 가구는 회전할 수 없습니다.", item.id)
+      : commitItems(
+          useProjectStore
+            .getState()
+            .project.furniture.map((f) =>
+              f.id === itemId ? { ...item, rotationDeg } : f,
+            ),
+          itemId,
+        )
     : missing(itemId);
 }
 export function duplicateFurniture({
@@ -260,6 +282,7 @@ export function duplicateFurniture({
   const candidate = {
     ...source,
     id: createId(),
+    locked: false,
     position: position ? { ...position } : { ...source.position },
   };
   if (!position) {
@@ -278,6 +301,8 @@ export function duplicateFurniture({
 export function deleteFurniture({ itemId }: { itemId: string }): CommandResult {
   const { project } = useProjectStore.getState();
   if (!getItem(itemId)) return missing(itemId);
+  if (getItem(itemId)?.locked)
+    return invalid("LOCKED", "잠긴 가구는 삭제할 수 없습니다.", itemId);
   return commitItems(
     project.furniture.filter((item) => item.id !== itemId),
     itemId,
@@ -331,6 +356,8 @@ export function resetFurnitureSize({
 }): CommandResult {
   const item = getItem(itemId);
   if (!item) return missing(itemId);
+  if (item.locked)
+    return invalid("LOCKED", "잠긴 가구는 크기를 변경할 수 없습니다.", itemId);
   const preset = catalog.find((x) => x.id === item.catalogId);
   if (!preset)
     return invalid("UNKNOWN_CATALOG", "원래 크기를 찾을 수 없습니다.");
@@ -346,8 +373,21 @@ export function resetFurnitureSize({
 }
 
 /** Operation allowances are advisory; structurally valid edits also work for invalid placements. */
-export function setFurnitureOperation({ itemId, operation }: { itemId: string; operation: FurnitureOperation }): CommandResult {
+export function setFurnitureOperation({
+  itemId,
+  operation,
+}: {
+  itemId: string;
+  operation: FurnitureOperation;
+}): CommandResult {
   const item = getItem(itemId);
   if (!item) return missing(itemId);
-  return commitItems(useProjectStore.getState().project.furniture.map(f => f.id === itemId ? { ...item, operation: { ...operation } } : f), itemId);
+  return commitItems(
+    useProjectStore
+      .getState()
+      .project.furniture.map((f) =>
+        f.id === itemId ? { ...item, operation: { ...operation } } : f,
+      ),
+    itemId,
+  );
 }

@@ -1,0 +1,191 @@
+{
+  "baseline": "495c7df",
+  "node": "22.15.0",
+  "npm": "10.9.2",
+  "commands": [
+    {
+      "name": "chrome",
+      "command": "npx playwright test tests/e2e/architecture-canvas.spec.ts tests/e2e/columns-clearance.spec.ts tests/e2e/workbench-3d.spec.ts tests/e2e/project-library-export.spec.ts --workers=1 --project=chrome --output=/tmp/roomfit-workbench-chrome",
+      "env": {
+        "RUN_CHROME": "1"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "env": {},
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "env": {},
+      "exitCode": 0
+    },
+    {
+      "name": "unit",
+      "command": "npm run test",
+      "env": {},
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "env": {
+        "VITE_BASE_PATH": "/roomfit-3d/"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "check-dist",
+      "command": "npm run check:dist",
+      "env": {
+        "VITE_BASE_PATH": "/roomfit-3d/"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "subpath",
+      "command": "npm run test:e2e:subpath",
+      "exitCode": 0
+    }
+  ],
+  "fullBrowser": {
+    "command": "npm run test:e2e -- --workers=1",
+    "exitCode": 0,
+    "passed": 272,
+    "initialRun": {
+      "exitCode": 1,
+      "passed": 264,
+      "failed": 2,
+      "reason": "Obsolete architecture test closed the retained panel after view switch; corrected by asserting panel remains open."
+    }
+  },
+  "unit": {
+    "passed": 162,
+    "files": 22
+  },
+  "distSha256": {
+    "assets/Viewer3D-B6hcDlt5.js": "baa23345a3d7263a150b56b081d25a178222dbe4c888e2b80d0e005763052477",
+    "assets/index-DIuc8BCC.css": "c27978ee077a26a5de8e5ced74626ab11b644efa7df14552ffcb10604a31faa5",
+    "assets/index-DX8YewzL.js": "1a46b354738911c9ea8526fb99477df355224f62cb2191ac9da629f7a6352b70",
+    "assets/konva-vendor-BBJ9AyRr.js": "a0cb6357f2e6b9550d6fdb3ffcf7e880a8470ec97892ba508f6a2cebe9a9297a",
+    "assets/react-vendor-CGTtH4Z4.js": "545c447f8ad7447272f70a69be1a53afe690984ab8975c5c0e14610821147d04",
+    "assets/rolldown-runtime-XKyaHtl9.js": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
+    "assets/three-core-BF58tRDi.js": "2a7443fb04c485eac7af9e2ffab7f114570c29dbb45921d8af899c7ceece1c34",
+    "assets/three-module-AImBqZWr.js": "56ecaecbe4dc3a3d00ae0f2ad425a322b444dd5dcd45bae980884e7d5ce20e6f",
+    "favicon.svg": "c69d0f9100415b3c0f2eec5bfc7daf61e7b1f6b323f35865ce5ef5de372f436a",
+    "index.html": "716ea6bb882d428375ec2dea1ce4789a135557b4f4bb5b5e0adca35c993b7731"
+  },
+  "sameDistBeforeAfterSubpath": true,
+  "productionLocal": {
+    "checkedAt": "2026-11-04T13:55:52.991Z",
+    "results": [
+      {
+        "browser": "chromium",
+        "version": "156.0.8078.4",
+        "url": "http://127.0.0.1:4175/roomfit-3d/",
+        "passed": true,
+        "checks": [
+          "welcome/new",
+          "Space pan furniture unchanged",
+          "off-grid Shift axis",
+          "Undo/Esc",
+          "window/zone",
+          "expanded fixture catalog",
+          "real 3D",
+          "JSON",
+          "autosave/reload",
+          "split view",
+          "3D camera and PNG",
+          "local project library",
+          "full-plan SVG"
+        ],
+        "assets": [
+          "/roomfit-3d/assets/Viewer3D-B6hcDlt5.js",
+          "/roomfit-3d/assets/index-DIuc8BCC.css",
+          "/roomfit-3d/assets/index-DX8YewzL.js",
+          "/roomfit-3d/assets/konva-vendor-BBJ9AyRr.js",
+          "/roomfit-3d/assets/react-vendor-CGTtH4Z4.js",
+          "/roomfit-3d/assets/rolldown-runtime-XKyaHtl9.js",
+          "/roomfit-3d/assets/three-core-BF58tRDi.js",
+          "/roomfit-3d/assets/three-module-AImBqZWr.js"
+        ]
+      },
+      {
+        "browser": "firefox",
+        "version": "157.0",
+        "url": "http://127.0.0.1:4175/roomfit-3d/",
+        "passed": true,
+        "checks": [
+          "welcome/new",
+          "Space pan furniture unchanged",
+          "off-grid Shift axis",
+          "Undo/Esc",
+          "window/zone",
+          "expanded fixture catalog",
+          "real 3D",
+          "JSON",
+          "autosave/reload",
+          "split view",
+          "3D camera and PNG",
+          "local project library",
+          "full-plan SVG"
+        ],
+        "assets": [
+          "/roomfit-3d/assets/Viewer3D-B6hcDlt5.js",
+          "/roomfit-3d/assets/index-DIuc8BCC.css",
+          "/roomfit-3d/assets/index-DX8YewzL.js",
+          "/roomfit-3d/assets/konva-vendor-BBJ9AyRr.js",
+          "/roomfit-3d/assets/react-vendor-CGTtH4Z4.js",
+          "/roomfit-3d/assets/rolldown-runtime-XKyaHtl9.js",
+          "/roomfit-3d/assets/three-core-BF58tRDi.js",
+          "/roomfit-3d/assets/three-module-AImBqZWr.js",
+          "/roomfit-3d/favicon.svg"
+        ]
+      }
+    ]
+  },
+  "responsive": {
+    "browser": "156.0.8078.80",
+    "results": [
+      {
+        "width": 390,
+        "passed": true,
+        "dimensions": {
+          "width": 390,
+          "scroll": 390
+        }
+      },
+      {
+        "width": 800,
+        "passed": true,
+        "dimensions": {
+          "width": 800,
+          "scroll": 800
+        }
+      },
+      {
+        "width": 1023,
+        "passed": true,
+        "dimensions": {
+          "width": 1023,
+          "scroll": 1023
+        }
+      }
+    ]
+  },
+  "runtimeAudit": {
+    "exitCode": 0,
+    "vulnerabilities": 0
+  },
+  "developmentAudit": {
+    "moderate": 10
+  },
+  "typecheckNegative": {
+    "exitCode": 1,
+    "diagnostic": "TS2322",
+    "restoredExitCode": 0
+  }
+}

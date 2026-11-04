@@ -1,4 +1,8 @@
 export type ShortcutAction =
+  | "selectAll"
+  | "copy"
+  | "paste"
+  | "measure"
   | "cancel"
   | "select"
   | "wallMove"
@@ -32,6 +36,30 @@ type Definition = {
 const plain = (e: KeyboardEvent) => !e.ctrlKey && !e.metaKey && !e.altKey;
 const mod = (e: KeyboardEvent) => e.ctrlKey || e.metaKey;
 export const shortcuts: Definition[] = [
+  {
+    action: "selectAll",
+    label: "Ctrl·⌘ A",
+    description: "모든 가구 선택",
+    match: (e) => mod(e) && !e.altKey && !e.shiftKey && e.code === "KeyA",
+  },
+  {
+    action: "copy",
+    label: "Ctrl·⌘ C",
+    description: "선택 가구 복사",
+    match: (e) => mod(e) && !e.altKey && !e.shiftKey && e.code === "KeyC",
+  },
+  {
+    action: "paste",
+    label: "Ctrl·⌘ V",
+    description: "선택 가구 붙여넣기",
+    match: (e) => mod(e) && !e.altKey && !e.shiftKey && e.code === "KeyV",
+  },
+  {
+    action: "measure",
+    label: "M",
+    description: "두 점 실측",
+    match: (e) => plain(e) && !e.shiftKey && e.code === "KeyM",
+  },
   {
     action: "cancel",
     label: "Esc",

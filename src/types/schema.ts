@@ -64,6 +64,7 @@ const furniture = z
       z.literal(270),
     ]),
     color: z.enum(COLORS).optional(),
+    locked: z.boolean().optional(),
     operation: z.object({
       kind: z.enum(["swing", "doubleSwing", "drawer", "sliding", "top"]),
       clearanceMm: integer(0, 3000), enabled: z.boolean(),
@@ -101,6 +102,7 @@ export const rawProjectSchema = z
         ]),
         snapEnabled: z.boolean(),
         gridVisible: z.boolean(),
+        minimumClearanceMm: integer(0, 3000).optional(),
       })
       .strict(),
   })

@@ -216,11 +216,13 @@ export function serializeProjectJson(project: ProjectDataV2): string {
         rotationDeg: item.rotationDeg,
         ...(item.color !== undefined ? { color: item.color } : {}),
         ...(item.operation !== undefined ? { operation: item.operation } : {}),
+        ...(item.locked !== undefined ? { locked: item.locked } : {}),
       })),
       settings: {
         gridSizeMm: project.settings.gridSizeMm,
         snapEnabled: project.settings.snapEnabled,
         gridVisible: project.settings.gridVisible,
+        ...(project.settings.minimumClearanceMm !== undefined ? { minimumClearanceMm: project.settings.minimumClearanceMm } : {}),
       },
     },
     null,

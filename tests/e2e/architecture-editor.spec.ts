@@ -41,7 +41,8 @@ test('architecture can be created, edited, saved and undone', async ({ page }) =
   const afterViewDownload = page.waitForEvent('download');
   await page.getByRole('button', { name: 'JSON 내보내기', exact: true }).click();
   expect(JSON.parse(await readFile(await (await afterViewDownload).path(), 'utf8'))).toEqual(exported);
-  await page.getByText('문·창문·구역', { exact: true }).click();
+  // The shared property panel stays mounted and open across view changes.
+  await expect(page.getByRole('button', { name: '욕실 편집' })).toBeVisible();
   await expect.poll(() => page.evaluate(() => localStorage.getItem('roomfit3d:v2:/:autosave'))).toContain('욕실 벽');
   await page.getByRole('button', { name: '실행 취소' }).click();
   await page.getByRole('button', { name: '욕실 편집' }).click();

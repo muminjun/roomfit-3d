@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { LIMITS } from "../../config/limits";
 import { createProject } from "../../features/project/createProject";
 import { useProjectStore } from "../../store/useProjectStore";
 import { projectSchema } from "../../types/schema";
@@ -22,6 +23,14 @@ const parseInteger = (value: string): number | null => {
   const number = Number(cleaned);
   return Number.isSafeInteger(number) ? number : null;
 };
+const ranges: Record<keyof Dimensions, readonly [number, number]> = {
+  width:[LIMITS.roomMin,LIMITS.roomMax], depth:[LIMITS.roomMin,LIMITS.roomMax],
+  height:[LIMITS.heightMin,LIMITS.heightMax], thickness:[LIMITS.wallMin,LIMITS.wallMax],
+};
+function fieldError(key: keyof Dimensions, value: string): string | undefined {
+  const number = parseInteger(value), [min,max] = ranges[key];
+  return number === null || number < min || number > max ? "표시된 범위의 정수를 입력해 주세요." : undefined;
+}
 export function NewProjectDialog({ onClose, onCreated }: { onClose: () => void; onCreated?: () => void }) {
   const loadProject = useProjectStore((s) => s.loadProject);
   const [values, setValues] = useState<Dimensions>({
@@ -30,7 +39,9 @@ export function NewProjectDialog({ onClose, onCreated }: { onClose: () => void; 
     height: "2400",
     thickness: "120",
   });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<Partial<Record<keyof Dimensions, string>>>({});
+  const id = useId();
+  const initial = useRef<Partial<Record<keyof Dimensions, string>>>({});
   const dialog = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const previous =
@@ -73,18 +84,15 @@ export function NewProjectDialog({ onClose, onCreated }: { onClose: () => void; 
       depth = parseInteger(values.depth),
       height = parseInteger(values.height),
       thickness = parseInteger(values.thickness);
-    if (
-      width === null ||
-      depth === null ||
-      height === null ||
-      thickness === null
-    ) {
-      setError("각 치수를 표시된 범위의 정수로 입력해 주세요.");
-      return;
+    const next: Partial<Record<keyof Dimensions, string>> = {};
+    for (const field of fields) {
+      if (fieldError(field.key, values[field.key])) next[field.key] = fieldError(field.key, values[field.key]);
     }
+    if (Object.keys(next).length || width === null || depth === null || height === null || thickness === null) { setErrors(next); return; }
+    setErrors({});
     const candidate = createProject(width, depth, height, thickness);
     if (!projectSchema.safeParse(candidate).success) {
-      setError("각 치수를 표시된 범위의 정수로 입력해 주세요.");
+      setErrors({ width: "방 치수를 확인해 주세요." });
       return;
     }
     if (
@@ -118,17 +126,24 @@ export function NewProjectDialog({ onClose, onCreated }: { onClose: () => void; 
                   type="text"
                   inputMode="numeric"
                   value={values[field.key]}
-                  onChange={(event) =>
-                    setValues({ ...values, [field.key]: event.target.value })
-                  }
-                  aria-invalid={error ? true : undefined}
-                  aria-describedby={`${field.key}-range${error ? " new-error" : ""}`}
+                  onFocus={() => { if (!errors[field.key]) initial.current[field.key] = values[field.key]; }}
+                  onChange={(event) => setValues({ ...values, [field.key]: event.target.value })}
+                  onBlur={(event) => setErrors(current => ({...current, [field.key]:fieldError(field.key, event.target.value)}))}
+                  onKeyDown={event => {
+                    if (event.key === "Escape" && (values[field.key] !== initial.current[field.key] || errors[field.key])) {
+                      event.preventDefault(); event.stopPropagation();
+                      setValues(current => ({ ...current, [field.key]: initial.current[field.key] ?? current[field.key] }));
+                      setErrors(current => ({ ...current, [field.key]: undefined }));
+                    }
+                  }}
+                  aria-invalid={errors[field.key] ? true : undefined}
+                  aria-describedby={`${id}-${field.key}-range${errors[field.key] ? ` ${id}-${field.key}-error` : ""}`}
                 />
-                <small id={`${field.key}-range`}>{field.range} mm</small>
+                <small id={`${id}-${field.key}-range`}>{field.range} mm</small>
+                {errors[field.key] && <small id={`${id}-${field.key}-error`} role="alert" className={styles.error}>{errors[field.key]}</small>}
               </label>
             ))}
           </div>
-          {error && <p id="new-error" role="alert">{error}</p>}
           <div className={styles.modalActions}>
             <button type="button" onClick={onClose}>
               취소

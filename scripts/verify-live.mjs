@@ -57,8 +57,27 @@ for (const [name, engine] of [["chromium", chromium], ["firefox", firefox]]) {
     await page.waitForTimeout(650); await page.reload();
     await expect(page.getByRole("button", { name: "책상 선택", exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "양변기 선택", exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "분할 보기", exact: true }).click();
+    await expect(page.getByLabel("2D 편집 영역")).toBeVisible();
+    await expect(page.getByLabel("3D 방 보기").locator("canvas")).toBeVisible();
+    await page.getByRole("button", { name: "위에서", exact: true }).click();
+    const pngPending = page.waitForEvent("download");
+    await page.getByRole("button", { name: "3D PNG 저장", exact: true }).click();
+    const png = await readFile(await (await pngPending).path());
+    assert.equal(png.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+    assert.ok(png.length > 1000);
+    await page.getByRole("button", { name: "프로젝트 보관함", exact: true }).click();
+    const library = page.getByRole("dialog");
+    await library.getByRole("button", { name: "현재 프로젝트 보관", exact: true }).click();
+    await expect(library.getByRole("button", { name: / 열기$/ })).toHaveCount(1);
+    await library.getByRole("button", { name: "닫기", exact: true }).click();
+    await page.getByRole("button", { name: "2D 편집", exact: true }).click();
+    const svgPending = page.waitForEvent("download");
+    await page.getByRole("button", { name: "평면도 SVG", exact: true }).click();
+    const svg = await readFile(await (await svgPending).path(), "utf8");
+    assert.ok(svg.includes("<svg") && svg.includes("양변기"));
     assert.deepEqual(errors, []);
-    results.push({ browser: name, version: browser.version(), url, passed: true, checks: ["welcome/new", "Space pan furniture unchanged", "off-grid Shift axis", "Undo/Esc", "window/zone", "expanded fixture catalog", "real 3D", "JSON", "autosave/reload"], assets: [...assets].sort() });
+    results.push({ browser: name, version: browser.version(), url, passed: true, checks: ["welcome/new", "Space pan furniture unchanged", "off-grid Shift axis", "Undo/Esc", "window/zone", "expanded fixture catalog", "real 3D", "JSON", "autosave/reload", "split view", "3D camera and PNG", "local project library", "full-plan SVG"], assets: [...assets].sort() });
     console.log(`${name}: live regression passed`);
   } finally { await browser.close(); }
 }

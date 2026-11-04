@@ -1,3 +1,5 @@
+> **2026-11-04 workbench update:** The current criterion-by-criterion source is [AC evidence 2026-11-04](ac-evidence-2026-11-04.md). Current full unit162/browser272, Chrome25 and same-dist subpath2 results are recorded in TEST_REPORT.md. CI and live deployment of workbench changes remain pending. Material below refers to the earlier release unless explicitly updated.
+
 <!-- 현재 추가 확인: unit126/16파일, 전체E2E154 종료0, 동일dist서브경로2 종료0. 원격CI는 후속 확인. -->
 # 수용 기준 감사 — 2026-11-03
 

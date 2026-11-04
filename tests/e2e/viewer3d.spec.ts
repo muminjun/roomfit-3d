@@ -18,8 +18,9 @@ test("3D 실제 캔버스와 카메라 조작을 거쳐도 프로젝트가 유�
   const canvas = page.getByLabel("3D 방 보기").locator("canvas");
   await expect(canvas).toBeVisible();
   await expect(
-    page.getByText("방과 가구는 2D에서 편집할 수 있습니다."),
+    page.getByText("3D 이동 모드와 속성 입력으로 가구를 편집할 수 있습니다."),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: "3D 이동", exact: true })).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByRole("button", { name: /퀸 침대 1500/ })).toHaveCount(
     0,
   );

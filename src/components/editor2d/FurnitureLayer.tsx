@@ -1,3 +1,7 @@
+import {
+  moveFurnitureBatch,
+  validateFurnitureBatch,
+} from "../../features/furniture/batchCommands";
 import { describeFurnitureIssues } from "./furnitureShortcuts";
 import { Circle, Group, Rect, Text } from "./konva";
 import type { KonvaEventObject } from "konva/lib/Node";
@@ -16,7 +20,7 @@ import {
 import type { FurnitureItem } from "../../types/model";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useUIStore } from "../../store/useUIStore";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type Konva from "konva";
 type Corner = "nw" | "ne" | "sw" | "se";
 export function FurnitureLayer({
@@ -30,10 +34,16 @@ export function FurnitureLayer({
 }) {
   const project = useProjectStore((s) => s.project),
     selected = useUIStore((s) => s.selected),
+    selectedIds = useUIStore((s) => s.selectedFurnitureIds),
     preview = useUIStore((s) => s.furniturePreview),
     setPreview = useUIStore((s) => s.setFurniturePreview),
     setSelected = useUIStore((s) => s.setSelected),
     tool = useUIStore((s) => s.tool);
+  const [groupPreview, setGroupPreview] = useState<{
+    moves: { id: string; position: { x: number; y: number } }[];
+    valid: boolean;
+  } | null>(null);
+  const group = useRef<FurnitureItem[]>([]);
   const original = useRef<FurnitureItem | null>(null),
     resize = useRef<{ item: FurnitureItem; corner: Corner } | null>(null),
     alt = useRef(false),
@@ -50,6 +60,8 @@ export function FurnitureLayer({
         activeNode.current = null;
       }
       original.current = null;
+      group.current = [];
+      setGroupPreview(null);
       resize.current = null;
       setPreview(null);
     };
@@ -108,22 +120,46 @@ export function FurnitureLayer({
       e.target.stopDrag();
       return;
     }
+    const ids = useUIStore.getState().selectedFurnitureIds;
+    group.current = project.furniture.filter((f) => ids.includes(f.id));
+    if (!ids.includes(item.id)) group.current = [item];
+    if (group.current.some((f) => f.locked)) {
+      useUIStore
+        .getState()
+        .setFurnitureMessage("잠긴 가구는 이동할 수 없습니다.");
+      e.target.position(item.position);
+      e.target.stopDrag();
+      return;
+    }
     original.current = item;
     cancelled.current = false;
     activeNode.current = e.target;
     activeStart.current = e.target.position();
     alt.current = e.evt.altKey;
-    setSelected({ kind: "furniture", id: item.id });
+    if (!ids.includes(item.id)) setSelected({ kind: "furniture", id: item.id });
   }
   function move(e: KonvaEventObject<DragEvent>) {
     if (!original.current) return;
-    update(
-      candidate(
-        original.current,
-        { x: e.target.x(), y: e.target.y() },
-        e.evt.shiftKey,
-      ),
+    const next = candidate(
+      original.current,
+      { x: e.target.x(), y: e.target.y() },
+      e.evt.shiftKey,
     );
+    if (group.current.length > 1 && !alt.current) {
+      const dx = next.position.x - original.current.position.x,
+        dy = next.position.y - original.current.position.y;
+      const moves = group.current.map((f) => ({
+        id: f.id,
+        position: { x: f.position.x + dx, y: f.position.y + dy },
+      }));
+      const validation = validateFurnitureBatch(moves);
+      setGroupPreview({ moves, valid: validation.valid });
+      setPreview({
+        item: next,
+        valid: validation.valid,
+        message: validation.message,
+      });
+    } else update(next);
   }
   function end(e: KonvaEventObject<DragEvent>) {
     if (!original.current || cancelled.current) return;
@@ -138,6 +174,8 @@ export function FurnitureLayer({
     ) {
       e.target.position(original.current.position);
       original.current = null;
+      group.current = [];
+      setGroupPreview(null);
       setPreview(null);
       return;
     }
@@ -147,6 +185,28 @@ export function FurnitureLayer({
       e.evt.shiftKey,
     );
     e.target.position(original.current.position);
+    if (group.current.length > 1 && !alt.current) {
+      const dx = next.position.x - original.current.position.x,
+        dy = next.position.y - original.current.position.y;
+      const result = moveFurnitureBatch(
+        group.current.map((f) => ({
+          id: f.id,
+          position: { x: f.position.x + dx, y: f.position.y + dy },
+        })),
+      );
+      useUIStore
+        .getState()
+        .setFurnitureMessage(
+          result.ok
+            ? ""
+            : describeFurnitureIssues(result.issues, project.furniture),
+        );
+      original.current = null;
+      group.current = [];
+      setGroupPreview(null);
+      setPreview(null);
+      return;
+    }
     const validation = validatePlacement(
       project.room,
       project.furniture,
@@ -203,10 +263,10 @@ export function FurnitureLayer({
               : item,
           r = getFurnitureRect(shown),
           base = getFurnitureRect(item),
-          isSelected =
-            selected?.kind === "furniture" && selected.id === item.id,
-          valid =
-            preview?.item.id === item.id
+          isSelected = selectedIds.includes(item.id),
+          valid = groupPreview?.moves.some((m) => m.id === item.id)
+            ? groupPreview.valid
+            : preview?.item.id === item.id
               ? preview.valid
               : validity[item.id]?.valid;
         const w = r.maxX - r.minX,
@@ -214,9 +274,19 @@ export function FurnitureLayer({
         return (
           <Group
             key={item.id}
-            x={item.position.x}
-            y={item.position.y}
-            draggable={tool === "select"}
+            x={
+              item.id === original.current?.id
+                ? item.position.x
+                : (groupPreview?.moves.find((m) => m.id === item.id)?.position
+                    .x ?? item.position.x)
+            }
+            y={
+              item.id === original.current?.id
+                ? item.position.y
+                : (groupPreview?.moves.find((m) => m.id === item.id)?.position
+                    .y ?? item.position.y)
+            }
+            draggable={tool === "select" && !item.locked}
             onMouseEnter={() => onHover(item.id)}
             onMouseLeave={() => onHover(null)}
             onMouseDown={(e) => {
@@ -242,9 +312,18 @@ export function FurnitureLayer({
               window.addEventListener("roomfit-cancel-drag", restore);
             }}
             onClick={(e) => {
-              if (isPan(e.evt)) return;
+              if (isPan(e.evt) || tool !== "select") return;
               e.cancelBubble = true;
-              setSelected({ kind: "furniture", id: item.id });
+              const ids = useUIStore.getState().selectedFurnitureIds;
+              if (e.evt.shiftKey)
+                useUIStore
+                  .getState()
+                  .setFurnitureSelection(
+                    ids.includes(item.id)
+                      ? ids.filter((id) => id !== item.id)
+                      : [...ids, item.id],
+                  );
+              else setSelected({ kind: "furniture", id: item.id });
             }}
             onDragStart={(e) => begin(e, item)}
             onDragMove={move}
@@ -269,6 +348,9 @@ export function FurnitureLayer({
               listening={false}
             />
             {isSelected &&
+              selected?.id === item.id &&
+              selectedIds.length === 1 &&
+              !item.locked &&
               (["nw", "ne", "sw", "se"] as Corner[]).map((c) => {
                 const x = c.includes("w") ? base.minX : base.maxX,
                   y = c.includes("n") ? base.minY : base.maxY;
