@@ -13,7 +13,7 @@
 - [x] 5. 3D/split: coordinator implements camera presets, read-only wall visibility, PNG capture and opt-in direct dragging with preview/cancel/history invariants; meaningful independent geometry/browser tests first.
 - [x] 6. Columns/clearance/ruler and architecture canvas manipulation: implement after preceding ownership handoff; preserve explicit subject/target and host semantics, test rotated/negative/offgrid/cancel cases.
 - [x] 7. Complete grouped original AC test gaps and re-audit exact assertions, leave unavailable physical checks as unverified.
-- [ ] 8. Fresh independent code review, full gates, one final same-base dist inspection, docs/commit/main push/Actions/live verification.
+- [x] 8. Fresh independent code review, full gates, one final same-base dist inspection, docs/commit/main push/Actions/live verification.
 
 ## Review focus
 

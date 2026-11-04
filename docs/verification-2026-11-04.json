@@ -187,5 +187,201 @@
     "exitCode": 1,
     "diagnostic": "TS2322",
     "restoredExitCode": 0
-  }
+  },
+  "implementationCommit": "aa855d390c6fd4e65d449c514f289cf7debb3ff1",
+  "actions": {
+    "conclusion": "success",
+    "headSha": "aa855d390c6fd4e65d449c514f289cf7debb3ff1",
+    "jobs": [
+      {
+        "completedAt": "2026-11-04T13:58:24Z",
+        "conclusion": "success",
+        "databaseId": 126618700039,
+        "name": "deploy",
+        "startedAt": "2026-11-04T13:57:35Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-11-04T13:57:38Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-11-04T13:57:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:57:39Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v7",
+            "number": 2,
+            "startedAt": "2026-11-04T13:57:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:57:46Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@v7",
+            "number": 3,
+            "startedAt": "2026-11-04T13:57:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:57:50Z",
+            "conclusion": "success",
+            "name": "Run npm ci",
+            "number": 4,
+            "startedAt": "2026-11-04T13:57:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:57:55Z",
+            "conclusion": "success",
+            "name": "Run npm run typecheck",
+            "number": 5,
+            "startedAt": "2026-11-04T13:57:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:57:57Z",
+            "conclusion": "success",
+            "name": "Run npm run lint",
+            "number": 6,
+            "startedAt": "2026-11-04T13:57:55Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:00Z",
+            "conclusion": "success",
+            "name": "Run npm run test",
+            "number": 7,
+            "startedAt": "2026-11-04T13:57:57Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:06Z",
+            "conclusion": "success",
+            "name": "Run npm run build",
+            "number": 8,
+            "startedAt": "2026-11-04T13:58:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:07Z",
+            "conclusion": "success",
+            "name": "Run node scripts/check-dist.mjs",
+            "number": 9,
+            "startedAt": "2026-11-04T13:58:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:07Z",
+            "conclusion": "success",
+            "name": "Run actions/configure-pages@v6",
+            "number": 10,
+            "startedAt": "2026-11-04T13:58:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:09Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-pages-artifact@v5",
+            "number": 11,
+            "startedAt": "2026-11-04T13:58:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:22Z",
+            "conclusion": "success",
+            "name": "Run actions/deploy-pages@v5",
+            "number": 12,
+            "startedAt": "2026-11-04T13:58:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:22Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@v7",
+            "number": 23,
+            "startedAt": "2026-11-04T13:58:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:22Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v7",
+            "number": 24,
+            "startedAt": "2026-11-04T13:58:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-11-04T13:58:23Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 25,
+            "startedAt": "2026-11-04T13:58:23Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/muminjun/roomfit-3d/actions/runs/41842857753/job/126618700039"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/muminjun/roomfit-3d/actions/runs/41842857753"
+  },
+  "liveAssets": {
+    "revision": "aa855d390c6fd4e65d449c514f289cf7debb3ff1",
+    "files": [
+      {
+        "path": "assets/Viewer3D-B6hcDlt5.js",
+        "status": 200,
+        "sha256": "baa23345a3d7263a150b56b081d25a178222dbe4c888e2b80d0e005763052477"
+      },
+      {
+        "path": "assets/index-DIuc8BCC.css",
+        "status": 200,
+        "sha256": "c27978ee077a26a5de8e5ced74626ab11b644efa7df14552ffcb10604a31faa5"
+      },
+      {
+        "path": "assets/index-DX8YewzL.js",
+        "status": 200,
+        "sha256": "1a46b354738911c9ea8526fb99477df355224f62cb2191ac9da629f7a6352b70"
+      },
+      {
+        "path": "assets/konva-vendor-BBJ9AyRr.js",
+        "status": 200,
+        "sha256": "a0cb6357f2e6b9550d6fdb3ffcf7e880a8470ec97892ba508f6a2cebe9a9297a"
+      },
+      {
+        "path": "assets/react-vendor-CGTtH4Z4.js",
+        "status": 200,
+        "sha256": "545c447f8ad7447272f70a69be1a53afe690984ab8975c5c0e14610821147d04"
+      },
+      {
+        "path": "assets/rolldown-runtime-XKyaHtl9.js",
+        "status": 200,
+        "sha256": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7"
+      },
+      {
+        "path": "assets/three-core-BF58tRDi.js",
+        "status": 200,
+        "sha256": "2a7443fb04c485eac7af9e2ffab7f114570c29dbb45921d8af899c7ceece1c34"
+      },
+      {
+        "path": "assets/three-module-AImBqZWr.js",
+        "status": 200,
+        "sha256": "56ecaecbe4dc3a3d00ae0f2ad425a322b444dd5dcd45bae980884e7d5ce20e6f"
+      },
+      {
+        "path": "favicon.svg",
+        "status": 200,
+        "sha256": "c69d0f9100415b3c0f2eec5bfc7daf61e7b1f6b323f35865ce5ef5de372f436a"
+      },
+      {
+        "path": "index.html",
+        "status": 200,
+        "sha256": "716ea6bb882d428375ec2dea1ce4789a135557b4f4bb5b5e0adca35c993b7731"
+      }
+    ]
+  },
+  "liveBrowserEvidence": "remote-evidence-2026-11-04.json"
 }

@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-11-04T13:59:11.948Z",
+  "results": [
+    {
+      "browser": "chromium",
+      "version": "156.0.8078.4",
+      "url": "https://muminjun.github.io/roomfit-3d/",
+      "passed": true,
+      "checks": [
+        "welcome/new",
+        "Space pan furniture unchanged",
+        "off-grid Shift axis",
+        "Undo/Esc",
+        "window/zone",
+        "expanded fixture catalog",
+        "real 3D",
+        "JSON",
+        "autosave/reload",
+        "split view",
+        "3D camera and PNG",
+        "local project library",
+        "full-plan SVG"
+      ],
+      "assets": [
+        "/roomfit-3d/assets/Viewer3D-B6hcDlt5.js",
+        "/roomfit-3d/assets/index-DIuc8BCC.css",
+        "/roomfit-3d/assets/index-DX8YewzL.js",
+        "/roomfit-3d/assets/konva-vendor-BBJ9AyRr.js",
+        "/roomfit-3d/assets/react-vendor-CGTtH4Z4.js",
+        "/roomfit-3d/assets/rolldown-runtime-XKyaHtl9.js",
+        "/roomfit-3d/assets/three-core-BF58tRDi.js",
+        "/roomfit-3d/assets/three-module-AImBqZWr.js"
+      ]
+    },
+    {
+      "browser": "firefox",
+      "version": "157.0",
+      "url": "https://muminjun.github.io/roomfit-3d/",
+      "passed": true,
+      "checks": [
+        "welcome/new",
+        "Space pan furniture unchanged",
+        "off-grid Shift axis",
+        "Undo/Esc",
+        "window/zone",
+        "expanded fixture catalog",
+        "real 3D",
+        "JSON",
+        "autosave/reload",
+        "split view",
+        "3D camera and PNG",
+        "local project library",
+        "full-plan SVG"
+      ],
+      "assets": [
+        "/roomfit-3d/assets/Viewer3D-B6hcDlt5.js",
+        "/roomfit-3d/assets/index-DIuc8BCC.css",
+        "/roomfit-3d/assets/index-DX8YewzL.js",
+        "/roomfit-3d/assets/konva-vendor-BBJ9AyRr.js",
+        "/roomfit-3d/assets/react-vendor-CGTtH4Z4.js",
+        "/roomfit-3d/assets/rolldown-runtime-XKyaHtl9.js",
+        "/roomfit-3d/assets/three-core-BF58tRDi.js",
+        "/roomfit-3d/assets/three-module-AImBqZWr.js",
+        "/roomfit-3d/favicon.svg"
+      ]
+    }
+  ]
+}

@@ -25,7 +25,7 @@
 
 명령별 종료코드와 최종 파일 해시는 [검증 기록](docs/verification-2026-11-04.json), 실제 렌더 측정은 [성능 기록](docs/performance-2026-11-04.json)에 보존했다. Chromium SwiftShader에서 마지막 CPU 제출0.5ms/프레임 간격16.7ms, Firefox Apple M1 계열에서6ms/16ms였고 두 장면은553 draw calls/4180 triangles였다. GPU 완료 측정이나 지속30fps 보장이 아니다.
 
-원문 SHA256은 `25cabf1861d7e9fe305cfbd328a8e7aabf4b6f95d5683cb3ee1dc265edb21065`로 Downloads 원본과 동일하다. 실제 Safari·스크린리더·물리 입력장치와 AC별 구체적인 잔여 증거는 최신 근거표의 부분 검증 항목으로 남긴다. Edge는 설치·실행하지 않았다. 원격 배포 결과는 완료 후 추가한다.
+원문 SHA256은 `25cabf1861d7e9fe305cfbd328a8e7aabf4b6f95d5683cb3ee1dc265edb21065`로 Downloads 원본과 동일하다. 실제 Safari·스크린리더·물리 입력장치와 AC별 구체적인 잔여 증거는 최신 근거표의 부분 검증 항목으로 남긴다. Edge는 설치·실행하지 않았다. 원격 구현 커밋은 `aa855d390c6fd4e65d449c514f289cf7debb3ff1`이다. [Pages Actions41842857753](https://github.com/muminjun/roomfit-3d/actions/runs/41842857753)는 재설치/타입/린트/단위162/build/check-dist/deploy 전 단계 성공했다. 실제 [서비스](https://muminjun.github.io/roomfit-3d/)에서 Chromium/Firefox의 확장된 사용자 여정이 종료0이었고 제공 파일10개가 검증한 dist와 SHA256 일치했다. [원격 근거](docs/remote-evidence-2026-11-04.json)를 보존했다. 최신 원문 AC는47개 검증/34개 부분 검증이며 남은 조항은 근거표에 개별 명시했다.
 
 ---
 
